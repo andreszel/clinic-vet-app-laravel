@@ -26,7 +26,7 @@ class AddUser extends FormRequest
         return [
             'name' => ['required', 'required', 'string', 'max:255'],
             'surname' => ['required', 'string', 'min:3'],
-            'phone' => ['required', 'string', 'min:9'],
+            'phone' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'string', 'min:9'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'commission_services' => ['required', 'integer'],
             'commission_medicals' => ['required', 'integer'],

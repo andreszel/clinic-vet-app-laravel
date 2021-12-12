@@ -60,17 +60,22 @@ class UserController extends Controller
 
     public function store(AddUser $request)
     {
+        $user = Auth::user();
+
         $data = $request->validated();
 
         // Add random password
         $random_password = Str::random(8);
         $hashed_random_password = Hash::make($random_password);
         $data['password'] = $hashed_random_password;
+        $data['parent_id'] = $user->id;
         //$email = $data['email'];
         $email = 'szelkaandrzej@gmail.com';
         $smtp_username = config('mail.mailers.smtp.username');
         $title = 'Prośba o zmianę tymczasowego hasła do Twojego konta';
         $url = 'https://wp.pl';
+
+        dd($data);
 
         //return redirect(url('send-mail/' . $title . '/' . $random_password . '/' . $email));
 
