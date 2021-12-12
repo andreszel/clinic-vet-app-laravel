@@ -1,0 +1,32 @@
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/js/delete.js":
+/*!********************************!*\
+  !*** ./resources/js/delete.js ***!
+  \********************************/
+/***/ (() => {
+
+eval("$(function () {\n  $('.delete').click(function () {\n    Swal.fire({\n      title: 'Czy na pewno chcesz usunąć rekord?',\n      icon: 'warning',\n      showCancelButton: true,\n      confirmButtonText: 'Tak',\n      cancelButtonText: 'Anuluj'\n    }).then(function (result) {\n      if (result.value) {\n        $.ajax({\n          headers: {\n            'X-CSRF-TOKEN': $('meta[name=\"csrf-token\"]').attr('content')\n          },\n          method: \"POST\",\n          url: deleteUrl,\n          data: {\n            name: \"John\",\n            location: \"Boston\"\n          }\n        }).done(function (data) {\n          $('#validation-message').append('<div class=\"alert dark alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span> </button><b>' + data.message + '</b></div>');\n          setTimeout(function () {\n            window.location.reload(true);\n          }, 2500);\n        }).fail(function (data) {\n          Swal.fire('Oops...', data.responseJSON.message, 'error');\n        });\n      }\n    });\n  });\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvanMvZGVsZXRlLmpzPzZjMTEiXSwibmFtZXMiOlsiJCIsImNsaWNrIiwiU3dhbCIsImZpcmUiLCJ0aXRsZSIsImljb24iLCJzaG93Q2FuY2VsQnV0dG9uIiwiY29uZmlybUJ1dHRvblRleHQiLCJjYW5jZWxCdXR0b25UZXh0IiwidGhlbiIsInJlc3VsdCIsInZhbHVlIiwiYWpheCIsImhlYWRlcnMiLCJhdHRyIiwibWV0aG9kIiwidXJsIiwiZGVsZXRlVXJsIiwiZGF0YSIsIm5hbWUiLCJsb2NhdGlvbiIsImRvbmUiLCJhcHBlbmQiLCJtZXNzYWdlIiwic2V0VGltZW91dCIsIndpbmRvdyIsInJlbG9hZCIsImZhaWwiLCJyZXNwb25zZUpTT04iXSwibWFwcGluZ3MiOiJBQUFBQSxDQUFDLENBQUMsWUFBVztBQUNUQSxFQUFBQSxDQUFDLENBQUMsU0FBRCxDQUFELENBQWFDLEtBQWIsQ0FBbUIsWUFBVztBQUMxQkMsSUFBQUEsSUFBSSxDQUFDQyxJQUFMLENBQVU7QUFDTkMsTUFBQUEsS0FBSyxFQUFFLG9DQUREO0FBRU5DLE1BQUFBLElBQUksRUFBRSxTQUZBO0FBR05DLE1BQUFBLGdCQUFnQixFQUFFLElBSFo7QUFJTkMsTUFBQUEsaUJBQWlCLEVBQUUsS0FKYjtBQUtOQyxNQUFBQSxnQkFBZ0IsRUFBRTtBQUxaLEtBQVYsRUFNR0MsSUFOSCxDQU1RLFVBQUNDLE1BQUQsRUFBWTtBQUNoQixVQUFHQSxNQUFNLENBQUNDLEtBQVYsRUFBaUI7QUFDYlgsUUFBQUEsQ0FBQyxDQUFDWSxJQUFGLENBQU87QUFDSEMsVUFBQUEsT0FBTyxFQUFFO0FBQ0wsNEJBQWdCYixDQUFDLENBQUMseUJBQUQsQ0FBRCxDQUE2QmMsSUFBN0IsQ0FBa0MsU0FBbEM7QUFEWCxXQUROO0FBSUhDLFVBQUFBLE1BQU0sRUFBRSxNQUpMO0FBS0hDLFVBQUFBLEdBQUcsRUFBRUMsU0FMRjtBQU1IQyxVQUFBQSxJQUFJLEVBQUU7QUFDRkMsWUFBQUEsSUFBSSxFQUFFLE1BREo7QUFFRkMsWUFBQUEsUUFBUSxFQUFFO0FBRlI7QUFOSCxTQUFQLEVBV0NDLElBWEQsQ0FXTSxVQUFTSCxJQUFULEVBQWM7QUFDaEJsQixVQUFBQSxDQUFDLENBQUMscUJBQUQsQ0FBRCxDQUF5QnNCLE1BQXpCLENBQWdDLG9NQUFvTUosSUFBSSxDQUFDSyxPQUF6TSxHQUFtTixZQUFuUDtBQUNBQyxVQUFBQSxVQUFVLENBQUMsWUFBWTtBQUFFQyxZQUFBQSxNQUFNLENBQUNMLFFBQVAsQ0FBZ0JNLE1BQWhCLENBQXVCLElBQXZCO0FBQStCLFdBQTlDLEVBQWdELElBQWhELENBQVY7QUFDSCxTQWRELEVBZUNDLElBZkQsQ0FlTSxVQUFTVCxJQUFULEVBQWM7QUFDaEJoQixVQUFBQSxJQUFJLENBQUNDLElBQUwsQ0FBVSxTQUFWLEVBQXFCZSxJQUFJLENBQUNVLFlBQUwsQ0FBa0JMLE9BQXZDLEVBQWdELE9BQWhEO0FBQ0gsU0FqQkQ7QUFrQkg7QUFDSixLQTNCRDtBQTRCSCxHQTdCRDtBQThCSCxDQS9CQSxDQUFEIiwic291cmNlc0NvbnRlbnQiOlsiJChmdW5jdGlvbigpIHtcclxuICAgICQoJy5kZWxldGUnKS5jbGljayhmdW5jdGlvbigpIHtcclxuICAgICAgICBTd2FsLmZpcmUoe1xyXG4gICAgICAgICAgICB0aXRsZTogJ0N6eSBuYSBwZXdubyBjaGNlc3ogdXN1bsSFxIcgcmVrb3JkPycsXHJcbiAgICAgICAgICAgIGljb246ICd3YXJuaW5nJyxcclxuICAgICAgICAgICAgc2hvd0NhbmNlbEJ1dHRvbjogdHJ1ZSxcclxuICAgICAgICAgICAgY29uZmlybUJ1dHRvblRleHQ6ICdUYWsnLFxyXG4gICAgICAgICAgICBjYW5jZWxCdXR0b25UZXh0OiAnQW51bHVqJ1xyXG4gICAgICAgIH0pLnRoZW4oKHJlc3VsdCkgPT4ge1xyXG4gICAgICAgICAgICBpZihyZXN1bHQudmFsdWUpIHtcclxuICAgICAgICAgICAgICAgICQuYWpheCh7XHJcbiAgICAgICAgICAgICAgICAgICAgaGVhZGVyczoge1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAnWC1DU1JGLVRPS0VOJzogJCgnbWV0YVtuYW1lPVwiY3NyZi10b2tlblwiXScpLmF0dHIoJ2NvbnRlbnQnKVxyXG4gICAgICAgICAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgICAgICAgICAgbWV0aG9kOiBcIlBPU1RcIixcclxuICAgICAgICAgICAgICAgICAgICB1cmw6IGRlbGV0ZVVybCxcclxuICAgICAgICAgICAgICAgICAgICBkYXRhOiB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIG5hbWU6IFwiSm9oblwiLFxyXG4gICAgICAgICAgICAgICAgICAgICAgICBsb2NhdGlvbjogXCJCb3N0b25cIlxyXG4gICAgICAgICAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgICAgIH0pXHJcbiAgICAgICAgICAgICAgICAuZG9uZShmdW5jdGlvbihkYXRhKXtcclxuICAgICAgICAgICAgICAgICAgICAkKCcjdmFsaWRhdGlvbi1tZXNzYWdlJykuYXBwZW5kKCc8ZGl2IGNsYXNzPVwiYWxlcnQgZGFyayBhbGVydC1zdWNjZXNzIGFsZXJ0LWRpc21pc3NpYmxlXCIgcm9sZT1cImFsZXJ0XCI+PGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJjbG9zZVwiIGRhdGEtZGlzbWlzcz1cImFsZXJ0XCIgYXJpYS1sYWJlbD1cIkNsb3NlXCI+PHNwYW4gYXJpYS1oaWRkZW49XCJ0cnVlXCI+w5c8L3NwYW4+IDwvYnV0dG9uPjxiPicgKyBkYXRhLm1lc3NhZ2UgKyAnPC9iPjwvZGl2PicpO1xyXG4gICAgICAgICAgICAgICAgICAgIHNldFRpbWVvdXQoZnVuY3Rpb24gKCkgeyB3aW5kb3cubG9jYXRpb24ucmVsb2FkKHRydWUpOyB9LCAyNTAwKTtcclxuICAgICAgICAgICAgICAgIH0pXHJcbiAgICAgICAgICAgICAgICAuZmFpbChmdW5jdGlvbihkYXRhKXtcclxuICAgICAgICAgICAgICAgICAgICBTd2FsLmZpcmUoJ09vcHMuLi4nLCBkYXRhLnJlc3BvbnNlSlNPTi5tZXNzYWdlLCAnZXJyb3InKTtcclxuICAgICAgICAgICAgICAgIH0pO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfSk7XHJcbiAgICB9KTtcclxufSk7Il0sImZpbGUiOiIuL3Jlc291cmNlcy9qcy9kZWxldGUuanMuanMiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./resources/js/delete.js\n");
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval-source-map devtool is used.
+/******/ 	var __webpack_exports__ = {};
+/******/ 	__webpack_modules__["./resources/js/delete.js"]();
+/******/ 	
+/******/ })()
+;
