@@ -30,7 +30,7 @@ class UserController extends Controller
         $phone = $request->get('phone');
         $limit = $request->get('limit', UserRepositoryInterface::LIMIT_DEFAULT);
 
-        $resultPaginator = $this->userRepository->filterBy($phrase, $email, $phone, $limit);
+        $resultPaginator = $this->userRepository->filterBy($phrase, $email, $phone, UserRepositoryInterface::TYPE_USER_DOCTOR, $limit);
         $resultPaginator->appends([
             'phrase' => $phrase,
             'email' => $email,
@@ -38,6 +38,28 @@ class UserController extends Controller
         ]);
 
         return view('admin.doctors.list', [
+            'users' => $resultPaginator,
+            'phrase' => $phrase,
+            'email' => $email,
+            'phone' => $phone
+        ]);
+    }
+
+    public function users_list(Request $request): View
+    {
+        $phrase = $request->get('phrase');
+        $email = $request->get('email');
+        $phone = $request->get('phone');
+        $limit = $request->get('limit', UserRepositoryInterface::LIMIT_DEFAULT);
+
+        $resultPaginator = $this->userRepository->filterBy($phrase, $email, $phone, UserRepositoryInterface::TYPE_USER_ADMIN, $limit);
+        $resultPaginator->appends([
+            'phrase' => $phrase,
+            'email' => $email,
+            'phone' => $phone,
+        ]);
+
+        return view('admin.users.list', [
             'users' => $resultPaginator,
             'phrase' => $phrase,
             'email' => $email,

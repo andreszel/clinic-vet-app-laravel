@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Lekarze</h1>
+<h1 class="h3 mb-2 text-gray-800">Użytkownicy <small>administratorzy</small></h1>
 
 <div class="row mb-3">
     <div class="col-md-12">
@@ -16,8 +16,6 @@
         <h6 class="m-0 font-weight-bold text-primary">Lista</h6>
     </div>
     <div class="card-body">
-
-        @if(!$users->isEmpty())
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
@@ -67,12 +65,6 @@
                 </tbody>
             </table>
         </div>
-        @else
-        <div class="text-center my-3">
-            <h4 class="text-info">Lista lekarzy jest pusta</h4>
-            <p>Dodaj chociaż jednego :)</p>
-        </div>
-        @endif
     </div>
 </div>
 @endsection

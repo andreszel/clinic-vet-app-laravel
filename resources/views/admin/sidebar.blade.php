@@ -53,16 +53,18 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Administrator
-    </div>
-
     <!-- Nav Item - Tables -->
     <li class="nav-item">
         <a class="nav-link" href="{{ route('doctors.list') }}">
             <i class="fas fa-fw fa-user-nurse"></i>
             <span>Lekarze</span></a>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('users.list') }}">
+            <i class="fas fa-fw fa-user-nurse"></i>
+            <span>Użytkownicy</span></a>
     </li>
 
     <!-- Nav Item - Tables -->

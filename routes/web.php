@@ -42,6 +42,10 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::delete('/remove/{id}', [UserController::class, 'delete'])->name('remove');
     });
 
+    Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+        Route::get('/', [UserController::class, 'users_list'])->name('list');
+    });
+
     Route::group(['prefix' => 'my-profile', 'as' => 'me.'], function () {
         Route::get('/', [ProfileController::class, 'index'])->name('profile');
         Route::get('/settings', [ProfileController::class, 'settings'])->name('settings.edit');

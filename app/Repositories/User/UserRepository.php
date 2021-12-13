@@ -61,11 +61,13 @@ class UserRepository implements UserRepositoryInterface
         $user->update();
     }
 
-    public function filterBy(?string $phrase, ?string $email, ?string $phone, int $limit = self::LIMIT_DEFAULT)
+    public function filterBy(?string $phrase, ?string $email, ?string $phone, int $type_id, int $limit = self::LIMIT_DEFAULT)
     {
         $query = $this->userModel
             ->with(['type'])
             ->orderBy('created_at');
+
+        $query->whereRaw('type_id = ?', $type_id);
 
         if ($phrase) {
             $query->whereRaw('name like ?', ["$phrase%"]);
