@@ -123,15 +123,15 @@
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{ route('me.profile') }}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Moje konto
                 </a>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{ route('me.settings.edit') }}">
                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                     Ustawienia
                 </a>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{ route('me.events') }}">
                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                     Zdarzenia
                 </a>

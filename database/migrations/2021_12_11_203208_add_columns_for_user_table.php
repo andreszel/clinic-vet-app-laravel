@@ -15,7 +15,7 @@ class AddColumnsForUserTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->after('remember_token', function ($table) {
-                $table->unsignedBigInteger('type_id')->unsigned()->index()->nullable();
+                $table->unsignedBigInteger('type_id')->unsigned()->index()->nullable()->default(1);
                 $table->string('surname')->nullable();
                 $table->string('phone')->nullable();
                 $table->boolean('set_pass')->default(false);

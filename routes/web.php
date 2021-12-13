@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Mail\TempPassChange;
@@ -20,12 +21,12 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('send-mail', function () {
+/* Route::get('send-mail', function () {
     return new TempPassChange();
-});
+}); */
 
 // Panel administracyjny
-Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
+Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'], function () {
     Route::get('/', [AdminHomeController::class, 'index'])->name('home');
     Route::get('/test-jquery', [AdminHomeController::class, 'testJquery']);
     Route::get('/test-pdf', [AdminHomeController::class, 'createPDF']);
@@ -39,6 +40,13 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/remove/{id}', [UserController::class, 'delete'])->name('remove');
+    });
+
+    Route::group(['prefix' => 'my-profile', 'as' => 'me.'], function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('profile');
+        Route::get('/settings', [ProfileController::class, 'settings'])->name('settings.edit');
+        Route::post('/settings-update', [ProfileController::class, 'settingsUpdate'])->name('settings.update');
+        Route::get('/events', [ProfileController::class, 'events'])->name('events');
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {
