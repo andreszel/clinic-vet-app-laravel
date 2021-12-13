@@ -120,7 +120,14 @@ class UserController extends Controller
 
         $user = $this->userRepository->create($data);
 
-        return redirect()->route('admin.doctors.edit', ['id' => $user->id])->with('success', 'Lekarz został dodany!');
+        // zakładka Lekarze
+        $route = 'admin.doctors.edit';
+        if ($user->type_id == 1) {
+            // zakładka Użytkownicy
+            $route = 'admin.users.edit';
+        }
+
+        return redirect()->route($route, ['id' => $user->id])->with('success', 'Lekarz został dodany!');
     }
 
     public function show(int $userId, Request $request): View

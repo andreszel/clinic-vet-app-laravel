@@ -4,11 +4,13 @@
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-gray-800">Lekarze</h1>
 
+@if(!$users->isEmpty())
 <div class="row mb-3">
     <div class="col-md-12">
         <a class="btn  btn-sm btn-primary float-right" href="{{ route('doctors.create') }}" title="Dodaj nowego lekarza"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
     </div>
 </div>
+@endif
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -69,8 +71,12 @@
         </div>
         @else
         <div class="text-center my-3">
-            <h4 class="text-info">Lista lekarzy jest pusta</h4>
-            <p>Dodaj chociaż jednego :)</p>
+            <h4 class="text-info">Lista jest pusta</h4>
+            <h1><i class="fas fa-ban"></i></h1>
+            <p>Dodaj chociaż jednego, ktoś musi pracować. :)</p>
+            <div class="col-md-12 text-center">
+                <a class="btn btn-primary" href="{{ route('doctors.create') }}" title="Dodaj nowego lekarza"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
+            </div>
         </div>
         @endif
     </div>
