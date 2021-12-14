@@ -14,7 +14,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="{{ route('home') }}">
             <i class="fas fa-home"></i>
             <span>Pulpit</span></a>
     </li>
@@ -52,13 +52,6 @@
     @if($user->type_id == 1)
     <!-- Divider -->
     <hr class="sidebar-divider">
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('doctors.list') }}">
-            <i class="fas fa-fw fa-user-nurse"></i>
-            <span>Lekarze</span></a>
-    </li>
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">

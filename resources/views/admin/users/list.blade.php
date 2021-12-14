@@ -2,13 +2,15 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Użytkownicy <small>administratorzy</small></h1>
+<h1 class="h3 mb-2 text-gray-800">Lekarze</h1>
 
+@if(!$users->isEmpty())
 <div class="row mb-3">
     <div class="col-md-12">
-        <a class="btn  btn-sm btn-primary float-right" href="{{ route('doctors.create') }}" title="Dodaj nowego lekarza"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
+        <a class="btn  btn-sm btn-primary float-right" href="{{ route('users.create') }}" title="Dodaj nowego lekarza"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
     </div>
 </div>
+@endif
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -16,6 +18,8 @@
         <h6 class="m-0 font-weight-bold text-primary">Lista</h6>
     </div>
     <div class="card-body">
+
+        @if(!$users->isEmpty())
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
@@ -65,6 +69,16 @@
                 </tbody>
             </table>
         </div>
+        @else
+        <div class="text-center my-3">
+            <h4 class="text-info">Lista jest pusta</h4>
+            <h1><i class="fas fa-ban"></i></h1>
+            <p>Dodaj chociaż jednego, ktoś musi pracować. :)</p>
+            <div class="col-md-12 text-center">
+                <a class="btn btn-primary" href="{{ route('users.create') }}" title="Dodaj nowego lekarza"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 @endsection

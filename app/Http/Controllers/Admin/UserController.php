@@ -37,7 +37,7 @@ class UserController extends Controller
             'phone' => $phone,
         ]);
 
-        return view('admin.doctors.list', [
+        return view('admin.users.list', [
             'users' => $resultPaginator,
             'phrase' => $phrase,
             'email' => $email,
@@ -73,7 +73,7 @@ class UserController extends Controller
         $commission_servies = $this->userRepository::COMMISSION_SERVIES;
         $commission_medicals = $this->userRepository::COMMISSION_MEDICALS;
 
-        return view('admin.doctors.create', [
+        return view('admin.users.create', [
             'types' => $types,
             'commission_servies' => $commission_servies,
             'commission_medicals' => $commission_medicals
@@ -95,18 +95,11 @@ class UserController extends Controller
         $email = 'szelkaandrzej@gmail.com';
         $smtp_username = config('mail.mailers.smtp.username');
         $title = 'Prośba o zmianę tymczasowego hasła do Twojego konta';
-        $url = 'https://wp.pl';
-
-        dd($data);
-
-        //return redirect(url('send-mail/' . $title . '/' . $random_password . '/' . $email));
+        $url = route('login');
 
         $details = ['random_password' => $random_password, 'smtp_username' => $smtp_username, 'email' => $email, 'title' => $title, 'url' => $url];
 
         $sendmail = Mail::to($email)->send(new TempPassChange($details));
-
-        dump($sendmail);
-        dd($details);
 
         /* Mail::send('emails.User.TempPassChange', $details, function ($m) use ($smtp_username, $email) {
             $m->from($smtp_username, 'Clinic Vet App');
@@ -116,18 +109,9 @@ class UserController extends Controller
             //$m->attachData($data, $name, array $options = []);
         }); */
 
-        dd($data);
-
         $user = $this->userRepository->create($data);
 
-        // zakładka Lekarze
-        $route = 'admin.doctors.edit';
-        if ($user->type_id == 1) {
-            // zakładka Użytkownicy
-            $route = 'admin.users.edit';
-        }
-
-        return redirect()->route($route, ['id' => $user->id])->with('success', 'Lekarz został dodany!');
+        return redirect()->route('admin.users.edit', ['id' => $user->id])->with('success', 'Lekarz został dodany!');
     }
 
     public function show(int $userId, Request $request): View

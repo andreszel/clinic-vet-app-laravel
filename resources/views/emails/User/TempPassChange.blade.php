@@ -5,8 +5,9 @@
     <p class="mb-3">W aplikacji {{ config('app.name') }} zostało założone konto.</p>
     <p>Twoje tymczasowe hasło do logowania: <strong>{{ $details['random_password'] }}</strong>!</p>
     <p>Po zalogowaniu hasło musisz zmienić na nowe!</p>
+    <p>Kliknij w link poniżej, aby zalogować się na swoje konto.</p>
     @component('mail::button', ['url' => $details['url'], 'color' => 'success'])
-    Ustaw nowe hasło
+    LOGOWANIE
     @endcomponent
 </div>
 
