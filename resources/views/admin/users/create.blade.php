@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Dodaj nowego lekarza</h1>
+<h1 class="h3 mb-2 text-gray-800">Dodaj nowego użytkownika</h1>
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -11,7 +11,7 @@
     </div>
 
     <div class="card-body">
-        <form method="POST" action="{{ route('doctors.store') }}">
+        <form method="POST" action="{{ route('users.store') }}">
             @csrf
             <div class="form-group row">
                 <label for="name" class="col-md-3 col-form-label">Imię</label>

@@ -3,7 +3,7 @@
 @section('content')
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Pulpit</h1>
+    <h1 class="h3 mb-0 text-gray-800">Pulpit <span class="font-italic text-lowercase"><small>{{ $user->type->name }}</small></span></h1>
 </div>
 
 <!-- Content Row -->
@@ -15,16 +15,16 @@
         <!-- Project Card Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Status user</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Typ Twojego konta</h6>
             </div>
             <div class="card-body">
                 @if (session('status'))
                 <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
+                    {{ $user->type->name }}
                 </div>
                 @endif
 
-                {{ __('You are logged in!') }}
+                {{ $user->type->name }}
             </div>
         </div>
     </div>

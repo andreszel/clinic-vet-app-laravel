@@ -26,6 +26,7 @@
                     <tr>
                         <th>Lp.</th>
                         <th>Imię i nazwisko</th>
+                        <th>Typ konta</th>
                         <th>Email</th>
                         <th>Telefon</th>
                         <th>Prowizja usługi/leki</th>
@@ -37,6 +38,7 @@
                     <tr>
                         <th>Lp.</th>
                         <th>Imię i nazwisko</th>
+                        <th>Typ konta</th>
                         <th>Email</th>
                         <th>Telefon</th>
                         <th>Prowizja usługi/leki</th>
@@ -49,20 +51,19 @@
                     <tr>
                         <td>{{ $user->id }}</td>
                         <td>{{ $user->name }} {{ $user->surname }}</td>
+                        <td>{{ $user->type->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone }}</td>
                         <td>{{ $user->commission_services }}/{{ $user->commission_medicals }}</td>
                         <td>{{ $user->active ? 'tak' : 'nie' }}</td>
                         <td>
-                            <a href="profil_lekarza.html" class="text-info mr-2" title="Profil lekarza">
-                                <i class="fas fa-user"></i>
-                            </a>
-                            <a href="nowy_lekarz.html" class="text-primary mr-2" title="Edytuj">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="#" class="text-danger mr-2" title="Usuń">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
+                            <form action="{{ route('users.remove', ['id' => $user->id]) }}" method="post">
+                                @method('DELETE')
+                                {{ csrf_field() }}
+                                <a href="{{ route('users.show', ['id' => $user->id]) }}" class="btn text-info mr-2" title="Profil lekarza"><i class="fas fa-user"></i></a>
+                                <a href="{{ route('users.edit', ['id' => $user->id]) }}" class="btn text-primary mr-2"><i class="fas fa-edit"></i></a>
+                                <button type="submit" class="btn text-danger mr-2" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt"></i></button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach

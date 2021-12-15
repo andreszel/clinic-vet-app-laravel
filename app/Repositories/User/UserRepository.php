@@ -48,7 +48,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function update(array $postData, int $userId): void
     {
-        $user = $this->findUserById($userId);
+        $user = $this->userModel->find($userId);
 
         $user->name = $postData['name'] ?? $user->name;
         $user->surname = $postData['surname'] ?? $user->surname;
@@ -61,13 +61,11 @@ class UserRepository implements UserRepositoryInterface
         $user->update();
     }
 
-    public function filterBy(?string $phrase, ?string $email, ?string $phone, int $type_id, int $limit = self::LIMIT_DEFAULT)
+    public function filterBy(?string $phrase, ?string $email, ?string $phone, int $limit = self::LIMIT_DEFAULT)
     {
         $query = $this->userModel
             ->with(['type'])
             ->orderBy('created_at');
-
-        $query->whereRaw('type_id = ?', $type_id);
 
         if ($phrase) {
             $query->whereRaw('name like ?', ["$phrase%"]);
@@ -82,14 +80,5 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return $query->paginate($limit);
-    }
-
-    private function findUserById($userId)
-    {
-        $user = $this->userModel->findUserById();
-        if (null === $user) {
-            throw new \Exception('User not found');
-        }
-        return $user;
     }
 }

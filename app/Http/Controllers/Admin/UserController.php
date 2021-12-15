@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddUser;
 use App\Interfaces\UserRepositoryInterface;
 use App\Mail\TempPassChange;
+use App\Models\User;
 use App\Models\UserTypes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,7 @@ class UserController extends Controller
         $phone = $request->get('phone');
         $limit = $request->get('limit', UserRepositoryInterface::LIMIT_DEFAULT);
 
-        $resultPaginator = $this->userRepository->filterBy($phrase, $email, $phone, UserRepositoryInterface::TYPE_USER_DOCTOR, $limit);
+        $resultPaginator = $this->userRepository->filterBy($phrase, $email, $phone, $limit);
         $resultPaginator->appends([
             'phrase' => $phrase,
             'email' => $email,
@@ -45,6 +46,27 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $user = User::with('type')->find($id);
+        $types = UserTypes::get();
+        $commission_servies = $this->userRepository::COMMISSION_SERVIES;
+        $commission_medicals = $this->userRepository::COMMISSION_MEDICALS;
+
+        return view('admin.users.edit', [
+            'user' => $user,
+            'types' => $types,
+            'commission_servies' => $commission_servies,
+            'commission_medicals' => $commission_medicals
+        ]);
+    }
+
     public function users_list(Request $request): View
     {
         $phrase = $request->get('phrase');
@@ -52,7 +74,7 @@ class UserController extends Controller
         $phone = $request->get('phone');
         $limit = $request->get('limit', UserRepositoryInterface::LIMIT_DEFAULT);
 
-        $resultPaginator = $this->userRepository->filterBy($phrase, $email, $phone, UserRepositoryInterface::TYPE_USER_ADMIN, $limit);
+        $resultPaginator = $this->userRepository->filterBy($phrase, $email, $phone, $limit);
         $resultPaginator->appends([
             'phrase' => $phrase,
             'email' => $email,
@@ -111,10 +133,19 @@ class UserController extends Controller
 
         $user = $this->userRepository->create($data);
 
-        return redirect()->route('admin.users.edit', ['id' => $user->id])->with('success', 'Lekarz został dodany!');
+        return redirect()->route('users.edit', ['id' => $user->id])->with('success', 'Użytkownik został dodany!');
     }
 
-    public function show(int $userId, Request $request): View
+    public function update(AddUser $request, int $userId)
+    {
+        $data = $request->validated();
+
+        $this->userRepository->update($data, $userId);
+
+        return redirect()->route('users.edit', ['id' => $userId])->with('success', 'Użytkownik został zaktualizowany!');
+    }
+
+    public function show(Request $request, int $userId): View
     {
         $loggedUser = Auth::user();
         $user = $this->userRepository->get($userId);
