@@ -156,9 +156,16 @@ class UserController extends Controller
         // sprawdzenie, czy zalogowany użytkownik to jest ten sam profil
         if ($loggedUser->id == $user->id) $profile_logged = true;
 
-        return view('admin.user.show', [
+        return view('admin.users.show', [
             'user' => $user,
             'profile_logged' => $profile_logged
         ]);
+    }
+
+    public function delete($userId)
+    {
+        $this->userRepository->delete($userId);
+
+        return redirect()->route('users.list')->with('success', 'Użytkownik został usunięty!');
     }
 }

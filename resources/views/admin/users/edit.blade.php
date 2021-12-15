@@ -129,7 +129,8 @@
 
             <div class="form-group row">
                 <div class="offset-md-3 col-md-9">
-                    <button name="submit" type="submit" class="btn btn-primary">Zapisz</button>
+                    <button name="submit" type="submit" class="btn btn-primary float-right">Zapisz</button>
+                    <a href="{{ route('users.list') }}" class="btn btn-success float-right">Lista użytkowników</a>
                 </div>
             </div>
         </form>
