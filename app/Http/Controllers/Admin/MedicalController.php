@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddMedical;
 use App\Interfaces\MedicalRepositoryInterface;
+use App\Models\Medical;
 use App\Models\UnitMeasure;
 use App\Models\Vats;
 use Illuminate\Http\Request;
@@ -67,49 +68,21 @@ class MedicalController extends Controller
     public function store(AddMedical $request)
     {
         // zalogowany użytkownik
-        $user_id = Auth::id();
-
-        $vat_buy = Vats::where('id', $request->vat_buy_id)->first();
-        $vat_sell = Vats::where('id', $request->vat_sell_id)->first();
-
+        //$user_id = Auth::id();
         $data = $request->validated();
 
-        if ($request->net_price_buy != NULL) {
-            dump('net price buy ok!!');
-            $gross_price_buy = number_format(($request->net_price_buy * (1 + ($vat_buy->name / 100))), 2, '.', '');
-            $request['gross_price_buy'] = $gross_price_buy;
-        } else {
-            dump('net gross buy ok!!');
-            //$request->net_price_buy = number_format(($request->gross_price_buy / (1 + ($vat_buy / 100))), 2, '.','');
-            $net_price_buy = number_format(($request->gross_price_buy / (1 + ($vat_buy->name / 100))), 2, '.', '');
-            $request['net_price_buy'] = $net_price_buy;
+        $postData = $this->checkData($request->all());
+        dd($postData);
+
+        // Sprawdzamy, czy na pewno są wszystkie dane
+        if (!$request['net_price_buy'] > 0 or !$request['gross_price_buy'] > 0) {
+            return redirect()->route('medicals.create')->with('danger', 'Brak ceny zakupu netto i brutto. Lek nie został dodany!');
+        }
+        if (!$request['net_price_sell'] > 0 or !$request['gross_price_sell'] > 0) {
+            return redirect()->route('medicals.create')->with('danger', 'Brak ceny sprzedaży netto i brutto. Lek nie został dodany!');
         }
 
-        if ($request->gross_price_sell != NULL) {
-            dump('gross price buy ok!!');
-            $net_price_sell = number_format(($request->gross_price_sell / (1 + ($vat_buy->sell / 100))), 2, '.', '');
-            $request['gross_price_buy'] = $net_price_sell;
-        } else {
-            dump('net gross buy ok!!');
-            //$request->net_price_buy = number_format(($request->gross_price_buy / (1 + ($vat_buy / 100))), 2, '.','');
-            $net_price_buy = number_format(($request->gross_price_sell / (1 + ($vat_sell->name / 100))), 2, '.', '');
-            $request['net_price_buy'] = $net_price_buy;
-        }
-
-        dd($request->all());
-
-        dump(empty($request->net_price_buy) and empty($request->gross_price_buy == NULL));
-        if ($request->net_price_buy == NULL and $request->gross_price_buy == NULL) {
-            return redirect()->route('medicals.create')->with('warning', 'Lek weterynaryjny nie został dodany, przesłane parametry były nieprawidłowe!');
-        }
-
-        if ($request->net_price_sell == NULL and $request->gross_price_sell == NULL) {
-            return redirect()->route('medicals.create')->with('warning', 'Lek weterynaryjny nie został dodany, przesłane parametry były nieprawidłowe!');
-        }
-
-
-
-        $medical = $this->medicalRepository->create($data);
+        $medical = $this->medicalRepository->create($postData);
 
         return redirect()->route('medicals.edit', ['id' => $medical->id])->with('success', 'Lek weterynaryjny został dodany!');
     }
@@ -133,7 +106,15 @@ class MedicalController extends Controller
      */
     public function edit($id)
     {
-        //
+        $medical = Medical::with(['vat_buy', 'vat_sell', 'unit_measure'])->find($id);
+        $vats = Vats::get();
+        $unit_measures = UnitMeasure::get();
+
+        return view('admin.medicals.edit', [
+            'medical' => $medical,
+            'vats' => $vats,
+            'unit_measures' => $unit_measures
+        ]);
     }
 
     /**
@@ -143,9 +124,23 @@ class MedicalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AddMedical $request, int $id)
     {
-        //
+        $data = $request->validated();
+
+        $postData = $this->checkData($request->all());
+
+        // Sprawdzamy, czy na pewno są wszystkie dane
+        if (!$request['net_price_buy'] > 0 or !$request['gross_price_buy'] > 0) {
+            return redirect()->route('medicals.create')->with('danger', 'Brak ceny zakupu netto i brutto. Lek nie został dodany!');
+        }
+        if (!$request['net_price_sell'] > 0 or !$request['gross_price_sell'] > 0) {
+            return redirect()->route('medicals.create')->with('danger', 'Brak ceny sprzedaży netto i brutto. Lek nie został dodany!');
+        }
+
+        $this->medicalRepository->update($postData, $id);
+
+        return redirect()->route('medicals.list')->with('success', 'Lek został zaktualizowany!');
     }
 
     /**
@@ -157,5 +152,72 @@ class MedicalController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function checkData(array $request)
+    {
+        $postData =  $request;
+
+        $vat_buy = Vats::where('id', $request['vat_buy_id'])->first();
+        $vat_sell = Vats::where('id', $request['vat_sell_id'])->first();
+
+        $netPriceBuy = 0;
+        $grossPriceBuy = 0;
+        $netPriceSell = 0;
+        $grossPriceSell = 0;
+
+        $vatBuyDivisor  = 1 + ((int)$vat_buy->name / 100);
+        $vatSellDivisor = 1 + ((int)$vat_sell->name / 100);
+
+        // obliczanie brakujących cen i uzupełnienie w obiekcie request - START
+
+        // ustawiamy null, żeby dalej nie było problemu z ustawianiem - nullujemy :)
+        /* if ($request['net_price_buy'] == 0) $postData['net_price_buy'] = NULL;
+        if ($request['gross_price_buy'] == 0) $postData['gross_price_buy'] = NULL;
+        if ($request['net_price_sell'] == 0) $postData['net_price_sell'] = NULL;
+        if ($request['gross_price_sell'] == 0) $postData['gross_price_sell'] = NULL;
+         */
+        // liczymy brakujące ceny
+
+        // ZAKUP
+        if ($request['net_price_buy'] == 0 and $request['gross_price_buy'] > 0) {
+            $netPriceBuy = number_format($request['gross_price_buy'] / $vatBuyDivisor, 2);
+        }
+        if ($request['net_price_buy'] > 0 and $request['gross_price_buy'] == 0) {
+            $grossPriceBuy = number_format(($request['net_price_buy'] * $vatBuyDivisor), 2);
+        }
+
+        // SPRZEDAŻ
+        if ($request['net_price_sell'] == 0 and $request['gross_price_sell'] > 0) {
+            $netPriceSell = number_format(($request['gross_price_sell'] / $vatSellDivisor), 2);
+        }
+        if ($request['net_price_sell'] > 0 and $request['gross_price_sell'] == 0) {
+            $grossPriceSell = number_format(($request['net_price_sell'] * $vatSellDivisor), 2);
+        }
+
+        // ustawiamy brakujące ceny, bo wartość początkową miały 0
+        if ($netPriceBuy > 0) {
+            $postData['net_price_buy'] = $netPriceBuy;
+        }
+        if ($grossPriceBuy > 0) {
+            $postData['gross_price_buy'] = $grossPriceBuy;
+        }
+        if ($netPriceSell > 0) {
+            $postData['net_price_sell'] = $netPriceSell;
+        }
+        if ($grossPriceSell > 0) {
+            $postData['gross_price_sell'] = $grossPriceSell;
+        }
+
+        // liczymy marżę
+        $netMargin = number_format($postData['net_price_sell'] - $postData['net_price_buy'], 2);
+        $grossMargin = number_format($postData['gross_price_sell'] - $postData['gross_price_buy'], 2);
+
+        // ustawiamy marżę
+        $postData['net_margin'] = $netMargin;
+        $postData['gross_margin'] = $grossMargin;
+        // obliczanie brakujących cen i uzupełnienie w obiekcie request - STOP
+
+        return $postData;
     }
 }

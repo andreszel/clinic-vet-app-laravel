@@ -26,8 +26,8 @@
                     <tr>
                         <th rowspan="2">Lp.</th>
                         <th rowspan="2">Nazwa leku</th>
-                        <th colspan="2" class="text-center">Zakupu</th>
-                        <th colspan="2" class="text-center">Sprzedaży</th>
+                        <th colspan="2" class="text-center">Zakup</th>
+                        <th colspan="2" class="text-center">Sprzedaż</th>
                         <th colspan="2" class="text-center">Marża</th>
                         <th colspan="2" class="text-center">VAT</th>
                         <th rowspan="2">Action</th>
@@ -39,8 +39,8 @@
                         <th>Brutto [pln]</th>
                         <th>Netto [pln]</th>
                         <th>Brutto [pln]</th>
-                        <th>Netto [pln]</th>
-                        <th>Brutto [pln]</th>
+                        <th class="text-center">Zakup</th>
+                        <th class="text-center">Sprzedaż</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -53,13 +53,13 @@
                         <th>Brutto [pln]</th>
                         <th>Netto [pln]</th>
                         <th>Brutto [pln]</th>
-                        <th>Netto [pln]</th>
-                        <th>Brutto [pln]</th>
+                        <th class="text-center">Zakup</th>
+                        <th class="text-center">Sprzedaż</th>
                         <th rowspan="2">Action</th>
                     </tr>
                     <tr>
-                        <th colspan="2" class="text-center">Zakupu</th>
-                        <th colspan="2" class="text-center">Sprzedaży</th>
+                        <th colspan="2" class="text-center">Zakup</th>
+                        <th colspan="2" class="text-center">Sprzedaż</th>
                         <th colspan="2" class="text-center">Marża</th>
                         <th colspan="2" class="text-center">VAT</th>
                     </tr>
@@ -70,7 +70,7 @@
                         <td>{{ $medical->id }}</td>
                         <td>
                             {{ $medical->name }}
-                            <a href="#" class="{{ $medical->active ? 'text-success' : 'text-secondary' }} float-right" title="Aktywuj sprzedaż leku">
+                            <a href="#" class="{{ $medical->active ? 'text-success' : 'text-secondary' }} float-right" title="{{ $medical->active ? 'Wyłącz sprzedaż leku' : 'Włącz sprzedaż leku' }}">
                                 <i class="fas fa-check"></i>
                             </a>
                         </td>
@@ -80,8 +80,8 @@
                         <td class="text-right">{{ $medical->gross_price_sell }}</td>
                         <td class="text-right">{{ $medical->net_margin }}</td>
                         <td class="text-right">{{ $medical->gross_margin }}</td>
-                        <td>{{ $medical->vat_buy->name }}</td>
-                        <td>{{ $medical->vat_sell->name }}</td>
+                        <td class="text-center px-3">{{ $medical->vat_buy->name }}%</td>
+                        <td class="text-center px-3">{{ $medical->vat_sell->name }}%</td>
                         <td>
                             <form action="{{ route('medicals.remove', ['id' => $medical->id]) }}" method="post">
                                 @method('DELETE')
