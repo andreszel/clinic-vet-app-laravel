@@ -178,8 +178,11 @@ return [
         // PDF
         Barryvdh\DomPDF\ServiceProvider::class,
 
-        //Admin - User
+        //Admin - Users
         App\Providers\UserServiceProvider::class,
+
+        //Admin - Medicals
+        App\Providers\MedicalServiceProvider::class,
     ],
 
     /*

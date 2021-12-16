@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\MedicalController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupportController;
@@ -47,6 +48,15 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::get('/settings', [ProfileController::class, 'settings'])->name('settings.edit');
         Route::post('/settings-update', [ProfileController::class, 'settingsUpdate'])->name('settings.update');
         Route::get('/events', [ProfileController::class, 'events'])->name('events');
+    });
+
+    Route::group(['prefix' => 'medicals', 'as' => 'medicals.'], function () {
+        Route::get('/', [MedicalController::class, 'index'])->name('list');
+        Route::get('/create', [MedicalController::class, 'create'])->name('create');
+        Route::get('/edit/{id}', [MedicalController::class, 'edit'])->name('edit');
+        Route::post('/store', [MedicalController::class, 'store'])->name('store');
+        Route::put('/update/{id}', [MedicalController::class, 'update'])->name('update');
+        Route::delete('/remove/{id}', [MedicalController::class, 'delete'])->name('remove');
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {

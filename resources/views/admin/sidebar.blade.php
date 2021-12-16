@@ -21,7 +21,7 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="lista_lekow.html">
+        <a class="nav-link" href="{{ route('medicals.list') }}">
             <i class="fas fa-fw fa-file-medical"></i>
             <span>Leki weterynaryjne</span></a>
     </li>
