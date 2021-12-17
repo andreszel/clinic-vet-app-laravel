@@ -72,7 +72,6 @@ class MedicalController extends Controller
         $data = $request->validated();
 
         $postData = $this->checkData($request->all());
-        dd($postData);
 
         // Sprawdzamy, czy na pewno są wszystkie dane
         if (!$request['net_price_buy'] > 0 or !$request['gross_price_buy'] > 0) {
@@ -82,9 +81,9 @@ class MedicalController extends Controller
             return redirect()->route('medicals.create')->with('danger', 'Brak ceny sprzedaży netto i brutto. Lek nie został dodany!');
         }
 
-        $medical = $this->medicalRepository->create($postData);
+        $this->medicalRepository->create($postData);
 
-        return redirect()->route('medicals.edit', ['id' => $medical->id])->with('success', 'Lek weterynaryjny został dodany!');
+        return redirect()->route('medicals.list')->with('success', 'Lek weterynaryjny został dodany!');
     }
 
     /**
@@ -143,6 +142,13 @@ class MedicalController extends Controller
         return redirect()->route('medicals.list')->with('success', 'Lek został zaktualizowany!');
     }
 
+    public function changeStatus(int $id)
+    {
+        $this->medicalRepository->change_status($id);
+
+        return redirect()->back()->with('success', 'Status został zmieniony!');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -151,7 +157,8 @@ class MedicalController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->medicalRepository->delete($id);
+        return redirect()->back()->with('success', 'Lek został usunięty!');
     }
 
     private function checkData(array $request)

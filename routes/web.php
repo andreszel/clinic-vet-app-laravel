@@ -56,7 +56,8 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::get('/edit/{id}', [MedicalController::class, 'edit'])->name('edit');
         Route::post('/store', [MedicalController::class, 'store'])->name('store');
         Route::put('/update/{id}', [MedicalController::class, 'update'])->name('update');
-        Route::delete('/remove/{id}', [MedicalController::class, 'delete'])->name('remove');
+        Route::delete('/remove/{id}', [MedicalController::class, 'destroy'])->name('remove');
+        Route::post('/change-status/{id}', [MedicalController::class, 'changeStatus'])->name('change_status');
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {

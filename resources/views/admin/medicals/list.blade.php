@@ -20,6 +20,8 @@
     <div class="card-body">
 
         @if(!$medicals->isEmpty())
+        <div class="col-xl-12 form-group" id="validation-message-medical"></div>
+
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
@@ -70,9 +72,13 @@
                         <td>{{ $medical->id }}</td>
                         <td>
                             {{ $medical->name }}
-                            <a href="#" class="{{ $medical->active ? 'text-success' : 'text-secondary' }} float-right" title="{{ $medical->active ? 'Wyłącz sprzedaż leku' : 'Włącz sprzedaż leku' }}">
+
+                            <a href="#" class="change-status {{ $medical->active ? 'text-success' : 'text-secondary' }} float-right" title="{{ $medical->active ? 'Wyłącz sprzedaż leku' : 'Włącz sprzedaż leku' }}" onclick="event.preventDefault(); document.getElementById('change-status-form').submit();">
                                 <i class="fas fa-check"></i>
                             </a>
+                            <form id="change-status-form" action="{{ route('medicals.change_status', ['id'=>$medical->id]) }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
                         </td>
                         <td class="text-right">{{ $medical->net_price_buy }}</td>
                         <td class="text-right">{{ $medical->gross_price_buy }}</td>
@@ -88,6 +94,7 @@
                                 {{ csrf_field() }}
                                 <a href="{{ route('medicals.edit', ['id' => $medical->id]) }}" class="btn text-primary mr-2"><i class="fas fa-edit"></i></a>
                                 <button type="submit" class="btn text-danger mr-2" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt"></i></button>
+                                <button class="delete-medical btn text-danger mr-2"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -107,6 +114,16 @@
         @endif
     </div>
 </div>
+
 @endsection
 
 @include('helpers.sections.datatables')
+
+@if(!$medicals->isEmpty())
+@section('javascript')
+const deleteUrlMedical = "{{ route('medicals.remove', ['id' => $medical->id]) }}";
+@endsection
+@section('js-files')
+<script src="{{ asset('js/delete-medical.js') }}"></script>
+@endsection
+@endif

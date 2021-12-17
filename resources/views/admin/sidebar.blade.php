@@ -13,35 +13,35 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
             <i class="fas fa-home"></i>
             <span>Pulpit</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
+    <li class="nav-item {{ request()->routeIs('medicals.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('medicals.list') }}">
             <i class="fas fa-fw fa-file-medical"></i>
             <span>Leki weterynaryjne</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
+    <li class="nav-item {{ request()->routeIs('additional.services.*') ? 'active' : '' }}">
         <a class="nav-link" href="lista_uslug_dodatkowych.html">
             <i class="fas fa-fw fa-puzzle-piece"></i>
             <span>Usługi dodatkowe</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
+    <li class="nav-item {{ request()->routeIs('visits.*') ? 'active' : '' }}">
         <a class="nav-link" href="lista_wizyt.html">
             <i class="fas fa-fw fa-briefcase-medical"></i>
             <span>Wizyty lekarskie</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
+    <li class="nav-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
         <a class="nav-link" href="lista_klientow.html">
             <i class="fas fa-fw fa-user"></i>
             <span>Klienci kliniki</span></a>
@@ -54,14 +54,14 @@
     <hr class="sidebar-divider">
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
+    <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('users.list') }}">
             <i class="fas fa-fw fa-user-nurse"></i>
             <span>Użytkownicy</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
+    <li class="nav-item {{ request()->routeIs('raport.*') ? 'active' : '' }}">
         <a class="nav-link" href="raporty.html">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Raporty</span></a>
