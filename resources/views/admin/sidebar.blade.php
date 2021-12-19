@@ -42,7 +42,7 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
-        <a class="nav-link" href="lista_klientow.html">
+        <a class="nav-link" href="{{ route('customers.list') }}">
             <i class="fas fa-fw fa-user"></i>
             <span>Klienci kliniki</span></a>
     </li>

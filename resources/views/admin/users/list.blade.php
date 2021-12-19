@@ -49,20 +49,30 @@
                 <tbody>
                     @foreach($users ?? [] as $user)
                     <tr>
-                        <td>{{ $user->id }}</td>
+                        <td>{{ $counter++ }}.</td>
                         <td>{{ $user->name }} {{ $user->surname }}</td>
                         <td>{{ $user->type->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone }}</td>
                         <td>{{ $user->commission_services }}/{{ $user->commission_medicals }}</td>
-                        <td>{{ $user->active ? 'tak' : 'nie' }}</td>
+                        <td>
+                            {{ $user->active ? 'tak' : 'nie' }}
+                            @if($user->id != Auth::id())
+                            <a href="#" class="change-status {{ $user->active ? 'text-success' : 'text-secondary' }} float-right" title="{{ $user->active ? 'Wyłącz konto użytkownika' : 'Włącz konto użytkownika' }}" onclick="event.preventDefault(); document.getElementById('change-status-form-{{$user->id}}').submit();">
+                                <i class="fas fa-check"></i>
+                            </a>
+                            <form id="change-status-form-{{$user->id}}" action="{{ route('users.change_status', ['id'=>$user->id]) }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                            @endif
+                        </td>
                         <td>
                             <form action="{{ route('users.remove', ['id' => $user->id]) }}" method="post">
                                 @method('DELETE')
                                 {{ csrf_field() }}
                                 <a href="{{ route('users.show', ['id' => $user->id]) }}" class="btn text-info mr-2" title="Profil lekarza"><i class="fas fa-user"></i></a>
                                 <a href="{{ route('users.edit', ['id' => $user->id]) }}" class="btn text-primary mr-2"><i class="fas fa-edit"></i></a>
-                                <button type="submit" class="btn text-danger mr-2" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt"></i></button>
+                                <button type="submit" class="btn text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
                     </tr>

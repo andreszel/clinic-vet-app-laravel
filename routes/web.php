@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\MedicalController;
@@ -41,6 +42,7 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/remove/{id}', [UserController::class, 'delete'])->name('remove');
+        Route::post('/change-status/{id}', [UserController::class, 'changeStatus'])->name('change_status');
     });
 
     Route::group(['prefix' => 'my-profile', 'as' => 'me.'], function () {
@@ -58,6 +60,15 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::put('/update/{id}', [MedicalController::class, 'update'])->name('update');
         Route::delete('/remove/{id}', [MedicalController::class, 'destroy'])->name('remove');
         Route::post('/change-status/{id}', [MedicalController::class, 'changeStatus'])->name('change_status');
+    });
+
+    Route::group(['prefix' => 'customers', 'as' => 'customers.'], function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('list');
+        Route::get('/create', [CustomerController::class, 'create'])->name('create');
+        Route::get('/edit/{id}', [CustomerController::class, 'edit'])->name('edit');
+        Route::post('/store', [CustomerController::class, 'store'])->name('store');
+        Route::put('/update/{id}', [CustomerController::class, 'update'])->name('update');
+        Route::delete('/remove/{id}', [CustomerController::class, 'destroy'])->name('remove');
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {

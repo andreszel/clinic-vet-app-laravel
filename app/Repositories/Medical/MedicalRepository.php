@@ -59,7 +59,7 @@ class MedicalRepository implements MedicalRepositoryInterface
 
     public function change_status(int $id): void
     {
-        $medical = Medical::with(['vat_buy', 'vat_sell', 'unit_measure'])->find($id);
+        $medical = $this->medicalModel->findOrFail($id);
 
         $medical->active = !$medical->active;
         $medical->save();

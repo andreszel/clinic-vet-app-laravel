@@ -183,6 +183,9 @@ return [
 
         //Admin - Medicals
         App\Providers\MedicalServiceProvider::class,
+
+        //Admin - Customers
+        App\Providers\CustomerServiceProvider::class,
     ],
 
     /*

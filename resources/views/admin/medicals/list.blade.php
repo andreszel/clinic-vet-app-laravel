@@ -69,14 +69,14 @@
                 <tbody>
                     @foreach($medicals ?? [] as $medical)
                     <tr>
-                        <td>{{ $medical->id }}</td>
+                        <td>{{ $counter++ }}.</td>
                         <td>
                             {{ $medical->name }}
 
-                            <a href="#" class="change-status {{ $medical->active ? 'text-success' : 'text-secondary' }} float-right" title="{{ $medical->active ? 'Wyłącz sprzedaż leku' : 'Włącz sprzedaż leku' }}" onclick="event.preventDefault(); document.getElementById('change-status-form').submit();">
+                            <a href="#" class="change-status {{ $medical->active ? 'text-success' : 'text-secondary' }} float-right" title="{{ $medical->active ? 'Wyłącz sprzedaż leku' : 'Włącz sprzedaż leku' }}" onclick="event.preventDefault(); document.getElementById('change-status-form-{{$medical->id}}').submit();">
                                 <i class="fas fa-check"></i>
                             </a>
-                            <form id="change-status-form" action="{{ route('medicals.change_status', ['id'=>$medical->id]) }}" method="POST" class="d-none">
+                            <form id="change-status-form-{{$medical->id}}" action="{{ route('medicals.change_status', ['id'=>$medical->id]) }}" method="POST" class="d-none">
                                 @csrf
                             </form>
                         </td>
@@ -93,8 +93,7 @@
                                 @method('DELETE')
                                 {{ csrf_field() }}
                                 <a href="{{ route('medicals.edit', ['id' => $medical->id]) }}" class="btn text-primary mr-2"><i class="fas fa-edit"></i></a>
-                                <button type="submit" class="btn text-danger mr-2" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt"></i></button>
-                                <button class="delete-medical btn text-danger mr-2"><i class="fas fa-trash-alt"></i></button>
+                                <button type="submit" class="btn text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -118,12 +117,3 @@
 @endsection
 
 @include('helpers.sections.datatables')
-
-@if(!$medicals->isEmpty())
-@section('javascript')
-const deleteUrlMedical = "{{ route('medicals.remove', ['id' => $medical->id]) }}";
-@endsection
-@section('js-files')
-<script src="{{ asset('js/delete-medical.js') }}"></script>
-@endsection
-@endif

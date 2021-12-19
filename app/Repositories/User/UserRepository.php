@@ -61,6 +61,14 @@ class UserRepository implements UserRepositoryInterface
         $user->update();
     }
 
+    public function change_status(int $id): void
+    {
+        $user = $this->userModel->findOrFail($id);
+
+        $user->active = !$user->active;
+        $user->save();
+    }
+
     public function filterBy(?string $phrase, ?string $email, ?string $phone, int $limit = self::LIMIT_DEFAULT)
     {
         $query = $this->userModel

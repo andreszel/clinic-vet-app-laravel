@@ -29,6 +29,7 @@ class UserController extends Controller
         $phrase = $request->get('phrase');
         $email = $request->get('email');
         $phone = $request->get('phone');
+        $page = $request->get('page');
         $limit = $request->get('limit', UserRepositoryInterface::LIMIT_DEFAULT);
 
         $resultPaginator = $this->userRepository->filterBy($phrase, $email, $phone, $limit);
@@ -38,11 +39,14 @@ class UserController extends Controller
             'phone' => $phone,
         ]);
 
+        $counter = ($page * $limit) + 1;
+
         return view('admin.users.list', [
             'users' => $resultPaginator,
             'phrase' => $phrase,
             'email' => $email,
-            'phone' => $phone
+            'phone' => $phone,
+            'counter' => $counter
         ]);
     }
 
@@ -54,7 +58,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::with('type')->find($id);
+        $user = User::with('type')->findOrFail($id);
         $types = UserTypes::get();
         $commission_servies = $this->userRepository::COMMISSION_SERVIES;
         $commission_medicals = $this->userRepository::COMMISSION_MEDICALS;
@@ -133,7 +137,8 @@ class UserController extends Controller
 
         $user = $this->userRepository->create($data);
 
-        return redirect()->route('users.edit', ['id' => $user->id])->with('success', 'Użytkownik został dodany!');
+        //return redirect()->route('users.edit', ['id' => $user->id])->with('success', 'Użytkownik został dodany!');
+        return redirect()->route('users.list')->with('success', 'Użytkownik został dodany!');
     }
 
     public function update(AddUser $request, int $userId)
@@ -143,6 +148,16 @@ class UserController extends Controller
         $this->userRepository->update($data, $userId);
 
         return redirect()->route('users.edit', ['id' => $userId])->with('success', 'Użytkownik został zaktualizowany!');
+    }
+
+    public function changeStatus(int $id)
+    {
+        if ($id == Auth::id()) {
+            return redirect()->back()->with('warning', 'Nie udało się, ponieważ swojego konta nie możesz wyłączyć!');
+        }
+
+        $this->userRepository->change_status($id);
+        return redirect()->back()->with('success', 'Status został zmieniony!');
     }
 
     public function show(Request $request, int $userId): View

@@ -7,12 +7,12 @@ $(function() {
             confirmButtonText: 'Tak',
             cancelButtonText: 'Anuluj'
         }).then((result) => {
-            /* if(result.value) {
+            if(result.value) {
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    method: "POST",
+                    method: "DELETE",
                     url: deleteUrlMedical,
                     data: {
                     }
@@ -24,7 +24,7 @@ $(function() {
                 .fail(function(data){
                     Swal.fire('Oops...', data.responseJSON.message, 'error');
                 });
-            } */
+            }
         });
     });
 });

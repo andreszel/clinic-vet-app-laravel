@@ -19,5 +19,6 @@ interface UserRepositoryInterface
     public function delete(int $userId);
     public function create(array $data);
     public function update(array $postData, int $userId): void;
+    public function change_status(int $id): void;
     public function filterBy(?string $phrase, ?string $email, ?string $phone, int $limit = self::LIMIT_DEFAULT);
 }
