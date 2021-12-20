@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdditionalServiceController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
@@ -69,6 +70,16 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::post('/store', [CustomerController::class, 'store'])->name('store');
         Route::put('/update/{id}', [CustomerController::class, 'update'])->name('update');
         Route::delete('/remove/{id}', [CustomerController::class, 'destroy'])->name('remove');
+    });
+
+    Route::group(['prefix' => 'additional-services', 'as' => 'additionalservices.'], function () {
+        Route::get('/', [AdditionalServiceController::class, 'index'])->name('list');
+        Route::get('/create', [AdditionalServiceController::class, 'create'])->name('create');
+        Route::get('/edit/{id}', [AdditionalServiceController::class, 'edit'])->name('edit');
+        Route::post('/store', [AdditionalServiceController::class, 'store'])->name('store');
+        Route::put('/update/{id}', [AdditionalServiceController::class, 'update'])->name('update');
+        Route::delete('/remove/{id}', [AdditionalServiceController::class, 'destroy'])->name('remove');
+        Route::post('/change-status/{id}', [AdditionalServiceController::class, 'changeStatus'])->name('change_status');
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {

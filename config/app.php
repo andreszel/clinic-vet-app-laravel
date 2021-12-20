@@ -186,6 +186,9 @@ return [
 
         //Admin - Customers
         App\Providers\CustomerServiceProvider::class,
+
+        //Admin - Additional Services
+        App\Providers\AdditionalServiceServiceProvider::class,
     ],
 
     /*

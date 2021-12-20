@@ -27,8 +27,8 @@
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item {{ request()->routeIs('additional.services.*') ? 'active' : '' }}">
-        <a class="nav-link" href="lista_uslug_dodatkowych.html">
+    <li class="nav-item {{ request()->routeIs('additional-services.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('additionalservices.list') }}">
             <i class="fas fa-fw fa-puzzle-piece"></i>
             <span>Usługi dodatkowe</span></a>
     </li>
