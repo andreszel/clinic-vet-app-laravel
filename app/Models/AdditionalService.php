@@ -21,7 +21,8 @@ class AdditionalService extends Model
         'vat_id',
         'set_price_in_add',
         'active',
-        'description'
+        'description',
+        'drive_to_customer'
     ];
 
     // ====> RELATIONS <====

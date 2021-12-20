@@ -14,4 +14,5 @@ interface AdditionalServiceRepositoryInterface
     public function create(array $data);
     public function update(array $postData, int $id): void;
     public function change_status(int $id): void;
+    public function change_status_drive_to_customer(int $id): void;
 }

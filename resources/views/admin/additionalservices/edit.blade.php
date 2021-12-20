@@ -105,6 +105,29 @@
                 </div>
             </div>
 
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label">Dojazd</label>
+                <div class="col-md-9">
+                    <div class="custom-controls-stacked">
+                        <div class="custom-control custom-radio">
+                            <input name="drive_to_customer" id="drive_to_customer_0" type="radio" required="required" class="custom-control-input" value="1" {{ $additionalservice->drive_to_customer ? 'checked="checked"' : '' }}>
+                            <label for="drive_to_customer_0" class="custom-control-label">Tak</label>
+                        </div>
+                    </div>
+                    <div class="custom-controls-stacked">
+                        <div class="custom-control custom-radio">
+                            <input name="drive_to_customer" id="drive_to_customer_1" type="radio" required="required" class="custom-control-input" value="0" {{ $additionalservice->drive_to_customer == false ? 'checked="checked"' : '' }}>
+                            <label for="drive_to_customer_1" class="custom-control-label">Nie</label>
+                        </div>
+                    </div>
+                    @error('drive_to_customer')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
 
 
             @if($errors->any())

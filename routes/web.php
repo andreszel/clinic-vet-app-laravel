@@ -80,6 +80,7 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::put('/update/{id}', [AdditionalServiceController::class, 'update'])->name('update');
         Route::delete('/remove/{id}', [AdditionalServiceController::class, 'destroy'])->name('remove');
         Route::post('/change-status/{id}', [AdditionalServiceController::class, 'changeStatus'])->name('change_status');
+        Route::post('/change-status-drive-to-customer/{id}', [AdditionalServiceController::class, 'changeStatusDriveToCustomer'])->name('change_status_drive_to_customer');
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {

@@ -28,9 +28,12 @@
                     <tr>
                         <th>Lp.</th>
                         <th>Nazwa</th>
-                        <th>Cena brutto [pln]</th>
-                        <th>VAT</th>
+                        <th>Cena netto [PLN]</th>
+                        <th>Cena brutto [PLN]</th>
+                        <th>VAT [PLN]</th>
+                        <th class="text-center px-3">VAT [%]</th>
                         <th>Włączona</th>
+                        <th>Dojazd</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -38,9 +41,12 @@
                     <tr>
                         <th>Lp.</th>
                         <th>Nazwa</th>
-                        <th>Cena brutto [pln]</th>
-                        <th>VAT</th>
+                        <th>Cena netto [PLN]</th>
+                        <th>Cena brutto [PLN]</th>
+                        <th>VAT [PLN]</th>
+                        <th class="text-center px-3">VAT [%]</th>
                         <th>Włączona</th>
+                        <th>Dojazd</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
@@ -49,8 +55,10 @@
                     <tr>
                         <td>{{ $counter++ }}.</td>
                         <td>{{ $additionalservice->name }}</td>
+                        <td class="text-right">{{ $additionalservice->net_price }}</td>
                         <td class="text-right">{{ $additionalservice->gross_price }}</td>
-                        <td class="text-center px-3">{{ $additionalservice->vat->name }}%</td>
+                        <td class="text-right">{{ $additionalservice->gross_price-$additionalservice->net_price }}</td>
+                        <td class="text-center px-3">{{ $additionalservice->vat->name }}</td>
                         <td>
                             {{ $additionalservice->active ? 'tak' : 'nie' }}
 
@@ -62,11 +70,21 @@
                             </form>
                         </td>
                         <td>
+                            {{ $additionalservice->drive_to_customer ? 'tak' : 'nie' }}
+
+                            <a href="#" class="change-status {{ $additionalservice->drive_to_customer ? 'text-success' : 'text-secondary' }} float-right" title="{{ $additionalservice->drive_to_customer ? 'Usługa jest dojazdem' : 'Usługa nie jest dojazdem' }}" onclick="event.preventDefault(); document.getElementById('change-status-drive-to-customer-form-{{$additionalservice->id}}').submit();">
+                                <i class="fas fa-check"></i>
+                            </a>
+                            <form id="change-status-drive-to-customer-form-{{$additionalservice->id}}" action="{{ route('additionalservices.change_status_drive_to_customer', ['id'=>$additionalservice->id]) }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </td>
+                        <td>
                             <form action="{{ route('additionalservices.remove', ['id' => $additionalservice->id]) }}" method="post">
                                 @method('DELETE')
                                 {{ csrf_field() }}
-                                <a href="{{ route('additionalservices.edit', ['id' => $additionalservice->id]) }}" class="btn text-primary mr-2"><i class="fas fa-edit"></i></a>
-                                <button type="submit" class="btn text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
+                                <a href="{{ route('additionalservices.edit', ['id' => $additionalservice->id]) }}" class="btn btn-sm text-primary mr-2"><i class="fas fa-edit"></i></a>
+                                <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
                     </tr>

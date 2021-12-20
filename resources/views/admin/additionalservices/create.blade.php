@@ -29,7 +29,7 @@
                 <label for="gross_price" class="col-3 col-form-label">Cena brutto</label>
                 <div class="col-2">
                     <div class="input-group">
-                        <input value="{{ old('gross_price') }}" id="gross_price" name="gross_price" placeholder="Wpisz cenę brutto" type="text" class="form-control" required="required">
+                        <input value="{{ old('gross_price') }}" id="gross_price" name="gross_price" placeholder="Wpisz cenę brutto" type="text" class="form-control">
                         <div class="input-group-append">
                             <div class="input-group-text">PLN</div>
                         </div>
@@ -41,6 +41,7 @@
                     @enderror
                 </div>
             </div>
+
             <div class="form-group row">
                 <label class="col-md-3" for="vat_id">Vat sprzedaży</label>
                 <div class="col-md-1">
@@ -62,13 +63,13 @@
                 <div class="col-md-9">
                     <div class="custom-controls-stacked">
                         <div class="custom-control custom-radio">
-                            <input name="set_price_in_visit" id="set_price_in_visit_0" type="radio" required="required" class="custom-control-input" value="1" checked="checked">
+                            <input name="set_price_in_visit" id="set_price_in_visit_0" type="radio" required="required" class="custom-control-input" value="1">
                             <label for="set_price_in_visit_0" class="custom-control-label">Tak</label>
                         </div>
                     </div>
                     <div class="custom-controls-stacked">
                         <div class="custom-control custom-radio">
-                            <input name="set_price_in_visit" id="set_price_in_visit_1" type="radio" required="required" class="custom-control-input" value="0">
+                            <input name="set_price_in_visit" id="set_price_in_visit_1" type="radio" required="required" class="custom-control-input" value="0" checked="checked">
                             <label for="set_price_in_visit_1" class="custom-control-label">Nie</label>
                         </div>
                     </div>
@@ -113,6 +114,29 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label">Dojazd</label>
+                <div class="col-md-9">
+                    <div class="custom-controls-stacked">
+                        <div class="custom-control custom-radio">
+                            <input name="drive_to_customer" id="drive_to_customer_0" type="radio" required="required" class="custom-control-input" value="1">
+                            <label for="drive_to_customer_0" class="custom-control-label">Tak</label>
+                        </div>
+                    </div>
+                    <div class="custom-controls-stacked">
+                        <div class="custom-control custom-radio">
+                            <input name="drive_to_customer" id="drive_to_customer_1" type="radio" required="required" class="custom-control-input" value="0" checked="checked">
+                            <label for="drive_to_customer_1" class="custom-control-label">Nie</label>
+                        </div>
+                    </div>
+                    @error('drive_to_customer')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
             </div>
 
             @if($errors->any())

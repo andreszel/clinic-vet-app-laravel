@@ -26,10 +26,11 @@ class AddAdditionalServices extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'vat_id' => ['required', 'exists:vats,id'],
-            'gross_price' => ['required_without:set_price_in_visit', 'regex:/^\d*([\.\,]\d{2})?$/'],
+            //'gross_price' => ['required_without:set_price_in_visit', 'regex:/^\d*([\.\,]\d{2})?$/'],
             'set_price_in_visit' => ['required'],
             'active' => ['required'],
-            'description' => []
+            'description' => [],
+            'drive_to_customer' => ['required']
         ];
     }
 }

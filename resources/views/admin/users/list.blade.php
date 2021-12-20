@@ -29,7 +29,8 @@
                         <th>Typ konta</th>
                         <th>Email</th>
                         <th>Telefon</th>
-                        <th>Prowizja usługi/leki</th>
+                        <th>Prowizja usługi</th>
+                        <th>Prowizja leki</th>
                         <th>Konto aktywne</th>
                         <th>#</th>
                     </tr>
@@ -41,7 +42,8 @@
                         <th>Typ konta</th>
                         <th>Email</th>
                         <th>Telefon</th>
-                        <th>Prowizja usługi/leki</th>
+                        <th>Prowizja usługi</th>
+                        <th>Prowizja leki</th>
                         <th>Konto aktywne</th>
                         <th>#</th>
                     </tr>
@@ -54,7 +56,8 @@
                         <td>{{ $user->type->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone }}</td>
-                        <td>{{ $user->commission_services }}/{{ $user->commission_medicals }}</td>
+                        <td>{{ $user->commission_services }}%</td>
+                        <td>{{ $user->commission_medicals }}%</td>
                         <td>
                             {{ $user->active ? 'tak' : 'nie' }}
                             @if($user->id != Auth::id())

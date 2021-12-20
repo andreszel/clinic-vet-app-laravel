@@ -22,6 +22,7 @@ class CreateAdditionalServicesTable extends Migration
             $table->unsignedBigInteger('vat_id')->unsigned()->index()->nullable()->default(2); //8% default
             $table->boolean('active')->default(true);
             $table->string('description')->nullable();
+            $table->boolean('drive_to_customer')->default(false);
             $table->timestamps();
 
             $table->foreign('vat_id')->references('id')->on('vats');

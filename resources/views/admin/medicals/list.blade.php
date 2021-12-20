@@ -92,8 +92,8 @@
                             <form action="{{ route('medicals.remove', ['id' => $medical->id]) }}" method="post">
                                 @method('DELETE')
                                 {{ csrf_field() }}
-                                <a href="{{ route('medicals.edit', ['id' => $medical->id]) }}" class="btn text-primary mr-2"><i class="fas fa-edit"></i></a>
-                                <button type="submit" class="btn text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
+                                <a href="{{ route('medicals.edit', ['id' => $medical->id]) }}" class="btn btn-sm text-primary mr-2"><i class="fas fa-edit"></i></a>
+                                <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
                     </tr>

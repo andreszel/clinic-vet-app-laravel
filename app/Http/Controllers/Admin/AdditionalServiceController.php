@@ -62,10 +62,16 @@ class AdditionalServiceController extends Controller
     public function store(AddAdditionalServices $request)
     {
         $data = $request->validated();
-        $vat = Vats::where('id', $request['vat_id'])->first();
-        $vatDivisor  = 1 + ((int)$vat->name / 100);
-        $netPrice = number_format($request['gross_price'] / $vatDivisor, 2);
-        $data['net_price'] = $netPrice;
+
+        if ($data['set_price_in_visit'] == 1) {
+            $data['net_price'] = 0;
+            $data['gross_price'] = 0;
+        } else {
+            $vat = Vats::where('id', $request['vat_id'])->first();
+            $vatDivisor  = 1 + ((int)$vat->name / 100);
+            $netPrice = number_format($request['gross_price'] / $vatDivisor, 2);
+            $data['net_price'] = $netPrice;
+        }
 
         $additionalservices = $this->additionalServiceRepository->create($data);
 
@@ -110,11 +116,17 @@ class AdditionalServiceController extends Controller
     public function update(AddAdditionalServices $request, int $id)
     {
         $data = $request->validated();
-        $vat = Vats::where('id', $request['vat_id'])->first();
-        $vatDivisor  = 1 + ((int)$vat->name / 100);
-        $netPrice = number_format($request['gross_price'] / $vatDivisor, 2);
-        $data['net_price'] = $netPrice;
-        dd($data);
+
+        if ($data['set_price_in_visit'] == 1) {
+            $data['net_price'] = '';
+            $data['gross_price'] = '';
+        } else {
+            $vat = Vats::where('id', $request['vat_id'])->first();
+            $vatDivisor  = 1 + ((int)$vat->name / 100);
+            $netPrice = number_format($request['gross_price'] / $vatDivisor, 2);
+            $data['net_price'] = $netPrice;
+        }
+
         $this->additionalServiceRepository->update($data, $id);
 
         return redirect()->route('additionalservices.list')->with('success', 'Usługa dodatkowa została zaktualizowana!');
@@ -137,5 +149,12 @@ class AdditionalServiceController extends Controller
         $this->additionalServiceRepository->change_status($id);
 
         return redirect()->back()->with('success', 'Status został zmieniony!');
+    }
+
+    public function changeStatusDriveToCustomer(int $id)
+    {
+        $this->additionalServiceRepository->change_status_drive_to_customer($id);
+
+        return redirect()->back()->with('success', 'Status dojazd w usłudze został zmieniony!');
     }
 }

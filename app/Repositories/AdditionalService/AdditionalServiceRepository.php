@@ -58,4 +58,12 @@ class AdditionalServiceRepository implements AdditionalServiceRepositoryInterfac
         $additionalservice->active = !$additionalservice->active;
         $additionalservice->save();
     }
+
+    public function change_status_drive_to_customer(int $id): void
+    {
+        $additionalservice = $this->additionalServiceModel->findOrFail($id);
+
+        $additionalservice->drive_to_customer = !$additionalservice->drive_to_customer;
+        $additionalservice->save();
+    }
 }
