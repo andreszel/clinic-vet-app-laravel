@@ -33,18 +33,6 @@ class AdditionalServiceController extends Controller
 
         $counter = ($page * $limit) + 1;
 
-        /* if (empty($request->session()->get('currentDate'))) {
-            $currentDate = $request->session()->get('currentDate');
-            $currentDate = date("Y-m-d H:i:s");
-            $request->session()->put('currentDate', $currentDate);
-        } else {
-            $currentDate = date("Y-m-d H:i:s");
-            $request->session()->put('currentDate', $currentDate);
-        }
-
-
-        $flash_value_session = $request->session()->get('currentDate');
-        dump($flash_value_session); */
 
 
         return view('admin.additionalservices.list', [

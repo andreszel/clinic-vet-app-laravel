@@ -47,9 +47,7 @@
             <span>Klienci kliniki</span></a>
     </li>
 
-    @php $user = Auth::user(); @endphp
-
-    @if($user->type_id == 1)
+    @can('admin-level')
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -66,7 +64,7 @@
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Raporty</span></a>
     </li>
-    @endif
+    @endcan
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
