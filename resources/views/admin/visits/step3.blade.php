@@ -28,13 +28,13 @@
             </div>
         </form>
 
-        <div class="row mb-5">
+        @if($errors->any())
+        <div class="row mt-3 mb-5">
             <div class="col-md-12">
-                @if($errors->any())
                 {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-                @endif
             </div>
         </div>
+        @endif
 
         <div class="row">
             <div class="col-md-12">

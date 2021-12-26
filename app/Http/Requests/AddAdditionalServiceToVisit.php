@@ -33,4 +33,12 @@ class AddAdditionalServiceToVisit extends FormRequest
             //'gross_price' => 'required'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'visit_id.exists' => 'Usługa, którą próbujesz dodać nie istnieje w naszej bazie',
+            'additional_service_id.unique' => 'Ta usługa jest już dodany do wizyty'
+        ];
+    }
 }
