@@ -104,7 +104,7 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
 
         // Step 4 - podsumowanie - zatwierdzenie wizyty
         Route::get('/summary/{id}', [VisitController::class, 'summary'])->name('summary');
-        Route::post('/store-summary', [VisitController::class, 'store_summary'])->name('store_summary');
+        Route::put('/store-summary/{id}', [VisitController::class, 'store_summary'])->name('store_summary');
 
         Route::get('/edit/{id}', [VisitController::class, 'edit'])->name('edit');
         //Route::put('/update/{id}', [VisitController::class, 'update'])->name('update');

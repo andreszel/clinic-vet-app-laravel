@@ -15,11 +15,15 @@ class VatsSeeder extends Seeder
     public function run()
     {
         DB::table('vats')->insert([
-            'name' => 8
+            'name' => 8,
+            true,
+            false
         ]);
 
         DB::table('vats')->insert([
-            'name' => 23
+            'name' => 23,
+            false,
+            true
         ]);
     }
 }

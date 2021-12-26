@@ -48,7 +48,7 @@
                     <div class="input-group">
                         <select id="vat_buy_id" name="vat_buy_id" required="required" class="custom-select">
                             @foreach($vats as $vat)
-                            <option value="{{ $vat->id }}" {{ $vat->id ? 'selected="selected"' : '' }}>{{ $vat->name }}</option>
+                            <option value="{{ $vat->id }}" {{ $vat->default_medicals ? 'selected="selected"' : '' }}>{{ $vat->name }}</option>
                             @endforeach
                         </select>
                         <div class="input-group-append">
@@ -97,7 +97,7 @@
                     <div class="input-group">
                         <select id="vat_sell_id" name="vat_sell_id" required="required" class="custom-select">
                             @foreach($vats as $vat)
-                            <option value="{{ $vat->id }}" {{ $vat->id ? 'selected="selected"' : '' }}>{{ $vat->name }}</option>
+                            <option value="{{ $vat->id }}" {{ $vat->default_medicals ? 'selected="selected"' : '' }}>{{ $vat->name }}</option>
                             @endforeach
                         </select>
                         <div class="input-group-append">

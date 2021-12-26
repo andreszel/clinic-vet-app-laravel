@@ -188,8 +188,8 @@
 
         <div class="row mt-4 mb-1">
             <div class="col-md-12">
-                <a href="{{ route('visits.step2', ['id'=>$visit->id]) }}" class="btn btn-success float-left" title="Krok 1 - parametry podstawowe">Krok 2 - dodawanie leków</a>
-                <a href="#" class="btn btn-success float-right" title="Krok 3 - dodawanie usług">Krok 4 - podsumowanie</a>
+                <a href="{{ route('visits.step2', ['id'=>$visit->id]) }}" class="btn btn-success float-left" title="Krok 2 - parametry podstawowe">Krok 2 - dodawanie leków</a>
+                <a href="{{ route('visits.summary', ['id'=>$visit->id]) }}" class="btn btn-success float-right" title="Krok 4 - Podsumowanie">Krok 4 - podsumowanie</a>
             </div>
         </div>
 

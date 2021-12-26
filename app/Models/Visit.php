@@ -26,12 +26,12 @@ class Visit extends Model
 
     public function user()
     {
-        return $this->belongsTo(Users::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function customer()
     {
-        return $this->belongsTo(Customers::class, 'customer_id', 'id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
     public function pay_type()

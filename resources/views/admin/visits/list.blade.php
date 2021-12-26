@@ -25,6 +25,8 @@
                         <th>Data wizyty</th>
                         <th>Cena brutto [PLN]</th>
                         <th>Lekarz</th>
+                        <th>Wizyta potwierdzona</th>
+                        <th>Data potwierdzenia</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -35,17 +37,21 @@
                         <th>Data wizyty</th>
                         <th>Cena brutto [PLN]</th>
                         <th>Lekarz</th>
+                        <th>Wizyta potwierdzona</th>
+                        <th>Data potwierdzenia</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
                 <tbody>
                     @foreach($visits ?? [] as $visit)
-                    <tr>
+                    <tr class="{{ $visit->confirm_visit ? 'text-success' : 'text-warning' }}">
                         <td>{{ $counter++ }}.</td>
                         <td>{{ $visit->customer->name }} {{ $visit->customer->surname }}</td>
                         <td>{{ $visit->visit_date }}</td>
                         <td class="text-right">{{ $visit->gross_price }}</td>
                         <td>{{ $visit->user->name }} {{ $visit->user->surname }}</td>
+                        <td>{{ $visit->confirm_visit ? 'tak' : 'nie' }}</td>
+                        <td>{{ $visit->confirm_visit ? $visit->updated_at : '' }}</td>
                         <td>
                             <form action="{{ route('visits.remove', ['id' => $visit->id]) }}" method="post">
                                 @method('DELETE')
@@ -53,13 +59,15 @@
                                 <a href="#" class="btn text-primary" title="Podgląd wydruku">
                                     <i class="far fa-file-pdf"></i>
                                 </a>
-                                <a href="#" class="btn text-primary" title="Szczegóły wizyty">
+                                <a href="{{ route('visits.summary', ['id' => $visit->id]) }}" class="btn text-primary" title="Szczegóły wizyty">
                                     <i class="fas fa-info"></i>
                                 </a>
-                                <a href="{{ route('visits.edit', ['id' => $visit->id]) }}" class="btn btn-sm text-primary mr-2">
+                                @if($visitRepository->canManageVisit($visit->id))
+                                <a href="{{ route('visits.edit', ['id' => $visit->id]) }}" class="btn btn-sm text-primary mr-2" title="Edytuj wizytę">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
+                                @endif
                             </form>
                         </td>
                     </tr>

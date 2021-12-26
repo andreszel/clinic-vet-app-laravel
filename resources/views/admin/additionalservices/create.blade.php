@@ -48,7 +48,7 @@
                     <div class="input-group">
                         <select id="vat_id" name="vat_id" required="required" class="custom-select">
                             @foreach($vats as $vat)
-                            <option value="{{ $vat->id }}" {{ $vat->id == 2 ? 'selected="selected"' : '' }}>{{ $vat->name }}</option>
+                            <option value="{{ $vat->id }}" {{ $vat->default_services ? 'selected="selected"' : '' }}>{{ $vat->name }}</option>
                             @endforeach
                         </select>
                         <div class="input-group-append">

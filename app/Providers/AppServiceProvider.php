@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
         // add Str::currency macro
         Str::macro('currency', function ($price) {
-            return number_format($price, 2, '.', '\'');
+            return number_format($price, 2, '.', ' ');
         });
     }
 }

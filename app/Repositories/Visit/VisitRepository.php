@@ -6,6 +6,7 @@ use App\Interfaces\VisitRepositoryInterface;
 use App\Models\Visit;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class VisitRepository implements VisitRepositoryInterface
 {
@@ -51,6 +52,7 @@ class VisitRepository implements VisitRepositoryInterface
         $visit->gross_price = $postData['gross_price'] ?? $visit->gross_price;
         $visit->pay_type_id = $postData['pay_type_id'] ?? $visit->pay_type_id;
         $visit->visit_cleared = $postData['visit_cleared'] ?? $visit->visit_cleared;
+        $visit->confirm_visit = $postData['confirm_visit'] ?? $visit->confirm_visit;
         $visit->description = $postData['description'] ?? $visit->description;
 
         $visit->update();
@@ -58,9 +60,18 @@ class VisitRepository implements VisitRepositoryInterface
 
     public function filterBy(?string $phrase, int $limit = self::LIMIT_DEFAULT)
     {
-        $query = $this->visitModel
-            ->with(['user', 'customer', 'pay_type'])
-            ->orderBy('created_at');
+        $user = Auth::user();
+
+        if ($user->type_id == 1) {
+            $query = $this->visitModel
+                ->with(['user', 'customer', 'pay_type'])
+                ->orderBy('created_at');
+        } else {
+            $query = $this->visitModel
+                ->where('user_id', $user->id)
+                ->with(['user', 'customer', 'pay_type'])
+                ->orderBy('created_at');
+        }
 
         if ($phrase) {
             $query->whereRaw('name like ?', ["$phrase%"]);
@@ -71,8 +82,8 @@ class VisitRepository implements VisitRepositoryInterface
 
     public function maxVisitNumber(int $customerId): int
     {
-        $start = Carbon::now()->startOfMonth()->toDateString();
-        $end = Carbon::now()->endOfMonth()->toDateString();
+        $start = Carbon::now()->startOfMonth()->timezone('Europe/Warsaw')->toDateString();
+        $end = Carbon::now()->endOfMonth()->timezone('Europe/Warsaw')->toDateString();
 
         $max_visit = $this->visitModel
             ->where('customer_id', $customerId)
@@ -85,5 +96,28 @@ class VisitRepository implements VisitRepositoryInterface
         } else {
             return 1;
         }
+    }
+
+    public function canManageVisit(int $id): bool
+    {
+        $visit = $this->visitModel
+            ->with(['user'])
+            ->where('id', $id)
+            ->first();
+
+        $canManage = false;
+
+        if ($visit->user->type_id == 1) {
+            $canManage = true;
+        } else {
+            $startTime = Carbon::parse($visit->updated_at)->timezone('Europe/Warsaw');
+            $finishTime = Carbon::now()->timezone('Europe/Warsaw');
+            $totalDuration = $finishTime->diffInMinutes($startTime);
+            if ($totalDuration < self::MAX_TIME_TO_EDIT) {
+                $canManage = true;
+            }
+        }
+
+        return $canManage;
     }
 }

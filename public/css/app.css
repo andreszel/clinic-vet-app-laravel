@@ -18815,4 +18815,7 @@ readers do not read off random characters that represent icons */
 .visit-date {
     width: 116px !important;
 }
+.forms-inline {
+    display: inline !important;
+}
 
