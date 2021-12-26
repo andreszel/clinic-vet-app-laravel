@@ -89,6 +89,8 @@ class AdditionalServiceController extends Controller
             $data['net_price'] = $netPrice;
         }
 
+        $data['set_price_in_visit'] = $request['set_price_in_visit'] ? 1 : 0;
+
         $additionalservices = $this->additionalServiceRepository->create($data);
 
         return redirect()->route('additionalservices.list')->with('success', 'Usługa dodatkowa została dodana!');
@@ -142,6 +144,7 @@ class AdditionalServiceController extends Controller
             $netPrice = number_format($request['gross_price'] / $vatDivisor, 2);
             $data['net_price'] = $netPrice;
         }
+        $data['set_price_in_visit'] = $request['set_price_in_visit'] ? 1 : 0;
 
         $this->additionalServiceRepository->update($data, $id);
 

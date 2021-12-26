@@ -77,10 +77,22 @@
                                     <form class="form-inline" action="{{ route('visits.add_additional_service', ['id' => $visit->id, 'additional_service_id'=>$additional_service->id]) }}" method="POST">
                                         <input type="hidden" name="visit_id" value="{{$visit->id}}">
                                         <input type="hidden" name="additional_service_id" value="{{$additional_service->id}}">
+                                        <input type="hidden" name="set_price_in_visit" value="{{$additional_service->set_price_in_visit}}">
                                         @csrf
                                         @method('POST')
+                                        @if($additional_service->set_price_in_visit)
                                         <div class="col-auto">
-                                            <input type="number" name="quantity" id="quantity" value="1" class="form-control" placeholder="Wpisz ilość" required="required" />
+                                            Cena
+                                        </div>
+                                        <div class="col-auto">
+                                            <input type="text" name="gross_price" id="gross_price" value="" class="form-control price-format" placeholder="Wpisz cenę" required="required" />
+                                        </div>
+                                        @endif
+                                        <div class="col-auto">
+                                            Ilość
+                                        </div>
+                                        <div class="col-auto">
+                                            <input type="number" name="quantity" id="quantity" value="1" class="form-control col-4" placeholder="Wpisz ilość" required="required" />
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i></button>
@@ -158,7 +170,7 @@
                 </div>
                 <div class="row my-5">
                     <div class="col-md-12 text-right">
-                        <h4>Suma wszystkich leków: {{ $sum_all_services }} PLN</h4>
+                        <h4>Suma wszystkich dodanych usług: {{ Str::currency($sum_all_services) }} PLN</h4>
                     </div>
                 </div>
                 @else
@@ -185,4 +197,4 @@
 </div>
 @endsection
 
-@include('helpers.sections.datetime_visit')
+@include('helpers.sections.format_price')

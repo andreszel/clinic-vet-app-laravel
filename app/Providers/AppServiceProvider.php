@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,5 +31,10 @@ class AppServiceProvider extends ServiceProvider
         view()->share('appName', 'Clinic VET APP');
         View::share('appTitle', 'Panel administracyjny - Clinic VET APP');
         //Schema::defaultStringLength(191);
+
+        // add Str::currency macro
+        Str::macro('currency', function ($price) {
+            return number_format($price, 2, '.', '\'');
+        });
     }
 }

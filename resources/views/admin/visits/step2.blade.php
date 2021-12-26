@@ -163,7 +163,7 @@
                 </div>
                 <div class="row my-5">
                     <div class="col-md-12 text-right">
-                        <h4>Suma wszystkich leków: {{ $sum_all_medicals }} PLN</h4>
+                        <h4>Suma wszystkich leków: {{ Str::currency($sum_all_medicals) }} PLN</h4>
                     </div>
                 </div>
                 @else
@@ -189,5 +189,3 @@
     </div>
 </div>
 @endsection
-
-@include('helpers.sections.datetime_visit')

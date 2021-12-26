@@ -64,13 +64,13 @@
                 <div class="col-md-9">
                     <div class="custom-controls-stacked">
                         <div class="custom-control custom-radio">
-                            <input name="set_price_in_visit" id="set_price_in_visit_1" type="radio" required="required" class="custom-control-input" value="1" {{ $additionalservice->set_price_in_visit ? 'checked="checked"' : '' }}>
+                            <input name="set_price_in_visit" id="set_price_in_visit_1" type="radio" required="required" class="custom-control-input" value="1" {{ $additionalservice->set_price_in_visit == 1 ? 'checked="checked"' : '' }}>
                             <label for="set_price_in_visit_1" class="custom-control-label">Tak</label>
                         </div>
                     </div>
                     <div class="custom-controls-stacked">
                         <div class="custom-control custom-radio">
-                            <input name="set_price_in_visit" id="set_price_in_visit_0" type="radio" required="required" class="custom-control-input" value="0" {{ $additionalservice->set_price_in_visit == false ? 'checked="checked"' : '' }}>
+                            <input name="set_price_in_visit" id="set_price_in_visit_0" type="radio" required="required" class="custom-control-input" value="0" {{ $additionalservice->set_price_in_visit == 0 ? 'checked="checked"' : '' }}>
                             <label for="set_price_in_visit_0" class="custom-control-label">Nie</label>
                         </div>
                     </div>

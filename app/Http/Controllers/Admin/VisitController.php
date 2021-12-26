@@ -11,6 +11,7 @@ use App\Models\AdditionalService;
 use App\Models\Customer;
 use App\Models\Medical;
 use App\Models\PayTypes;
+use App\Models\Vats;
 use App\Models\Visit;
 use App\Models\VisitAdditionalService;
 use App\Models\VisitMedical;
@@ -230,14 +231,19 @@ class VisitController extends Controller
             ->where('active', 1)
             ->first();
 
+        $grossPrice = ($additional_service->set_price_in_visit ? $postData['gross_price'] : $additional_service->gross_price);
+        $vat = Vats::where('id', $additional_service->vat_id)->first();
+        $vatDivisor  = 1 + ((int)$vat->name / 100);
+        $netPrice = number_format($grossPrice / $vatDivisor, 2);
+
         $visit_additional_service = new VisitAdditionalService();
 
         $visit_additional_service->visit_id = $postData['visit_id'];
         $visit_additional_service->additional_service_id = $additional_service->id;
         $visit_additional_service->quantity = $postData['quantity'];
         $visit_additional_service->vat_id = $additional_service->vat_id;
-        $visit_additional_service->net_price = $additional_service->net_price;
-        $visit_additional_service->gross_price = $additional_service->gross_price;
+        $visit_additional_service->net_price = $netPrice;
+        $visit_additional_service->gross_price = $grossPrice;
         //dd($visit_additional_service);
         $visit_additional_service->save();
 
