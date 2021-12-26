@@ -21,6 +21,7 @@
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
     @yield('datatables-css')
+    @yield('datetime-visit-css')
 </head>
 
 <body id="page-top">
@@ -109,6 +110,8 @@
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
     @yield('charts')
+
+    @yield('datetime-visit-js')
 
     <script type="text/javascript">
         @yield('javascript')

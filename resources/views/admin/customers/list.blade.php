@@ -56,8 +56,12 @@
                             <form action="{{ route('customers.remove', ['id' => $customer->id]) }}" method="post">
                                 @method('DELETE')
                                 {{ csrf_field() }}
-                                <a href="{{ route('customers.edit', ['id' => $customer->id]) }}" class="btn btn-sm text-primary mr-2"><i class="fas fa-edit"></i></a>
+                                <a href="{{ route('customers.edit', ['id' => $customer->id]) }}" class="btn btn-sm text-primary mr-2" title="Edytuj klienta"><i class="fas fa-edit"></i></a>
                                 <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                            <form action="{{ route('visits.store_new_visit', ['customerId' => $customer->id]) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm text-primary mr-2" title="Dodaj nową wizytę lekarską"><i class="fas fa-fw fa-briefcase-medical"></i></button>
                             </form>
                         </td>
                     </tr>

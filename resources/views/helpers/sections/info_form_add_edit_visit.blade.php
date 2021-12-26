@@ -1,0 +1,1 @@
+<p class="mb-4">Dodawanie nowej wizyty składa się z kilku kroków. Po pierwsze wybierasz Klienta, dla którego chcesz dodać wizytę, po drugie wybierasz leki, po trzecie wybierasz usługi, a na koniec możesz zobaczyć podsumowanie. <a target="_blank" href="https://datatables.net">Pomoc</a>.</p>

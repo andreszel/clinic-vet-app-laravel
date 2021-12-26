@@ -29,8 +29,8 @@ class CreateMedicalsTable extends Migration
             $table->timestamps();
 
             $table->foreign('unit_measure_id')->references('id')->on('unit_measures');
-            $table->foreign('vat_buy_id')->references('id')->on('unit_measures');
-            $table->foreign('vat_sell_id')->references('id')->on('unit_measures');
+            $table->foreign('vat_buy_id')->references('id')->on('vats');
+            $table->foreign('vat_sell_id')->references('id')->on('vats');
         });
     }
 

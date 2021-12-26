@@ -43,4 +43,9 @@ class Medical extends Model
     {
         return $this->belongsTo(UnitMeasure::class, 'unit_measure_id', 'id');
     }
+
+    public function visits()
+    {
+        return $this->belongsToMany(Visit::class, 'visits');
+    }
 }

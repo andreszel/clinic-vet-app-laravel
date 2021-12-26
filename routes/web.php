@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MedicalController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupportController;
+use App\Http\Controllers\Admin\VisitController;
 use App\Mail\TempPassChange;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +82,33 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::delete('/remove/{id}', [AdditionalServiceController::class, 'destroy'])->name('remove');
         Route::post('/change-status/{id}', [AdditionalServiceController::class, 'changeStatus'])->name('change_status');
         Route::post('/change-status-drive-to-customer/{id}', [AdditionalServiceController::class, 'changeStatusDriveToCustomer'])->name('change_status_drive_to_customer');
+    });
+
+    Route::group(['prefix' => 'visits', 'as' => 'visits.'], function () {
+        Route::get('/', [VisitController::class, 'index'])->name('list');
+
+        // Create new visit
+        Route::post('/store_new_visit/{customerId}', [VisitController::class, 'store_new_visit'])->name('store_new_visit');
+
+        // Step 1 -  - klient, forma płatności, data wizyty
+        Route::get('/step1/{id}', [VisitController::class, 'step1'])->name('step1');
+        Route::put('/store-step-1/{id}', [VisitController::class, 'store_step1'])->name('store_step1');
+
+        // Step 2 - leki
+        Route::get('/step2/{id}', [VisitController::class, 'step2'])->name('step2');
+        Route::post('/add_medical/{id}/{medical_id}', [VisitController::class, 'add_medical'])->name('add_medical');
+
+        // Step 3 - usługi dodatkowe
+        Route::get('/step3/{id}', [VisitController::class, 'step3'])->name('step3');
+        Route::post('/add_additional_service/{id}/{additional_service_id}', [VisitController::class, 'add_additional_service'])->name('add_additional_service');
+
+        // Step 4 - podsumowanie - zatwierdzenie wizyty
+        Route::get('/summary/{id}', [VisitController::class, 'summary'])->name('summary');
+        Route::post('/store-summary', [VisitController::class, 'store_summary'])->name('store_summary');
+
+        Route::get('/edit/{id}', [VisitController::class, 'edit'])->name('edit');
+        //Route::put('/update/{id}', [VisitController::class, 'update'])->name('update');
+        Route::delete('/remove/{id}', [VisitController::class, 'destroy'])->name('remove');
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {

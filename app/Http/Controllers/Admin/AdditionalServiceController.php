@@ -33,9 +33,24 @@ class AdditionalServiceController extends Controller
 
         $counter = ($page * $limit) + 1;
 
+        /* if (empty($request->session()->get('currentDate'))) {
+            $currentDate = $request->session()->get('currentDate');
+            $currentDate = date("Y-m-d H:i:s");
+            $request->session()->put('currentDate', $currentDate);
+        } else {
+            $currentDate = date("Y-m-d H:i:s");
+            $request->session()->put('currentDate', $currentDate);
+        }
+
+
+        $flash_value_session = $request->session()->get('currentDate');
+        dump($flash_value_session); */
+
+
         return view('admin.additionalservices.list', [
             'additionalservices' => $additionalservices,
-            'counter' => $counter
+            'counter' => $counter,
+            //'flash_value_session' => $flash_value_session
         ]);
     }
 
@@ -69,6 +84,7 @@ class AdditionalServiceController extends Controller
         } else {
             $vat = Vats::where('id', $request['vat_id'])->first();
             $vatDivisor  = 1 + ((int)$vat->name / 100);
+            $data['gross_price'] = number_format($request['gross_price'], 2);
             $netPrice = number_format($request['gross_price'] / $vatDivisor, 2);
             $data['net_price'] = $netPrice;
         }
@@ -118,8 +134,8 @@ class AdditionalServiceController extends Controller
         $data = $request->validated();
 
         if ($data['set_price_in_visit'] == 1) {
-            $data['net_price'] = '';
-            $data['gross_price'] = '';
+            $data['net_price'] = 0;
+            $data['gross_price'] = 0;
         } else {
             $vat = Vats::where('id', $request['vat_id'])->first();
             $vatDivisor  = 1 + ((int)$vat->name / 100);

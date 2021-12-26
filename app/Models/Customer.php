@@ -28,4 +28,9 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function visits()
+    {
+        return $this->belongsTo(Visit::class, 'user_id', 'id');
+    }
 }

@@ -189,6 +189,9 @@ return [
 
         //Admin - Additional Services
         App\Providers\AdditionalServiceServiceProvider::class,
+
+        //Admin - Visit Services
+        App\Providers\VisitServiceProvider::class,
     ],
 
     /*

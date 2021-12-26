@@ -35,7 +35,7 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item {{ request()->routeIs('visits.*') ? 'active' : '' }}">
-        <a class="nav-link" href="lista_wizyt.html">
+        <a class="nav-link" href="{{ route('visits.list') }}">
             <i class="fas fa-fw fa-briefcase-medical"></i>
             <span>Wizyty lekarskie</span></a>
     </li>

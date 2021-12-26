@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="commission_services" class="col-md-3 col-form-label">Prowizja usługi</label>
+                <label for="commission_services" class="col-md-3 col-form-label">Prowizja usługi(oprócz dojazdów)</label>
                 <div class="col-md-9">
                     <div class="input-group">
                         <input value="{{ $commission_servies }}" id="commission_services" name="commission_services" placeholder="Wpisz wysokość prowizji" type="number" class="form-control" required="required">

@@ -4,6 +4,7 @@
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-gray-800">Usługi dodatkowe</h1>
 
+
 @if(!$additionalservices->isEmpty())
 <div class="row mb-3">
     <div class="col-md-12">
