@@ -98,7 +98,7 @@ class VisitRepository implements VisitRepositoryInterface
         }
     }
 
-    public function canManageVisit(int $id): bool
+    /* public function canManageVisit(int $id): bool
     {
         $user = Auth::user();
         $visit = $this->visitModel
@@ -125,5 +125,5 @@ class VisitRepository implements VisitRepositoryInterface
         }
 
         return $canManage;
-    }
+    } */
 }

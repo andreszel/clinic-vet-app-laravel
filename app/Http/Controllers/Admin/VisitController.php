@@ -15,6 +15,7 @@ use App\Models\Vats;
 use App\Models\Visit;
 use App\Models\VisitAdditionalService;
 use App\Models\VisitMedical;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -78,12 +79,11 @@ class VisitController extends Controller
      */
     public function edit($id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
 
-        if ($canManage)
-            return redirect()->route('visits.step1', ['id' => $id]);
-        else
-            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
+        return redirect()->route('visits.step1', ['id' => $id]);
     }
 
     /**
@@ -93,11 +93,13 @@ class VisitController extends Controller
      */
     public function step1(Request $request, $id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
-
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
+        /* 
         if (!$canManage) {
             return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
-        }
+        } */
 
         $currentStep = 1;
         $pay_types = PayTypes::get();
@@ -122,11 +124,9 @@ class VisitController extends Controller
      */
     public function store_step1(AddVisitStep1 $request_add, int $id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
-
-        if (!$canManage) {
-            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
-        }
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
 
         $data = $request_add->validated();
         $this->visitRepository->update($data, $id);
@@ -141,11 +141,9 @@ class VisitController extends Controller
      */
     public function step2(Request $request, $id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
-
-        if (!$canManage) {
-            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
-        }
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
 
         $currentStep = 2;
         $visit = Visit::findOrFail($id);
@@ -190,11 +188,9 @@ class VisitController extends Controller
 
     public function add_medical(AddMedicalToVisit $request, $id, $medical_id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
-
-        if (!$canManage) {
-            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
-        }
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
 
         $postData =  $request->all();
 
@@ -222,11 +218,9 @@ class VisitController extends Controller
      */
     public function step3(Request $request, $id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
-
-        if (!$canManage) {
-            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
-        }
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
 
         $currentStep = 3;
         $visit = Visit::findOrFail($id);
@@ -271,11 +265,9 @@ class VisitController extends Controller
 
     public function add_additional_service(AddAdditionalServiceToVisit $request, $id, $additional_service_id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
-
-        if (!$canManage) {
-            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
-        }
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
 
         $postData =  $request->all();
 
@@ -310,10 +302,13 @@ class VisitController extends Controller
      */
     public function summary(Request $request, $id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
+
         $currentStep = 4;
-        $visit = Visit::findOrFail($id);
-        $customer = Customer::findOrFail($visit->customer_id);
+        $visitModel = Visit::findOrFail($id);
+        $customer = Customer::findOrFail($visitModel->customer_id);
         $maxStep = VisitRepositoryInterface::MAX_STEP;
         $maxTimeToEdit = VisitRepositoryInterface::MAX_TIME_TO_EDIT;
 
@@ -339,14 +334,13 @@ class VisitController extends Controller
             'currentStep' => $currentStep,
             'maxStep' => $maxStep,
             'customer' => $customer,
-            'visit' => $visit,
+            'visit' => $visitModel,
             'counter_visit_medicals' => $counter_visit_medicals,
             'visit_medicals' => $visit_medicals,
             'sum_all_medicals' => $sum_all_medicals,
             'counter_visit_services' => $counter_visit_services,
             'visit_additional_services' => $visit_additional_services,
             'sum_all_additional_services' => $sum_all_additional_services,
-            'canManage' => $canManage,
             'maxTimeToEdit' => $maxTimeToEdit
         ]);
     }
@@ -359,39 +353,37 @@ class VisitController extends Controller
      */
     public function store_summary(Request $request, int $id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = $this->visitRepository->get($id);
+        Gate::authorize('view', $visitModel);
 
-        if ($canManage) {
-            $postData =  $request->all();
-            $net_price = 0;
-            $gross_price = 0;
+        $postData =  $request->all();
+        $net_price = 0;
+        $gross_price = 0;
 
-            $visit_medicals = VisitMedical::with(['vat', 'medical.unit_measure'])
-                ->where('visit_id', $id)
-                ->get();
-            foreach ($visit_medicals as $visit_medical) {
-                $net_price += $visit_medical->quantity * $visit_medical->net_price;
-                $gross_price += $visit_medical->quantity * $visit_medical->gross_price;
-            }
-
-            $visit_additional_services = VisitAdditionalService::with(['vat', 'additionalservice'])
-                ->where('visit_id', $id)
-                ->get();
-            foreach ($visit_additional_services as $visit_additional_service) {
-                $net_price += $visit_additional_service->quantity * $visit_additional_service->net_price;
-                $gross_price += $visit_additional_service->quantity * $visit_additional_service->gross_price;
-            }
-
-            $postData['net_price'] = number_format($net_price, 2, '.', '');
-            $postData['gross_price'] = number_format($gross_price, 2, '.', '');
-            $postData['confirm_visit'] = true;
-
-            $this->visitRepository->update($postData, $id);
-
-            return redirect()->route('visits.list')->with('success', 'Wizyta została zapisana!');
-        } else {
-            return redirect()->route('visits.list')->with('danger', 'Wizyta nie może już być edytowana! Skontaktuj się się z administratorem.');
+        $visit_medicals = VisitMedical::with(['vat', 'medical.unit_measure'])
+            ->where('visit_id', $id)
+            ->get();
+        foreach ($visit_medicals as $visit_medical) {
+            $net_price += $visit_medical->quantity * $visit_medical->net_price;
+            $gross_price += $visit_medical->quantity * $visit_medical->gross_price;
         }
+
+        $visit_additional_services = VisitAdditionalService::with(['vat', 'additionalservice'])
+            ->where('visit_id', $id)
+            ->get();
+        foreach ($visit_additional_services as $visit_additional_service) {
+            $net_price += $visit_additional_service->quantity * $visit_additional_service->net_price;
+            $gross_price += $visit_additional_service->quantity * $visit_additional_service->gross_price;
+        }
+
+        $postData['net_price'] = number_format($net_price, 2, '.', '');
+        $postData['gross_price'] = number_format($gross_price, 2, '.', '');
+        $postData['confirm_visit'] = true;
+
+        $this->visitRepository->update($postData, $id);
+
+        return redirect()->route('visits.list')->with('success', 'Wizyta została zapisana!');
         //$this->visitRepository->update($data, $id);
     }
 
@@ -403,19 +395,15 @@ class VisitController extends Controller
      */
     public function destroy($id)
     {
-        $canManage = $this->visitRepository->canManageVisit($id);
+        //$canManage = $this->visitRepository->canManageVisit($id);
+        $visitModel = Visit::findOrFail($id);
+        Gate::authorize('view', $visitModel);
 
-        if ($canManage) {
-            $visit = Visit::findOrFail($id);
-
-            if (!$visit->confirm_visit) {
-                $this->visitRepository->delete($id);
-                return redirect()->back()->with('success', 'Wizyta lekarska została usunięta!');
-            } else {
-                return redirect()->back()->with('error', 'Wizyta lekarska nie została usunięta! Zatwierdzonych wizyt nie można usuwać.');
-            }
+        if (!$visitModel->confirm_visit) {
+            $this->visitRepository->delete($id);
+            return redirect()->back()->with('success', 'Wizyta lekarska została usunięta!');
+        } else {
+            return redirect()->back()->with('error', 'Wizyta lekarska nie została usunięta! Zatwierdzonych wizyt nie można usuwać.');
         }
-
-        return redirect()->back()->with('error', 'Wizyta lekarska nie została usunięta! Brak uprawnień do wykonywania tego typu operacji dla tej wizyty.');
     }
 }

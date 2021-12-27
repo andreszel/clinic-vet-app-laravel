@@ -17,5 +17,4 @@ interface VisitRepositoryInterface
     public function update(array $postData, int $id): void;
     public function filterBy(?string $phrase, int $limit = self::LIMIT_DEFAULT);
     public function maxVisitNumber(int $customerId): int;
-    public function canManageVisit(int $id): bool;
 }

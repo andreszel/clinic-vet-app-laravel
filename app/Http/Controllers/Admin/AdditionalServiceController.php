@@ -33,8 +33,6 @@ class AdditionalServiceController extends Controller
 
         $counter = ($page * $limit) + 1;
 
-
-
         return view('admin.additionalservices.list', [
             'additionalservices' => $additionalservices,
             'counter' => $counter,

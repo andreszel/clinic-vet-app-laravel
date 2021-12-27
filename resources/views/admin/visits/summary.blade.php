@@ -186,7 +186,8 @@
                 <p class="text-warning">Edycja wizyty na Twoim koncie możliwa max w czasie {{ $maxTimeToEdit }} minut od zapisania wizyty. </p>
             </div>
         </div>
-        @if($canManage)
+
+        @can('view', $visit)
         <form id="save-summary-form" action="{{ route('visits.store_summary', ['id'=>$visit->id]) }}" method="POST">
             @csrf
             @method('PUT')
@@ -202,7 +203,7 @@
                 </div>
             </div>
         </form>
-        @endif
+        @endcan
 
     </div>
 </div>

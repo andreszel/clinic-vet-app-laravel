@@ -62,12 +62,12 @@
                                 <a href="{{ route('visits.summary', ['id' => $visit->id]) }}" class="btn text-primary" title="Szczegóły wizyty">
                                     <i class="fas fa-info"></i>
                                 </a>
-                                @if($visitRepository->canManageVisit($visit->id))
+                                @can('view', $visit)
                                 <a href="{{ route('visits.edit', ['id' => $visit->id]) }}" class="btn btn-sm text-primary mr-2" title="Edytuj wizytę">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
-                                @endif
+                                @endcan
                             </form>
                         </td>
                     </tr>
