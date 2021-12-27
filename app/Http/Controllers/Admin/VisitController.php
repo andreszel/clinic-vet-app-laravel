@@ -67,7 +67,7 @@ class VisitController extends Controller
 
         $visit = $this->visitRepository->create($postData);
 
-        return redirect()->route('visits.step1', ['id' => $visit->id])->with('success', 'Wizyta dla klienta {{ $customer->name }} {{ $customer->surname }} została utworzona! Wybierz teraz typ płatności i datę wizyty.');
+        return redirect()->route('visits.step1', ['id' => $visit->id])->with('success', 'Wizyta dla klienta została utworzona! Wybierz teraz typ płatności i datę wizyty.');
     }
 
     /**
@@ -93,6 +93,12 @@ class VisitController extends Controller
      */
     public function step1(Request $request, $id)
     {
+        $canManage = $this->visitRepository->canManageVisit($id);
+
+        if (!$canManage) {
+            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
+        }
+
         $currentStep = 1;
         $pay_types = PayTypes::get();
         $visit = Visit::findOrFail($id);
@@ -116,6 +122,12 @@ class VisitController extends Controller
      */
     public function store_step1(AddVisitStep1 $request_add, int $id)
     {
+        $canManage = $this->visitRepository->canManageVisit($id);
+
+        if (!$canManage) {
+            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
+        }
+
         $data = $request_add->validated();
         $this->visitRepository->update($data, $id);
 
@@ -129,6 +141,12 @@ class VisitController extends Controller
      */
     public function step2(Request $request, $id)
     {
+        $canManage = $this->visitRepository->canManageVisit($id);
+
+        if (!$canManage) {
+            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
+        }
+
         $currentStep = 2;
         $visit = Visit::findOrFail($id);
         $customer = Customer::findOrFail($visit->customer_id);
@@ -172,6 +190,12 @@ class VisitController extends Controller
 
     public function add_medical(AddMedicalToVisit $request, $id, $medical_id)
     {
+        $canManage = $this->visitRepository->canManageVisit($id);
+
+        if (!$canManage) {
+            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
+        }
+
         $postData =  $request->all();
 
         //pobieramy dane o leku
@@ -198,6 +222,12 @@ class VisitController extends Controller
      */
     public function step3(Request $request, $id)
     {
+        $canManage = $this->visitRepository->canManageVisit($id);
+
+        if (!$canManage) {
+            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
+        }
+
         $currentStep = 3;
         $visit = Visit::findOrFail($id);
         $customer = Customer::findOrFail($visit->customer_id);
@@ -241,6 +271,12 @@ class VisitController extends Controller
 
     public function add_additional_service(AddAdditionalServiceToVisit $request, $id, $additional_service_id)
     {
+        $canManage = $this->visitRepository->canManageVisit($id);
+
+        if (!$canManage) {
+            return redirect()->route('visits.list')->with('warning', 'Wizyta nie może być już edytowana!');
+        }
+
         $postData =  $request->all();
 
         //pobieramy dane o leku

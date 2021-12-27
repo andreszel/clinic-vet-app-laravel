@@ -39,7 +39,7 @@
         <div class="row">
             <div class="col-md-12">
                 @if(count($additional_services) > 0)
-                <h6 class="mb-3 font-weight-bold text-primary">Lista znalezionych leków dla frazy <span class="text-warning">"{{ $phrase }}"</span></h6>
+                <h6 class="mt-3 mb-3 font-weight-bold text-primary">Lista znalezionych leków dla frazy <span class="text-warning">"{{ $phrase }}"</span></h6>
                 <div class="table-responsive">
                     <table class="table table-bordered" width="100%" cellspacing="0">
                         <thead>

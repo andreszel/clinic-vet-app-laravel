@@ -74,7 +74,7 @@
                         </tfoot>
                         <tbody>
                             @foreach($visit_medicals ?? [] as $visit_medical)
-                            @php $sum_medical = number_format($visit_medical->quantity*$visit_medical->gross_price,2); $sum_all_medicals += $sum_medical; @endphp
+                            @php $sum_all_medicals += (int)$visit_medical->quantity*$visit_medical->gross_price; @endphp
                             <tr>
                                 <td>{{ $counter_visit_medicals++ }}.</td>
                                 <td>{{ $visit_medical->medical->name }}</td>
@@ -82,7 +82,7 @@
                                 <td class="text-right">{{ $visit_medical->gross_price }}</td>
                                 <td class="text-center">{{ $visit_medical->vat->name }}</td>
                                 <td class="text-center">{{ $visit_medical->quantity }} {{ $visit_medical->medical->unit_measure->short_name }}</td>
-                                <td class="text-right">{{ $sum_medical }}</td>
+                                <td class="text-right">{{ Str::currency((int)$visit_medical->quantity*$visit_medical->gross_price) }}</td>
                             </tr>
                             @endforeach
                         </tbody>

@@ -100,6 +100,7 @@ class VisitRepository implements VisitRepositoryInterface
 
     public function canManageVisit(int $id): bool
     {
+        $user = Auth::user();
         $visit = $this->visitModel
             ->with(['user'])
             ->where('id', $id)
@@ -107,13 +108,18 @@ class VisitRepository implements VisitRepositoryInterface
 
         $canManage = false;
 
-        if ($visit->user->type_id == 1) {
+        if ($user->type_id == 1) {
             $canManage = true;
         } else {
-            $startTime = Carbon::parse($visit->updated_at)->timezone('Europe/Warsaw');
-            $finishTime = Carbon::now()->timezone('Europe/Warsaw');
-            $totalDuration = $finishTime->diffInMinutes($startTime);
-            if ($totalDuration < self::MAX_TIME_TO_EDIT) {
+            if ($visit->confirm_visit) {
+
+                $startTime = Carbon::parse($visit->updated_at)->timezone('Europe/Warsaw');
+                $finishTime = Carbon::now()->timezone('Europe/Warsaw');
+                $totalDuration = $finishTime->diffInMinutes($startTime);
+                if ($totalDuration < self::MAX_TIME_TO_EDIT) {
+                    $canManage = true;
+                }
+            } else {
                 $canManage = true;
             }
         }

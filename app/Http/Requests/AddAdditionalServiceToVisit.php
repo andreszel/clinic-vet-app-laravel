@@ -26,7 +26,7 @@ class AddAdditionalServiceToVisit extends FormRequest
     {
         return [
             'visit_id' => 'required|integer|exists:visits,id',
-            'additional_service_id' => 'required|integer|exists:additional_services,id|unique:visit_additional_services',
+            'additional_service_id' => 'required|integer|exists:additional_services,id',
             'quantity' => 'required|integer|min:1',
             'gross_price' => ['required_if:set_price_in_visit,1'],
             //'vat_id' => 'required|integer|exists:vats,id',

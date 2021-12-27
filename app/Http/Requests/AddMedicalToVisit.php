@@ -25,7 +25,7 @@ class AddMedicalToVisit extends FormRequest
     {
         return [
             'visit_id' => 'required|integer|exists:visits,id',
-            'medical_id' => 'required|integer|exists:medicals,id|unique:visit_medicals',
+            'medical_id' => 'required|integer|exists:medicals,id',
             'quantity' => 'required|integer|min:1',
             //'vat_id' => 'required|integer|exists:vats,id',
             //'net_price' => 'required',
