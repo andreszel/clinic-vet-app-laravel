@@ -29,7 +29,7 @@ class UserController extends Controller
 
     public function index(Request $request): View
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         $phrase = $request->get('phrase');
         $email = $request->get('email');
@@ -63,7 +63,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         $user = User::with('type')->findOrFail($id);
         $types = UserTypes::get();
@@ -80,7 +80,7 @@ class UserController extends Controller
 
     public function users_list(Request $request): View
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         $phrase = $request->get('phrase');
         $email = $request->get('email');
@@ -104,7 +104,7 @@ class UserController extends Controller
 
     public function create()
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         $types = UserTypes::get();
         $commission_servies = $this->userRepository::COMMISSION_SERVIES;
@@ -119,7 +119,7 @@ class UserController extends Controller
 
     public function store(AddUser $request)
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         $user = Auth::user();
 
@@ -156,7 +156,7 @@ class UserController extends Controller
 
     public function update(AddUser $request, int $userId)
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         $data = $request->validated();
 
@@ -167,7 +167,7 @@ class UserController extends Controller
 
     public function changeStatus(int $id)
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         if ($id == Auth::id()) {
             return redirect()->back()->with('warning', 'Nie udało się, ponieważ swojego konta nie możesz wyłączyć!');
@@ -179,7 +179,7 @@ class UserController extends Controller
 
     public function show(Request $request, int $userId): View
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         $loggedUser = Auth::user();
         $user = $this->userRepository->get($userId);
@@ -198,7 +198,7 @@ class UserController extends Controller
 
     public function delete($userId)
     {
-        Gate::authorize('admin-level');
+        //Gate::authorize('admin-level');
 
         $this->userRepository->delete($userId);
 
