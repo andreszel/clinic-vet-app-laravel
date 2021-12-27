@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\MedicalController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\VisitController;
@@ -109,6 +110,10 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::get('/edit/{id}', [VisitController::class, 'edit'])->name('edit');
         //Route::put('/update/{id}', [VisitController::class, 'update'])->name('update');
         Route::delete('/remove/{id}', [VisitController::class, 'destroy'])->name('remove');
+    });
+
+    Route::group(['middleware' => 'can:admin-level', 'prefix' => 'reports', 'as' => 'reports.'], function () {
+        Route::get('/', [ReportController::class, 'index'])->name('list');
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {

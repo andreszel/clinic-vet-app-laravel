@@ -56,8 +56,8 @@
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item {{ request()->routeIs('raport.*') ? 'active' : '' }}">
-        <a class="nav-link" href="raporty.html">
+    <li class="nav-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('reports.list') }}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Raporty</span></a>
     </li>
