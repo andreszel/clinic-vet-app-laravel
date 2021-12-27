@@ -24,6 +24,8 @@
 
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
+
+                @can('admin-level')
                 <thead>
                     <tr>
                         <th rowspan="2">Lp.</th>
@@ -48,7 +50,6 @@
                     <tr>
                         <th rowspan="2">Lp.</th>
                         <th rowspan="2">Nazwa leku</th>
-                        <th>Netto [pln]</th>
                         <th>Brutto [pln]</th>
                         <th>VAT</th>
                         <th>Netto [pln]</th>
@@ -97,6 +98,40 @@
                     </tr>
                     @endforeach
                 </tbody>
+                @endcan
+
+                @cannot('admin-level')
+
+                <thead>
+                    <tr>
+                        <th>Lp.</th>
+                        <th>Nazwa leku</th>
+                        <th>Netto [pln]</th>
+                        <th>Brutto [pln]</th>
+                        <th class="text-center">VAT</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <th>Lp.</th>
+                    <th>Nazwa leku</th>
+                    <th>Netto [pln]</th>
+                    <th>Brutto [pln]</th>
+                    <th class="text-center">VAT</th>
+                </tfoot>
+                <tbody>
+                    @foreach($medicals ?? [] as $medical)
+                    <tr>
+                        <td>{{ $counter++ }}.</td>
+                        <td>{{ $medical->name }} ({{ $medical->unit_measure->name }})</td>
+                        <td class="text-right">{{ $medical->net_price_sell }}</td>
+                        <td class="text-right">{{ $medical->gross_price_sell }}</td>
+                        <td class="text-center px-3">{{ $medical->vat_sell->name }}%</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+
+                @endcannot
+
             </table>
         </div>
         @else

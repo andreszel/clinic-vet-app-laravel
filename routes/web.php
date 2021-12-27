@@ -56,12 +56,12 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
 
     Route::group(['prefix' => 'medicals', 'as' => 'medicals.'], function () {
         Route::get('/', [MedicalController::class, 'index'])->name('list');
-        Route::get('/create', [MedicalController::class, 'create'])->name('create');
-        Route::get('/edit/{id}', [MedicalController::class, 'edit'])->name('edit');
-        Route::post('/store', [MedicalController::class, 'store'])->name('store');
-        Route::put('/update/{id}', [MedicalController::class, 'update'])->name('update');
-        Route::delete('/remove/{id}', [MedicalController::class, 'destroy'])->name('remove');
-        Route::post('/change-status/{id}', [MedicalController::class, 'changeStatus'])->name('change_status');
+        Route::get('/create', [MedicalController::class, 'create'])->name('create')->middleware('can:admin-level');
+        Route::get('/edit/{id}', [MedicalController::class, 'edit'])->name('edit')->middleware('can:admin-level');
+        Route::post('/store', [MedicalController::class, 'store'])->name('store')->middleware('can:admin-level');
+        Route::put('/update/{id}', [MedicalController::class, 'update'])->name('update')->middleware('can:admin-level');
+        Route::delete('/remove/{id}', [MedicalController::class, 'destroy'])->name('remove')->middleware('can:admin-level');
+        Route::post('/change-status/{id}', [MedicalController::class, 'changeStatus'])->name('change_status')->middleware('can:admin-level');
     });
 
     Route::group(['prefix' => 'customers', 'as' => 'customers.'], function () {
@@ -75,13 +75,13 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
 
     Route::group(['prefix' => 'additional-services', 'as' => 'additionalservices.'], function () {
         Route::get('/', [AdditionalServiceController::class, 'index'])->name('list');
-        Route::get('/create', [AdditionalServiceController::class, 'create'])->name('create');
-        Route::get('/edit/{id}', [AdditionalServiceController::class, 'edit'])->name('edit');
-        Route::post('/store', [AdditionalServiceController::class, 'store'])->name('store');
-        Route::put('/update/{id}', [AdditionalServiceController::class, 'update'])->name('update');
-        Route::delete('/remove/{id}', [AdditionalServiceController::class, 'destroy'])->name('remove');
-        Route::post('/change-status/{id}', [AdditionalServiceController::class, 'changeStatus'])->name('change_status');
-        Route::post('/change-status-drive-to-customer/{id}', [AdditionalServiceController::class, 'changeStatusDriveToCustomer'])->name('change_status_drive_to_customer');
+        Route::get('/create', [AdditionalServiceController::class, 'create'])->name('create')->middleware('can:admin-level');
+        Route::get('/edit/{id}', [AdditionalServiceController::class, 'edit'])->name('edit')->middleware('can:admin-level');
+        Route::post('/store', [AdditionalServiceController::class, 'store'])->name('store')->middleware('can:admin-level');
+        Route::put('/update/{id}', [AdditionalServiceController::class, 'update'])->name('update')->middleware('can:admin-level');
+        Route::delete('/remove/{id}', [AdditionalServiceController::class, 'destroy'])->name('remove')->middleware('can:admin-level');
+        Route::post('/change-status/{id}', [AdditionalServiceController::class, 'changeStatus'])->name('change_status')->middleware('can:admin-level');
+        Route::post('/change-status-drive-to-customer/{id}', [AdditionalServiceController::class, 'changeStatusDriveToCustomer'])->name('change_status_drive_to_customer')->middleware('can:admin-level');
     });
 
     Route::group(['prefix' => 'visits', 'as' => 'visits.'], function () {

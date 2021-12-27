@@ -33,9 +33,11 @@
                         <th>Cena brutto [PLN]</th>
                         <th>VAT [PLN]</th>
                         <th class="text-center px-3">VAT [%]</th>
+                        @can('admin-level')
                         <th>Włączona</th>
                         <th>Dojazd</th>
                         <th>Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tfoot>
@@ -46,9 +48,11 @@
                         <th>Cena brutto [PLN]</th>
                         <th>VAT [PLN]</th>
                         <th class="text-center px-3">VAT [%]</th>
+                        @can('admin-level')
                         <th>Włączona</th>
                         <th>Dojazd</th>
                         <th>Action</th>
+                        @endcan
                     </tr>
                 </tfoot>
                 <tbody>
@@ -60,6 +64,7 @@
                         <td class="text-right">{{ $additionalservice->gross_price }}</td>
                         <td class="text-right">{{ $additionalservice->gross_price-$additionalservice->net_price }}</td>
                         <td class="text-center px-3">{{ $additionalservice->vat->name }}</td>
+                        @can('admin-level')
                         <td>
                             {{ $additionalservice->active ? 'tak' : 'nie' }}
 
@@ -88,6 +93,7 @@
                                 <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
+                        @endcan
                     </tr>
                     @endforeach
                 </tbody>
