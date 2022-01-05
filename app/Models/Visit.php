@@ -39,8 +39,13 @@ class Visit extends Model
         return $this->belongsTo(PayTypes::class, 'pay_type_id', 'id');
     }
 
-    public function medicals()
+    public function visit_medicals()
     {
-        return $this->belongsToMany(VisitMedical::class, 'medical_id');
+        return $this->hasMany(VisitMedical::class);
+    }
+
+    public function additional_services()
+    {
+        return $this->hasMany(VisitAdditionalService::class);
     }
 }

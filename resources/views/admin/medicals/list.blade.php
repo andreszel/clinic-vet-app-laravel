@@ -22,6 +22,9 @@
         @if(!$medicals->isEmpty())
         <div class="col-xl-12 form-group" id="validation-message-medical"></div>
 
+        {{ $medicals->links() }}
+
+
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
 
@@ -50,6 +53,7 @@
                     <tr>
                         <th rowspan="2">Lp.</th>
                         <th rowspan="2">Nazwa leku</th>
+                        <th>Netto [pln]</th>
                         <th>Brutto [pln]</th>
                         <th>VAT</th>
                         <th>Netto [pln]</th>
@@ -106,17 +110,19 @@
                     <tr>
                         <th>Lp.</th>
                         <th>Nazwa leku</th>
-                        <th>Netto [pln]</th>
-                        <th>Brutto [pln]</th>
-                        <th class="text-center">VAT</th>
+                        <th>Wartość netto PLN</th>
+                        <th class="text-center">Stawka VAT %</th>
+                        <th>Kwota VAT PLN</th>
+                        <th>Wartość brutto PLN</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <th>Lp.</th>
                     <th>Nazwa leku</th>
-                    <th>Netto [pln]</th>
-                    <th>Brutto [pln]</th>
-                    <th class="text-center">VAT</th>
+                    <th>Wartość netto PLN</th>
+                    <th class="text-center">Stawka VAT %</th>
+                    <th>Kwota VAT PLN</th>
+                    <th>Wartość brutto PLN</th>
                 </tfoot>
                 <tbody>
                     @foreach($medicals ?? [] as $medical)
@@ -124,8 +130,9 @@
                         <td>{{ $counter++ }}.</td>
                         <td>{{ $medical->name }} ({{ $medical->unit_measure->name }})</td>
                         <td class="text-right">{{ $medical->net_price_sell }}</td>
+                        <td class="text-center px-3">{{ $medical->vat_sell->name }}</td>
+                        <td class="text-right">{{ number_format($medical->gross_price_sell-$medical->net_price_sell,2) }}</td>
                         <td class="text-right">{{ $medical->gross_price_sell }}</td>
-                        <td class="text-center px-3">{{ $medical->vat_sell->name }}%</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -134,6 +141,8 @@
 
             </table>
         </div>
+
+        {{ $medicals->links() }}
         @else
         <div class="text-center my-3">
             <h4 class="text-info">Lista jest pusta</h4>

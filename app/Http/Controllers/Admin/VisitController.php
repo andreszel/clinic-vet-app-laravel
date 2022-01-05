@@ -403,7 +403,23 @@ class VisitController extends Controller
             $this->visitRepository->delete($id);
             return redirect()->back()->with('success', 'Wizyta lekarska została usunięta!');
         } else {
+            $this->visitRepository->delete($id);
             return redirect()->back()->with('error', 'Wizyta lekarska nie została usunięta! Zatwierdzonych wizyt nie można usuwać.');
         }
+    }
+
+    public function remove_additional_service($visit_id, $id)
+    {
+        VisitAdditionalService::where('visit_id', $visit_id)->find($id)->delete();
+
+        return redirect()->back()->with('success', 'Usługa została usunięta!');
+    }
+
+
+    public function remove_medical($visit_id, $id)
+    {
+        VisitMedical::where('visit_id', $visit_id)->find($id)->delete();
+
+        return redirect()->back()->with('success', 'Lek został usunięty!');
     }
 }

@@ -156,7 +156,11 @@
                                 <td class="text-center">{{ $visit_medical->quantity }} {{ $visit_medical->medical->unit_measure->short_name }}</td>
                                 <td class="text-right">{{ Str::currency((int)$visit_medical->quantity*$visit_medical->gross_price) }}</td>
                                 <td>
-
+                                    <form action="{{ route('visits.remove_medical', ['id' => $visit_medical->id, 'visit_id' => $visit->id]) }}" method="post">
+                                        @method('DELETE')
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

@@ -34,4 +34,9 @@ class VisitMedical extends Model
     {
         return $this->belongsTo(Medical::class, 'medical_id', 'id');
     }
+
+    public function visits()
+    {
+        return $this->belongsToMany(Visit::class, 'visit_id', 'id');
+    }
 }

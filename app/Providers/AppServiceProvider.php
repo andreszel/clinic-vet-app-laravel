@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -31,10 +33,17 @@ class AppServiceProvider extends ServiceProvider
         view()->share('appName', 'Clinic VET APP');
         View::share('appTitle', 'Panel administracyjny - Clinic VET APP');
         //Schema::defaultStringLength(191);
+        //date_default_timezone_set('Europe/Warsaw');
 
         // add Str::currency macro
         Str::macro('currency', function ($price) {
             return number_format($price, 2, '.', ' ');
         });
+
+        Blade::directive('currency_format', function ($money) {
+            return "<?php echo number_format($money, 2, '.', ' '); ?>";
+        });
+
+        Paginator::useBootstrap();
     }
 }

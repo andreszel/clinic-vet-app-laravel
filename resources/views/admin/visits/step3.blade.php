@@ -151,7 +151,7 @@
                         </tfoot>
                         <tbody>
                             @foreach($visit_services ?? [] as $visit_service)
-                            @php $suma = number_format($visit_service->quantity*$visit_service->gross_price,2); $sum_all_services += $suma; @endphp
+                            @php $suma = number_format((int)$visit_service->quantity*$visit_service->gross_price,2); $sum_all_services += (float)$suma; @endphp
                             <tr>
                                 <td>{{ $counter_visit_services++ }}.</td>
                                 <td>{{ $visit_service->additionalservice->name }}</td>
@@ -161,7 +161,11 @@
                                 <td class="text-center">{{ $visit_service->quantity }}</td>
                                 <td class="text-right">{{ $suma }}</td>
                                 <td>
-
+                                    <form action="{{ route('visits.remove_additional_service', ['id' => $visit_service->id, 'visit_id' => $visit->id]) }}" method="post">
+                                        @method('DELETE')
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

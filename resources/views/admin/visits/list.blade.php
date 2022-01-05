@@ -59,10 +59,10 @@
                                 <a href="#" class="btn text-primary" title="Podgląd wydruku">
                                     <i class="far fa-file-pdf"></i>
                                 </a>
+                                @can('view', $visit)
                                 <a href="{{ route('visits.summary', ['id' => $visit->id]) }}" class="btn text-primary" title="Szczegóły wizyty">
                                     <i class="fas fa-info"></i>
                                 </a>
-                                @can('view', $visit)
                                 <a href="{{ route('visits.edit', ['id' => $visit->id]) }}" class="btn btn-sm text-primary mr-2" title="Edytuj wizytę">
                                     <i class="fas fa-edit"></i>
                                 </a>

@@ -98,10 +98,12 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         // Step 2 - leki
         Route::get('/step2/{id}', [VisitController::class, 'step2'])->name('step2');
         Route::post('/add_medical/{id}/{medical_id}', [VisitController::class, 'add_medical'])->name('add_medical');
+        Route::delete('/remove_medical/{visit_id}/{id}', [VisitController::class, 'remove_medical'])->name('remove_medical');
 
         // Step 3 - usługi dodatkowe
         Route::get('/step3/{id}', [VisitController::class, 'step3'])->name('step3');
         Route::post('/add_additional_service/{id}/{additional_service_id}', [VisitController::class, 'add_additional_service'])->name('add_additional_service');
+        Route::delete('/remove_additional_service/{visit_id}/{id}', [VisitController::class, 'remove_additional_service'])->name('remove_additional_service');
 
         // Step 4 - podsumowanie - zatwierdzenie wizyty
         Route::get('/summary/{id}', [VisitController::class, 'summary'])->name('summary');

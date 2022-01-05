@@ -1,7 +1,7 @@
-@section('datetime-visit-css')
+@section('datetime-css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha512-f0tzWhCwVFS3WeYaofoLWkTP62ObhewQ1EZn65oSYDZUg1+CyywGKkWzm8BxaJj5HGKI72PnMH9jYyIFz+GH7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
-@section('datetime-visit-js')
+@section('datetime-js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- Core plugin JavaScript-->
 <script src="{{ asset('js/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
@@ -12,7 +12,7 @@
 @section('javascript')
 (function($) {
 $(function() {
-$('#visit_date').datetimepicker({
+$('.visit-report-date').datetimepicker({
 i18n: {
 pl: {
 months: [
@@ -21,8 +21,8 @@ months: [
 'Wrzesień', 'Październik', 'Listopad', 'Grudzień',
 ],
 dayOfWeek: [
-"Nd", "Pon", "Wt", "Śr",
-"Cz", "Pt", "So",
+"Pon", "Wt", "Śr",
+"Cz", "Pt", "So", "Nd"
 ]
 }
 },
@@ -43,8 +43,8 @@ lang: 'pl',
 onChangeDateTime: function(dp, $input) {
 //console.log($input.val());
 },
-mask: true,
-minDate: '-1970/01/2',
+mask: false,
+minDate: '2021/12/01',
 });
 $.datetimepicker.setLocale('pl');
 });

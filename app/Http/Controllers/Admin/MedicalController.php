@@ -33,7 +33,7 @@ class MedicalController extends Controller
         $page = $request->get('page');
         $limit = $request->get('limit', MedicalRepositoryInterface::LIMIT_DEFAULT);
 
-        $resultPaginator = $this->medicalRepository->filterBy($phrase, $limit);
+        $resultPaginator = $this->medicalRepository->filterBy($phrase, 5);
         $resultPaginator->appends([
             'phrase' => $phrase
         ]);

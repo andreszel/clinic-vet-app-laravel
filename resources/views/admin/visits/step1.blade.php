@@ -54,7 +54,7 @@
             <div class="form-group row">
                 <label for="visit_date" class="col-4 col-form-label">Data wizyty</label>
                 <div class="col-1">
-                    <input value="{{ $visit->visit_date }}" type="text" id="visit_date" name="visit_date" placeholder="Wpisz datę wizyty" class="form-control visit-date" required="required" autocomplete="off">
+                    <input value="{{ $visit->visit_date }}" type="text" id="visit_date" name="visit_date" placeholder="Wpisz datę wizyty" class="form-control visit-date visit-report-date" required="required" autocomplete="off">
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -78,4 +78,4 @@
 </div>
 @endsection
 
-@include('helpers.sections.datetime_visit')
+@include('helpers.sections.datetime')

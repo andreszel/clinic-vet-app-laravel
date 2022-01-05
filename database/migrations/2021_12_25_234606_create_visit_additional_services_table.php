@@ -23,7 +23,7 @@ class CreateVisitAdditionalServicesTable extends Migration
             $table->decimal('gross_price', 10, 2)->unsigned();
             $table->timestamps();
 
-            $table->foreign('visit_id')->references('id')->on('visits');
+            $table->foreign('visit_id')->references('id')->on('visits')->onDelete('cascade');
             $table->foreign('additional_service_id')->references('id')->on('additional_services');
             $table->foreign('vat_id')->references('id')->on('vats');
         });

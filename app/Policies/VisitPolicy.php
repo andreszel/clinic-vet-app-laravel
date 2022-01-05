@@ -36,22 +36,22 @@ class VisitPolicy
         if ($user->type_id == 1) {
             //return true;
             return Response::allow();
-
+        } else {
             if ($visit->confirm_visit) {
                 $startTime = Carbon::parse($visit->updated_at)->timezone('Europe/Warsaw');
                 $finishTime = Carbon::now()->timezone('Europe/Warsaw');
                 $totalDuration = $finishTime->diffInMinutes($startTime);
+
                 if ($totalDuration < VisitRepositoryInterface::MAX_TIME_TO_EDIT) {
-                    //return true;
                     return Response::allow();
+                } else {
+                    return Response::deny('Brak uprawnień do teh akcji!');
                 }
             } else {
                 //return true;
                 return Response::allow();
             }
         }
-
-        return Response::deny('Brak uprawnień do teh akcji!');
     }
 
     /**
