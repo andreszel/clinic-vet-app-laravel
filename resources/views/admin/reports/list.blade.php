@@ -74,7 +74,6 @@
 <hr />
 
 <!-- Raport 1: Statystyka wizyt wszystkich lekarzy -->
-@if(!$user_id)
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Raport 1: Statystyka wizyt wszystkich lekarzy</h6>
@@ -86,7 +85,7 @@
                     <tr>
                         <th rowspan="2">Lp.</th>
                         <th rowspan="2">Lekarz</th>
-                        <th colspan="6">Ilość wizyt za</th>
+                        <th colspan="6">Ilość wizyt za ostatni</th>
                     </tr>
                     <tr>
                         <th>1 rok</th>
@@ -100,128 +99,40 @@
                 <tfoot>
                     <tr>
                         <th colspan="2" class="text-right">Razem</th>
-                        <th>72</th>
-                        <th>33</th>
-                        <th>12</th>
-                        <th>9</th>
-                        <th>6</th>
-                        <th>0</th>
+                        <th>{{ $sum_visit_stats['last_year'] }}</th>
+                        <th>{{ $sum_visit_stats['last_six_months'] }}</th>
+                        <th>{{ $sum_visit_stats['last_three_months'] }}</th>
+                        <th>{{ $sum_visit_stats['last_month'] }}</th>
+                        <th>{{ $sum_visit_stats['last_week'] }}</th>
+                        <th>{{ $sum_visit_stats['today'] }}</th>
                     </tr>
                 </tfoot>
                 <tbody>
+                    @foreach($visit_stats as $key => $visit_stat)
                     <tr>
-                        <td>1</td>
-                        <td>Tiger Nixon</td>
-                        <td>24</td>
-                        <td>11</td>
-                        <td>4</td>
-                        <td>3</td>
-                        <td>2</td>
-                        <td>0</td>
+                        <td>{{ $counter++ }}.</td>
+                        <td>{{ $visit_stat['name'] }} {{ $visit_stat['surname'] }}</td>
+                        <td>{{ $visit_stat['stats']['last_year'] }}</td>
+                        <td>{{ $visit_stat['stats']['last_six_months'] }}</td>
+                        <td>{{ $visit_stat['stats']['last_three_months'] }}</td>
+                        <td>{{ $visit_stat['stats']['last_month'] }}</td>
+                        <td>{{ $visit_stat['stats']['last_week'] }}</td>
+                        <td>{{ $visit_stat['stats']['today'] }}</td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Tiger Nixon</td>
-                        <td>24</td>
-                        <td>11</td>
-                        <td>4</td>
-                        <td>3</td>
-                        <td>2</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Tiger Nixon</td>
-                        <td>24</td>
-                        <td>11</td>
-                        <td>4</td>
-                        <td>3</td>
-                        <td>2</td>
-                        <td>0</td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
-<hr />
-@endif
-
-<!-- DataTales Example -->
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Raport 2: Statystyka obrotów i zysku</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Lp.</th>
-                        <th>Lekarz</th>
-                        <th>Obroty leki</th>
-                        <th>Obroty usługi dodatkowe</th>
-                        <th>Obroty</th>
-                        <th>Zysk firma</th>
-                        <th>Zysk lekarz</th>
-                        <th>Zyski suma</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th colspan="2" class="text-right">Razem</th>
-                        <th>46260.00</th>
-                        <th>10260.00</th>
-                        <th>56520.00</th>
-                        <th>2260.80</th>
-                        <th>2260.80</th>
-                        <th>4521.60</th>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Tiger Nixon</td>
-                        <td>15420.00</td>
-                        <td>3420.00</td>
-                        <td>18840.00</td>
-                        <td>753.60</td>
-                        <td>753.60</td>
-                        <td>1507.20</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Tiger Nixon</td>
-                        <td>15420.00</td>
-                        <td>3420.00</td>
-                        <td>18840.00</td>
-                        <td>753.60</td>
-                        <td>753.60</td>
-                        <td>1507.20</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Tiger Nixon</td>
-                        <td>15420.00</td>
-                        <td>3420.00</td>
-                        <td>18840.00</td>
-                        <td>753.60</td>
-                        <td>753.60</td>
-                        <td>1507.20</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+@php $counter = 1; @endphp
 
 <hr />
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Raport 3: Statystyka leków i usług dodatkowych</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Raport 2: Statystyka leków i usług dodatkowych</h6>
     </div>
     <div class="card-body">
 
@@ -253,7 +164,7 @@
                     <tbody>
                         @foreach($medical_stats AS $key => $medical_stat)
                         <tr>
-                            <td>1</td>
+                            <td>{{ $counter++ }}.</td>
                             <td>{{ $medical_stat['name'] }}</td>
                             <td>{{ $medical_stat['unit_measure_name'] }}</td>
                             <td>{{ $medical_stat['quantity'] }}</td>
@@ -265,6 +176,7 @@
                 </table>
             </div>
         </div>
+        @php $counter = 1; @endphp
 
         <h5>Lista usług</h5>
 
@@ -290,7 +202,7 @@
             <tbody>
                 @foreach($additional_service_stats AS $additional_service_stat)
                 <tr>
-                    <td>1</td>
+                    <td>{{ $counter++ }}.</td>
                     <td>{{ $additional_service_stat['name'] }}</td>
                     <td>{{ $additional_service_stat['quantity'] }}</td>
                     <td class="text-right">{{ $additional_service_stat['net_price'] }}</td>
@@ -299,8 +211,80 @@
                 @endforeach
             </tbody>
         </table>
+        @php $counter = 1; @endphp
     </div>
 </div>
+
+<hr />
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Raport 3: Statystyka obrotów i zysku</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Lp.</th>
+                        <th>Lekarz</th>
+                        <th>Obroty leki</th>
+                        <th>Obroty usługi dodatkowe</th>
+                        <th>Obroty</th>
+                        <th>Zysk firma</th>
+                        <th>Zysk lekarz</th>
+                        <th>Zyski suma</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th colspan="2" class="text-right">Razem</th>
+                        <th>46260.00</th>
+                        <th>10260.00</th>
+                        <th>56520.00</th>
+                        <th>2260.80</th>
+                        <th>2260.80</th>
+                        <th>4521.60</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr>
+                        <td>{{ $counter++ }}.</td>
+                        <td>Tiger Nixon</td>
+                        <td>15420.00</td>
+                        <td>3420.00</td>
+                        <td>18840.00</td>
+                        <td>753.60</td>
+                        <td>753.60</td>
+                        <td>1507.20</td>
+                    </tr>
+                    <tr>
+                        <td>{{ $counter++ }}.</td>
+                        <td>Tiger Nixon</td>
+                        <td>15420.00</td>
+                        <td>3420.00</td>
+                        <td>18840.00</td>
+                        <td>753.60</td>
+                        <td>753.60</td>
+                        <td>1507.20</td>
+                    </tr>
+                    <tr>
+                        <td>{{ $counter++ }}.</td>
+                        <td>Tiger Nixon</td>
+                        <td>15420.00</td>
+                        <td>3420.00</td>
+                        <td>18840.00</td>
+                        <td>753.60</td>
+                        <td>753.60</td>
+                        <td>1507.20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@php $counter = 1; @endphp
 
 <hr />
 
@@ -341,7 +325,7 @@
                 <tbody>
                     @foreach($visits ?? [] as $visit)
                     <tr>
-                        <td>{{ $counter_visits++ }}.</td>
+                        <td>{{ $counter++ }}.</td>
                         <td>{{ $visit->visit_date }}</td>
                         <td>{{ $visit->customer->name . ' ' . $visit->customer->surname }}</td>
                         <td>{{ $visit->user->name . ' ' . $visit->user->surname }}</td>
@@ -378,6 +362,7 @@
         @endif
     </div>
 </div>
+@php $counter = 1; @endphp
 
 @endsection
 

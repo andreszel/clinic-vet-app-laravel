@@ -3,26 +3,42 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Interfaces\VisitRepositoryInterface;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    private VisitRepositoryInterface $visitRepository;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(VisitRepositoryInterface $visitRepository)
     {
         //$this->middleware('auth');
+        $this->visitRepository = $visitRepository;
     }
 
     public function index()
     {
         $user = User::find(Auth::id());
-        return view('admin.home', ['user' => $user]);
+
+        $quantity_customers = Customer::count();
+        $turnoverCurrentMonth = $this->visitRepository->turnoverCurrentMonth();
+        $marginCurrentMonth = $this->visitRepository->marginCurrentMonth();
+        $countVisitsCurrentMonth = $this->visitRepository->countVisitsCurrentMonth();
+
+        return view('admin.home', [
+            'user' => $user,
+            'quantity_customers' => $quantity_customers,
+            'turnoverCurrentMonth' => $turnoverCurrentMonth,
+            'marginCurrentMonth' => $marginCurrentMonth,
+            'countVisitsCurrentMonth' => $countVisitsCurrentMonth
+        ]);
     }
 
     public function testJquery()

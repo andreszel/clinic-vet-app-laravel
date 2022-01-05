@@ -17,4 +17,7 @@ interface VisitRepositoryInterface
     public function update(array $postData, int $id): void;
     public function filterBy(?string $phrase, int $limit = self::LIMIT_DEFAULT);
     public function maxVisitNumber(int $customerId): int;
+    public function turnoverCurrentMonth(): float;
+    public function marginCurrentMonth(): float;
+    public function countVisitsCurrentMonth(): int;
 }

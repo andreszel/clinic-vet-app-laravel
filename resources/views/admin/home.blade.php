@@ -41,7 +41,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Klientów w bazie</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">125</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $quantity_customers }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-user fa-2x text-gray-300"></i>
@@ -59,7 +59,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Obroty za m-c bieżący</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">PLN 215,000</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">PLN @currency_format($turnoverCurrentMonth)</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -77,7 +77,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Zysk za m-c bieżący</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">PLN 45,000</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">PLN @currency_format($marginCurrentMonth)</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -96,7 +96,7 @@
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Ilość wizyt lekarskich w m-c bieżący</div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">73</div>
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $countVisitsCurrentMonth }}</div>
                             </div>
                             <div class="col">
                                 <div class="progress progress-sm mr-2">

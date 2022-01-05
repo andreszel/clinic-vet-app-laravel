@@ -205,6 +205,8 @@ class VisitController extends Controller
         $visit_medical->vat_id = $medical->vat_sell_id;
         $visit_medical->net_price = $medical->net_price_sell;
         $visit_medical->gross_price = $medical->gross_price_sell;
+        $visit_medical->net_margin = $medical->net_margin;
+        $visit_medical->gross_margin = $medical->gross_margin;
 
         $visit_medical->save();
 
@@ -289,6 +291,7 @@ class VisitController extends Controller
         $visit_additional_service->vat_id = $additional_service->vat_id;
         $visit_additional_service->net_price = $netPrice;
         $visit_additional_service->gross_price = $grossPrice;
+
         //dd($visit_additional_service);
         $visit_additional_service->save();
 
