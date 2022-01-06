@@ -2,8 +2,12 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Nowa wizyta dla {{ $customer->name }} {{ $customer->surname }} - podstawowe parametry</h1>
-@include('helpers.sections.info_form_add_edit_visit')
+<div class="row">
+    <div class="cold-md-12 mb-3">
+        <h1 class="h3 text-gray-800 d-inline">Nowa wizyta dla {{ $customer->name }} {{ $customer->surname }} - dodawanie usług dodatkowych</h1>
+        @include('helpers.sections.info_form_add_edit_visit')
+    </div>
+</div>
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">

@@ -2,8 +2,12 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Nowa wizyta dla {{ $customer->name }} {{ $customer->surname }} - podsumowanie</h1>
-@include('helpers.sections.info_form_add_edit_visit')
+<div class="row">
+    <div class="cold-md-12 mb-3">
+        <h1 class="h3 text-gray-800 d-inline">Nowa wizyta dla {{ $customer->name }} {{ $customer->surname }} - dodawanie usług dodatkowych</h1>
+        @include('helpers.sections.info_form_add_edit_visit')
+    </div>
+</div>
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -54,8 +58,8 @@
                             <tr>
                                 <th>Lp.</th>
                                 <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
+                                <th class="text-right">Cena jedn. netto [PLN]</th>
+                                <th class="text-right">Cena jedn. brutto [PLN]</th>
                                 <th class="text-center">VAT [%]</th>
                                 <th class="text-center">Ilość</th>
                                 <th class="text-right">Suma [PLN]</th>
@@ -63,18 +67,16 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Lp.</th>
-                                <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
+                                <th colspan="2">Razem</th>
+                                <th class="text-right">Cena jedn. netto [PLN]</th>
+                                <th class="text-right">Cena jedn. brutto [PLN]</th>
                                 <th class="text-center">VAT [%]</th>
                                 <th class="text-center">Ilość</th>
-                                <th class="text-right">Suma [PLN]</th>
+                                <th class="text-right">Suma brutto [PLN]</th>
                             </tr>
                         </tfoot>
                         <tbody>
                             @foreach($visit_medicals ?? [] as $visit_medical)
-                            @php $sum_all_medicals += (int)$visit_medical->quantity*$visit_medical->gross_price; @endphp
                             <tr>
                                 <td>{{ $counter_visit_medicals++ }}.</td>
                                 <td>{{ $visit_medical->medical->name }}</td>
@@ -82,7 +84,7 @@
                                 <td class="text-right">{{ $visit_medical->gross_price }}</td>
                                 <td class="text-center">{{ $visit_medical->vat->name }}</td>
                                 <td class="text-center">{{ $visit_medical->quantity }} {{ $visit_medical->medical->unit_measure->short_name }}</td>
-                                <td class="text-right">{{ Str::currency((int)$visit_medical->quantity*$visit_medical->gross_price) }}</td>
+                                <td class="text-right">{{ Str::currency($visit_medical->sum_gross_price) }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -143,7 +145,6 @@
                         </tfoot>
                         <tbody>
                             @foreach($visit_additional_services ?? [] as $visit_additional_service)
-                            @php $sum_service = number_format($visit_additional_service->quantity*$visit_additional_service->gross_price,2); $sum_all_additional_services += $sum_service; @endphp
                             <tr>
                                 <td>{{ $counter_visit_services++ }}.</td>
                                 <td>{{ $visit_additional_service->additionalservice->name }}</td>
@@ -151,7 +152,7 @@
                                 <td class="text-right">{{ $visit_additional_service->gross_price }}</td>
                                 <td class="text-center">{{ $visit_additional_service->vat->name }}</td>
                                 <td class="text-center">{{ $visit_additional_service->quantity }}</td>
-                                <td class="text-right">{{ $sum_service }}</td>
+                                <td class="text-right">{{ $visit_additional_service->sum_gross_price }}</td>
                             </tr>
                             @endforeach
                         </tbody>

@@ -145,20 +145,19 @@
                         <tr>
                             <th>Lp.</th>
                             <th>Nazwa leku</th>
-                            <th>Jedn. miary</th>
                             <th>Ilość</th>
+                            <th>Jedn. miary</th>
+                            <th>Kwota VAT PLN</th>
                             <th>Kwota netto PLN</th>
                             <th>Kwota brutto PLN</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>Lp.</th>
-                            <th>Nazwa leku</th>
-                            <th>Jedn. miary</th>
-                            <th>Ilość</th>
-                            <th>Kwota netto PLN</th>
-                            <th>Kwota brutto PLN</th>
+                            <th colspan="4" class="text-right">Razem</th>
+                            <th class="text-right">{{ Str::currency($medical_stats_vat_price_sum) }}</th>
+                            <th class="text-right">{{ Str::currency($medical_stats_net_price_sum) }}</th>
+                            <th class="text-right">{{ Str::currency($medical_stats_gross_price_sum) }}</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -166,10 +165,11 @@
                         <tr>
                             <td>{{ $counter++ }}.</td>
                             <td>{{ $medical_stat['name'] }}</td>
+                            <td class="text-right">{{ $medical_stat['quantity'] }}</td>
                             <td>{{ $medical_stat['unit_measure_name'] }}</td>
-                            <td>{{ $medical_stat['quantity'] }}</td>
-                            <td class="text-right">{{ $medical_stat['net_price'] }}</td>
-                            <td class="text-right">{{ $medical_stat['gross_price'] }}</td>
+                            <td class="text-right">{{ Str::currency($medical_stat['vat_price']) }}</td>
+                            <td class="text-right">{{ Str::currency($medical_stat['net_price']) }}</td>
+                            <td class="text-right">{{ Str::currency($medical_stat['gross_price']) }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -186,17 +186,17 @@
                     <th>Lp.</th>
                     <th>Nazwa</th>
                     <th>Ilość</th>
+                    <th>Kwota VAT PLN</th>
                     <th>Kwota netto PLN</th>
                     <th>Kwota brutto PLN</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Lp.</th>
-                    <th>Nazwa</th>
-                    <th>Ilość</th>
-                    <th>Kwota netto PLN</th>
-                    <th>Kwota brutto PLN</th>
+                    <th colspan="3" class="text-right">Razem</th>
+                    <th class="text-right">{{ Str::currency($additional_service_stats_vat_price_sum) }}</th>
+                    <th class="text-right">{{ Str::currency($additional_service_stats_net_price_sum) }}</th>
+                    <th class="text-right">{{ Str::currency($additional_service_stats_gross_price_sum) }}</th>
                 </tr>
             </tfoot>
             <tbody>
@@ -205,8 +205,9 @@
                     <td>{{ $counter++ }}.</td>
                     <td>{{ $additional_service_stat['name'] }}</td>
                     <td>{{ $additional_service_stat['quantity'] }}</td>
-                    <td class="text-right">{{ $additional_service_stat['net_price'] }}</td>
-                    <td class="text-right">{{ $additional_service_stat['gross_price'] }}</td>
+                    <td class="text-right">{{ Str::currency($additional_service_stat['vat_price']) }}</td>
+                    <td class="text-right">{{ Str::currency($additional_service_stat['net_price']) }}</td>
+                    <td class="text-right">{{ Str::currency($additional_service_stat['gross_price']) }}</td>
                 </tr>
                 @endforeach
             </tbody>

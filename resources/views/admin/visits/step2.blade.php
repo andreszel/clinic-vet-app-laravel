@@ -2,8 +2,12 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Nowa wizyta dla {{ $customer->name }} {{ $customer->surname }} - dodawanie leków</h1>
-@include('helpers.sections.info_form_add_edit_visit')
+<div class="row">
+    <div class="cold-md-12 mb-3">
+        <h1 class="h3 mb-5 text-gray-800 d-inline">Nowa wizyta dla {{ $customer->name }} {{ $customer->surname }} - dodawanie leków</h1>
+        @include('helpers.sections.info_form_add_edit_visit')
+    </div>
+</div>
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -82,13 +86,17 @@
                                         <div class="col-auto">
                                             @php
                                             $default_value = 1;
-                                            if($medical->unit_measure->id == 2) $default_value = 100;
+                                            $step = 1;
+                                            if($medical->unit_measure->id == 2) {
+                                            $default_value = 100;
+                                            $step = 5;
+                                            }
                                             @endphp
-                                            <input type="number" name="quantity" id="quantity" value="{{ $default_value }}" class="form-control" placeholder="Wpisz ilość" required="required" />
+                                            <input type="number" name="quantity" id="quantity" value="{{ $default_value }}" class="form-control" step="{{$step}}" placeholder="Wpisz ilość" required="required" />
                                         </div>
                                         <div class="col-auto">{{ $medical->unit_measure->name }}</div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i></button>
+                                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Dodaj do wizyty</button>
                                         </div>
                                     </form>
                                 </td>
@@ -145,7 +153,7 @@
                         <tbody>
                             @foreach($visit_medicals ?? [] as $visit_medical)
                             @php
-                            $sum_all_medicals += (int)$visit_medical->quantity*$visit_medical->gross_price;
+                            $sum_all_medicals += $visit_medical->sum_gross_price;
                             @endphp
                             <tr>
                                 <td>{{ $counter_visit_medicals++ }}.</td>
@@ -154,7 +162,7 @@
                                 <td class="text-right">{{ $visit_medical->gross_price }}</td>
                                 <td class="text-center">{{ $visit_medical->vat->name }}</td>
                                 <td class="text-center">{{ $visit_medical->quantity }} {{ $visit_medical->medical->unit_measure->short_name }}</td>
-                                <td class="text-right">{{ Str::currency((int)$visit_medical->quantity*$visit_medical->gross_price) }}</td>
+                                <td class="text-right">{{ Str::currency($visit_medical->sum_gross_price) }}</td>
                                 <td>
                                     <form action="{{ route('visits.remove_medical', ['id' => $visit_medical->id, 'visit_id' => $visit->id]) }}" method="post">
                                         @method('DELETE')

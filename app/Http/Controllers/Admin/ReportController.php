@@ -37,7 +37,13 @@ class ReportController extends Controller
         $customer_email = $request->get('customer_email');
         $paramsCount = 0;
         $medical_stats = [];
+        $medical_stats_vat_price_sum = 0;
+        $medical_stats_net_price_sum = 0;
+        $medical_stats_gross_price_sum = 0;
         $additional_service_stats = [];
+        $additional_service_stats_vat_price_sum = 0;
+        $additional_service_stats_net_price_sum = 0;
+        $additional_service_stats_gross_price_sum = 0;
         // Statystyka wizyt za ostatni 1 rok, 6 miesięcy, 3 miesiące, 1 miesiąc, 1 tydzień, 1 dzień
         $visit_stats = [];
         $sum_visit_stats = [];
@@ -98,10 +104,22 @@ class ReportController extends Controller
 
             foreach ($visits as $visit) {
                 foreach ($visit->visit_medicals as $visit_medical) {
+                    $vat_price = $visit_medical->sum_gross_price - $visit_medical->sum_net_price;
+
+                    $medical_stats_vat_price_sum += $vat_price;
+                    $medical_stats_net_price_sum += $visit_medical->sum_net_price;
+                    $medical_stats_gross_price_sum += $visit_medical->sum_gross_price;
+
                     $medical_stats = $this->addToMedicalStats($visit_medical, $medical_stats);
                 }
 
                 foreach ($visit->additional_services as $additional_service) {
+                    $vat_price = $additional_service->sum_gross_price - $additional_service->sum_net_price;
+
+                    $additional_service_stats_vat_price_sum += $vat_price;
+                    $additional_service_stats_net_price_sum += $additional_service->sum_net_price;
+                    $additional_service_stats_gross_price_sum += $additional_service->sum_gross_price;
+
                     $additional_service_stats = $this->addToAdditionalServiceStats($additional_service, $additional_service_stats);
                 }
             }
@@ -143,7 +161,13 @@ class ReportController extends Controller
                 'customer_email' => $customer_email,
                 'counter' => 1,
                 'medical_stats' => $medical_stats,
+                'medical_stats_vat_price_sum' => $medical_stats_vat_price_sum,
+                'medical_stats_net_price_sum' => $medical_stats_net_price_sum,
+                'medical_stats_gross_price_sum' => $medical_stats_gross_price_sum,
                 'additional_service_stats' => $additional_service_stats,
+                'additional_service_stats_vat_price_sum' => $additional_service_stats_vat_price_sum,
+                'additional_service_stats_net_price_sum' => $additional_service_stats_net_price_sum,
+                'additional_service_stats_gross_price_sum' => $additional_service_stats_gross_price_sum,
                 'visit_stats' => $visit_stats,
                 'sum_visit_stats' => $sum_visit_stats
             ]
@@ -196,8 +220,9 @@ class ReportController extends Controller
         $newData['medical_id'] = $data->medical_id;
         $newData['name'] = $data->medical->name;
         $newData['unit_measure_name'] = $data->medical->unit_measure->name;
-        $newData['net_price'] = sprintf('%.2f', $data->quantity * $data->net_price);
-        $newData['gross_price'] = sprintf('%.2f', $data->quantity * $data->gross_price);
+        $newData['vat_price'] = $data->sum_gross_price - $data->sum_net_price;
+        $newData['net_price'] = $data->sum_net_price;
+        $newData['gross_price'] = $data->sum_gross_price;
         $newData['quantity'] = $data->quantity;
 
         // Check exists service in array
@@ -206,10 +231,14 @@ class ReportController extends Controller
             if ($value['medical_id'] == $data->medical_id) {
                 $exists = true;
 
-                $net_price = sprintf('%.2f', $arr[$key]['net_price'] + ($data->quantity * $data->net_price));
-                $gross_price = sprintf('%.2f', $arr[$key]['gross_price'] + ($data->quantity * $data->gross_price));
+                $net_price = $arr[$key]['net_price'] + $data->sum_net_price;
+                $gross_price = $arr[$key]['gross_price'] + $data->sum_gross_price;
+                //vat value
+                $vat_price = $gross_price - $net_price;
+
                 $quantity = $arr[$key]['quantity'] + $data->quantity;
 
+                $arr[$key]['vat_price'] = $vat_price;
                 $arr[$key]['net_price'] = $net_price;
                 $arr[$key]['gross_price'] = $gross_price;
                 $arr[$key]['quantity'] = $quantity;
@@ -224,22 +253,38 @@ class ReportController extends Controller
     private function addToAdditionalServiceStats($data, $arr)
     {
         $newData = [];
+
         $newData['additional_service_id'] = $data->additional_service_id;
         $newData['name'] = $data->additionalservice->name;
-        $newData['net_price'] = sprintf('%.2f', $data->quantity * $data->net_price);
-        $newData['gross_price'] = sprintf('%.2f', $data->quantity * $data->gross_price);
+
+        //cena wpisywana, np. paliwo
+        if ($data->additionalservice->set_price_in_visit) {
+            $net_price = $data->net_price;
+            $gross_price = $data->gross_price;
+        } else {
+            $net_price = $data->quantity * $data->net_price;
+            $gross_price = $data->quantity * $data->gross_price;
+        }
+
+        //calc values
+        $newData['vat_price'] = $gross_price - $net_price;
+        $newData['net_price'] = $net_price;
+        $newData['gross_price'] = $gross_price;
         $newData['quantity'] = $data->quantity;
 
         // Check exists service in array
         $exists = false;
         foreach ($arr as $key => $value) {
-            if ($value['additional_service_id'] == $data->additional_service_id) {
+            if ($value['additional_service_id'] == $data->additional_service_id && !$data->additionalservice->set_price_in_visit) {
                 $exists = true;
 
-                $net_price = sprintf('%.2f', $arr[$key]['net_price'] + ($data->quantity * $data->net_price));
-                $gross_price = sprintf('%.2f', $arr[$key]['gross_price'] + ($data->quantity * $data->gross_price));
+                $net_price = $arr[$key]['net_price'] + ($data->quantity * $data->net_price);
+                $gross_price = $arr[$key]['gross_price'] + ($data->quantity * $data->gross_price);
                 $quantity = $arr[$key]['quantity'] + $data->quantity;
+                //vat value
+                $vat_price = $gross_price - $net_price;
 
+                $newData['vat_price'] = $vat_price;
                 $arr[$key]['net_price'] = $net_price;
                 $arr[$key]['gross_price'] = $gross_price;
                 $arr[$key]['quantity'] = $quantity;

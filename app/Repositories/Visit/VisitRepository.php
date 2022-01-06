@@ -62,19 +62,15 @@ class VisitRepository implements VisitRepositoryInterface
     {
         $user = Auth::user();
 
-        if ($user->type_id == 1) {
-            $query = $this->visitModel
-                ->with(['user', 'customer', 'pay_type'])
-                ->orderBy('created_at');
-        } else {
-            $query = $this->visitModel
-                ->where('user_id', $user->id)
-                ->with(['user', 'customer', 'pay_type'])
-                ->orderBy('created_at');
+        $query = $this->visitModel
+            ->with(['user', 'customer', 'pay_type']);
+        if ($user->type_id != 1) {
+            $query = $query->where('user_id', $user->id);
         }
+        $query->orderBy('created_at');
 
         if ($phrase) {
-            $query->whereRaw('name like ?', ["$phrase%"]);
+            $query->whereRaw('name like ?', ["%$phrase%"]);
         }
 
         return $query->paginate($limit);
@@ -103,11 +99,17 @@ class VisitRepository implements VisitRepositoryInterface
         $turnover = 0;
         $start = Carbon::now()->startOfMonth()->timezone('Europe/Warsaw')->toDateString();
         $end = Carbon::now()->endOfMonth()->timezone('Europe/Warsaw')->toDateString();
+        // dane zalogowanego usera
+        $user = Auth::user();
 
         $query = Visit::with(['visit_medicals', 'additional_services'])
             ->where('created_at', '>=', $start)
             ->where('created_at', '<=', $end)
-            ->orderBy('created_at');
+            ->where('confirm_visit', true);
+        if ($user->type_id != 1) {
+            $query = $query->where('user_id', $user->id);
+        }
+        $query->orderBy('created_at');
         $visits = $query->get();
 
         foreach ($visits as $visit) {
@@ -142,7 +144,8 @@ class VisitRepository implements VisitRepositoryInterface
         // pobieramy wizyty
         $query = Visit::with(['user', 'visit_medicals', 'additional_services'])
             ->where('created_at', '>=', $start)
-            ->where('created_at', '<=', $end);
+            ->where('created_at', '<=', $end)
+            ->where('confirm_visit', true);
         if ($user->type_id != 1) {
             $query = $query->where('user_id', $user->id);
         }
@@ -214,7 +217,8 @@ class VisitRepository implements VisitRepositoryInterface
         // pobieramy wizyty
         $query = Visit::with(['user', 'visit_medicals', 'additional_services'])
             ->where('created_at', '>=', $start)
-            ->where('created_at', '<=', $end);
+            ->where('created_at', '<=', $end)
+            ->where('confirm_visit', true);
         if ($user->type_id != 1) {
             $query = $query->where('user_id', $user->id);
         }

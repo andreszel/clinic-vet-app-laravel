@@ -2,8 +2,12 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Nowa wizyta dla {{ $customer->name }} {{ $customer->surname }} - dodawanie usług dodatkowych</h1>
-@include('helpers.sections.info_form_add_edit_visit')
+<div class="row">
+    <div class="cold-md-12 mb-3">
+        <h1 class="h3 text-gray-800 d-inline">Nowa wizyta dla {{ $customer->name }} {{ $customer->surname }} - dodawanie usług dodatkowych</h1>
+        @include('helpers.sections.info_form_add_edit_visit')
+    </div>
+</div>
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -95,7 +99,7 @@
                                             <input type="number" name="quantity" id="quantity" value="1" class="form-control col-4" placeholder="Wpisz ilość" required="required" />
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i></button>
+                                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Dodaj do wizyty</button>
                                         </div>
                                     </form>
                                 </td>
@@ -151,7 +155,6 @@
                         </tfoot>
                         <tbody>
                             @foreach($visit_services ?? [] as $visit_service)
-                            @php $suma = number_format((int)$visit_service->quantity*$visit_service->gross_price,2); $sum_all_services += (float)$suma; @endphp
                             <tr>
                                 <td>{{ $counter_visit_services++ }}.</td>
                                 <td>{{ $visit_service->additionalservice->name }}</td>
@@ -159,7 +162,7 @@
                                 <td class="text-right">{{ $visit_service->gross_price }}</td>
                                 <td class="text-center">{{ $visit_service->vat->name }}</td>
                                 <td class="text-center">{{ $visit_service->quantity }}</td>
-                                <td class="text-right">{{ $suma }}</td>
+                                <td class="text-right">{{ $visit_service->sum_gross_price }}</td>
                                 <td>
                                     <form action="{{ route('visits.remove_additional_service', ['id' => $visit_service->id, 'visit_id' => $visit->id]) }}" method="post">
                                         @method('DELETE')

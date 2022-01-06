@@ -162,7 +162,7 @@ class VisitController extends Controller
             $query = Medical::with(['vat_buy', 'vat_sell', 'unit_measure'])
                 ->where('active', true)
                 ->orderBy('name');
-            $query->whereRaw('name like ?', ["$phrase%"]);
+            $query->whereRaw('name like ?', ["%$phrase%"]);
 
             $medicals = $query->get();
         }
@@ -193,22 +193,65 @@ class VisitController extends Controller
         Gate::authorize('view', $visitModel);
 
         $postData =  $request->all();
+        $quantity = $postData['quantity'];
 
         //pobieramy dane o leku
-        $medical = Medical::findOrFail($postData['medical_id']);
+        $medical = Medical::findOrFail($medical_id);
 
-        $visit_medical = new VisitMedical();
+        //sprawdzamy, czy już nie ma dodanego takiego leku
+        $old_medical = VisitMedical::where('medical_id', $medical_id)
+            ->where('visit_id', $postData['visit_id'])
+            ->first();
 
-        $visit_medical->visit_id = $postData['visit_id'];
-        $visit_medical->medical_id = $postData['medical_id'];
-        $visit_medical->quantity = $postData['quantity'];
-        $visit_medical->vat_id = $medical->vat_sell_id;
-        $visit_medical->net_price = $medical->net_price_sell;
-        $visit_medical->gross_price = $medical->gross_price_sell;
-        $visit_medical->net_margin = $medical->net_margin;
-        $visit_medical->gross_margin = $medical->gross_margin;
+        //calc
+        // cena zakupu
+        $sum_gross_price_buy = ($quantity * $medical->gross_price_buy);
+        $sum_net_price_buy = $sum_gross_price_buy / (1 + ($medical->vat_buy->name / 100));
+        // cena sprzedaży
+        $sum_gross_price_sell = ($quantity * $medical->gross_price_sell);
+        $sum_net_price_sell = $sum_gross_price_sell / (1 + ($medical->vat_sell->name / 100));
+        // margin
+        $sum_net_margin = $sum_net_price_sell - $sum_net_price_buy;
+        $sum_gross_margin = $sum_gross_price_sell - $sum_gross_price_buy;
 
-        $visit_medical->save();
+        //jeżeli lek istnieje, dodajemy ilość, aktualizujemy wybrane pola i wykonujemy update
+        if ($old_medical) {
+            $quantity = ($old_medical->quantity + $postData['quantity']);
+
+            $old_medical->quantity = $quantity;
+            $old_medical->vat_id = $medical->vat_sell_id;
+            $old_medical->net_price = $medical->net_price_sell;
+            $old_medical->gross_price = $medical->gross_price_sell;
+            $old_medical->net_margin = $medical->net_margin;
+            $old_medical->gross_margin = $medical->gross_margin;
+
+            // ustawiamy wartości, żeby później już nie obliczać
+            $old_medical->sum_net_price = $sum_net_price_sell;
+            $old_medical->sum_gross_price = $sum_gross_price_sell;
+            $old_medical->sum_net_margin = $sum_net_margin;
+            $old_medical->sum_gross_margin = $sum_gross_margin;
+
+            $old_medical->update();
+        } else {
+            $visit_medical = new VisitMedical();
+
+            $visit_medical->visit_id = $postData['visit_id'];
+            $visit_medical->medical_id = $medical_id;
+            $visit_medical->quantity = $quantity;
+            $visit_medical->vat_id = $medical->vat_sell_id;
+            $visit_medical->net_price = $medical->net_price_sell;
+            $visit_medical->gross_price = $medical->gross_price_sell;
+            $visit_medical->net_margin = $medical->net_margin;
+            $visit_medical->gross_margin = $medical->gross_margin;
+
+            // ustawiamy wartości, żeby później już nie obliczać
+            $visit_medical->sum_net_price = $sum_net_price_sell;
+            $visit_medical->sum_gross_price = $sum_gross_price_sell;
+            $visit_medical->sum_net_margin = $sum_net_margin;
+            $visit_medical->sum_gross_margin = $sum_gross_margin;
+
+            $visit_medical->save();
+        }
 
         return redirect()->back()->with('success', 'Lek został dodany!');
     }
@@ -249,7 +292,11 @@ class VisitController extends Controller
         $visit_services = VisitAdditionalService::with(['vat', 'additionalservice'])
             ->where('visit_id', $id)
             ->get();
-        //dd($visit_services);
+
+        foreach ($visit_services as $visit_service) {
+            $sum_all_services += $visit_service->sum_gross_price;
+        }
+
 
         return view('admin.visits.step3', [
             'counter' => $counter,
@@ -272,28 +319,71 @@ class VisitController extends Controller
         Gate::authorize('view', $visitModel);
 
         $postData =  $request->all();
+        $quantity = (int)$postData['quantity'];
 
         //pobieramy dane o leku
         $additional_service = AdditionalService::where('id', $postData['additional_service_id'])
             ->where('active', 1)
             ->first();
 
-        $grossPrice = number_format(($additional_service->set_price_in_visit ? $postData['gross_price'] : $additional_service->gross_price), 2, '.', '');
+        // obliczamy cenę brutto i netto
+        $grossPrice = ($additional_service->set_price_in_visit ? $postData['gross_price'] : $additional_service->gross_price);
         $vat = Vats::where('id', $additional_service->vat_id)->first();
         $vatDivisor  = 1 + ((int)$vat->name / 100);
-        $netPrice = number_format($grossPrice / $vatDivisor, 2, '.', '');
+        $netPrice = $grossPrice / $vatDivisor;
 
-        $visit_additional_service = new VisitAdditionalService();
+        //calc
+        // cena
+        $sum_gross_price = ($quantity * $grossPrice);
+        $sum_net_price = $sum_gross_price / (1 + ($additional_service->vat->name / 100));
 
-        $visit_additional_service->visit_id = $postData['visit_id'];
-        $visit_additional_service->additional_service_id = $additional_service->id;
-        $visit_additional_service->quantity = $postData['quantity'];
-        $visit_additional_service->vat_id = $additional_service->vat_id;
-        $visit_additional_service->net_price = $netPrice;
-        $visit_additional_service->gross_price = $grossPrice;
+        // sprawdzamy, czy istnieje już taka usługa dodana do wizyty
+        $old_visit_additional_service = VisitAdditionalService::where('additional_service_id', $additional_service->id)
+            ->where('visit_id', $postData['visit_id'])
+            ->first();
 
-        //dd($visit_additional_service);
-        $visit_additional_service->save();
+        //jeżeli istnieje i nie jest to paliwo to dodajemy ilość, aktualiujemy vat i ceny
+        if ($old_visit_additional_service) {
+            if ($additional_service->set_price_in_visit) {
+                $newNetPrice = ($old_visit_additional_service->net_price + $netPrice);
+                $newGrossPrice = ($old_visit_additional_service->gross_price + $grossPrice);
+
+                $old_visit_additional_service->vat_id = $additional_service->vat_id;
+                $old_visit_additional_service->net_price = $newNetPrice;
+                $old_visit_additional_service->gross_price = $newGrossPrice;
+
+                // ustawiamy wartości, żeby później już nie obliczać
+                $old_visit_additional_service->sum_net_price = $sum_net_price;
+                $old_visit_additional_service->sum_gross_price = $sum_gross_price;
+
+                $old_visit_additional_service->update();
+            } else {
+                $quantity += $old_visit_additional_service->quantity;
+
+                $old_visit_additional_service->quantity = $quantity;
+                $old_visit_additional_service->vat_id = $additional_service->vat_id;
+                $old_visit_additional_service->net_price = $netPrice;
+                $old_visit_additional_service->gross_price = $grossPrice;
+
+                $old_visit_additional_service->update();
+            }
+        } else {
+            $visit_additional_service = new VisitAdditionalService();
+
+            $visit_additional_service->visit_id = $postData['visit_id'];
+            $visit_additional_service->additional_service_id = $additional_service->id;
+            $visit_additional_service->quantity = $quantity;
+            $visit_additional_service->vat_id = $additional_service->vat_id;
+            $visit_additional_service->net_price = $netPrice;
+            $visit_additional_service->gross_price = $grossPrice;
+
+            // ustawiamy wartości, żeby później już nie obliczać
+            $visit_additional_service->sum_net_price = $sum_net_price;
+            $visit_additional_service->sum_gross_price = $sum_gross_price;
+
+            //dd($visit_additional_service);
+            $visit_additional_service->save();
+        }
 
         return redirect()->back()->with('success', 'Usługa dodatkowa została dodana!');
     }
@@ -330,7 +420,14 @@ class VisitController extends Controller
         $visit_additional_services = VisitAdditionalService::with(['vat', 'additionalservice'])
             ->where('visit_id', $id)
             ->get();
-        //dd($visit_services);
+
+        foreach ($visit_medicals as $visit_medical) {
+            $sum_all_medicals += $visit_medical->sum_gross_price;
+        }
+
+        foreach ($visit_additional_services as $visit_additional_service) {
+            $sum_all_additional_services += $visit_additional_service->sum_gross_price;
+        }
 
         return view('admin.visits.summary', [
             'counter' => $counter,
@@ -361,27 +458,27 @@ class VisitController extends Controller
         Gate::authorize('view', $visitModel);
 
         $postData =  $request->all();
-        $net_price = 0;
-        $gross_price = 0;
+        $sum_net_price = 0;
+        $sum_gross_price = 0;
 
         $visit_medicals = VisitMedical::with(['vat', 'medical.unit_measure'])
             ->where('visit_id', $id)
             ->get();
         foreach ($visit_medicals as $visit_medical) {
-            $net_price += $visit_medical->quantity * $visit_medical->net_price;
-            $gross_price += $visit_medical->quantity * $visit_medical->gross_price;
+            $sum_net_price += $visit_medical->sum_net_price;
+            $sum_gross_price += $visit_medical->sum_gross_price;
         }
 
         $visit_additional_services = VisitAdditionalService::with(['vat', 'additionalservice'])
             ->where('visit_id', $id)
             ->get();
         foreach ($visit_additional_services as $visit_additional_service) {
-            $net_price += $visit_additional_service->quantity * $visit_additional_service->net_price;
-            $gross_price += $visit_additional_service->quantity * $visit_additional_service->gross_price;
+            $sum_net_price += $visit_additional_service->sum_net_price;
+            $sum_gross_price += $visit_additional_service->sum_gross_price;
         }
 
-        $postData['net_price'] = number_format($net_price, 2, '.', '');
-        $postData['gross_price'] = number_format($gross_price, 2, '.', '');
+        $postData['net_price'] = $sum_net_price;
+        $postData['gross_price'] = $sum_gross_price;
         $postData['confirm_visit'] = true;
 
         $this->visitRepository->update($postData, $id);

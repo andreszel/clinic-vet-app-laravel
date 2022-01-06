@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 interface UserRepositoryInterface
 {
     public const LIMIT_DEFAULT = 15;
-    public const COMMISSION_SERVIES = 0;
+    public const COMMISSION_SERVIES = 50;
     public const COMMISSION_MEDICALS = 50;
     public const TYPE_USER_ADMIN = 1;
     public const TYPE_USER_DOCTOR = 2;
