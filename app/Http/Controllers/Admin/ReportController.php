@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\VisitRepositoryInterface;
 use App\Models\User;
 use App\Models\Visit;
 use Carbon\Carbon;
@@ -15,10 +16,12 @@ use Illuminate\Support\Facades\Auth;
 class ReportController extends Controller
 {
     private UserRepositoryInterface $userRepository;
+    private VisitRepositoryInterface $visitRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository, VisitRepositoryInterface $visitRepository)
     {
         $this->userRepository = $userRepository;
+        $this->visitRepository = $visitRepository;
     }
 
     /**
@@ -40,10 +43,13 @@ class ReportController extends Controller
         $medical_stats_vat_price_sum = 0;
         $medical_stats_net_price_sum = 0;
         $medical_stats_gross_price_sum = 0;
+        $turnover_margin_stats = [];
+        $turnover_margin_stats_sum = [];
         $additional_service_stats = [];
         $additional_service_stats_vat_price_sum = 0;
         $additional_service_stats_net_price_sum = 0;
         $additional_service_stats_gross_price_sum = 0;
+        $services_medicals_stats_gross_price_sum = 0;
         // Statystyka wizyt za ostatni 1 rok, 6 miesięcy, 3 miesiące, 1 miesiąc, 1 tydzień, 1 dzień
         $visit_stats = [];
         $sum_visit_stats = [];
@@ -98,34 +104,39 @@ class ReportController extends Controller
         }
 
         //dd($query->toSql());
-        if ($paramsCount > 0) {
-            $visits = $query->get();
-            //dd($visits);
 
-            foreach ($visits as $visit) {
-                foreach ($visit->visit_medicals as $visit_medical) {
-                    $vat_price = $visit_medical->sum_gross_price - $visit_medical->sum_net_price;
+        $visits = $query->get();
+        //dd($visits);
 
-                    $medical_stats_vat_price_sum += $vat_price;
-                    $medical_stats_net_price_sum += $visit_medical->sum_net_price;
-                    $medical_stats_gross_price_sum += $visit_medical->sum_gross_price;
+        foreach ($visits as $visit) {
+            // Statystyki obrotów i zysków ze wszystkich znalezionych wizyt
+            $turnover_margin_stats = $this->addTurnoverMarginStats($visit, $turnover_margin_stats);
 
-                    $medical_stats = $this->addToMedicalStats($visit_medical, $medical_stats);
-                }
+            foreach ($visit->visit_medicals as $visit_medical) {
+                $vat_price = $visit_medical->sum_gross_price - $visit_medical->sum_net_price;
 
-                foreach ($visit->additional_services as $additional_service) {
-                    $vat_price = $additional_service->sum_gross_price - $additional_service->sum_net_price;
+                $medical_stats_vat_price_sum += $vat_price;
+                $medical_stats_net_price_sum += $visit_medical->sum_net_price;
+                $medical_stats_gross_price_sum += $visit_medical->sum_gross_price;
 
-                    $additional_service_stats_vat_price_sum += $vat_price;
-                    $additional_service_stats_net_price_sum += $additional_service->sum_net_price;
-                    $additional_service_stats_gross_price_sum += $additional_service->sum_gross_price;
-
-                    $additional_service_stats = $this->addToAdditionalServiceStats($additional_service, $additional_service_stats);
-                }
+                $medical_stats = $this->addToMedicalStats($visit_medical, $medical_stats);
             }
-        } else {
-            $visits = Collection::make(new Visit);
+
+            foreach ($visit->additional_services as $additional_service) {
+                $vat_price = $additional_service->sum_gross_price - $additional_service->sum_net_price;
+
+                $additional_service_stats_vat_price_sum += $vat_price;
+                $additional_service_stats_net_price_sum += $additional_service->sum_net_price;
+                $additional_service_stats_gross_price_sum += $additional_service->sum_gross_price;
+
+                $additional_service_stats = $this->addToAdditionalServiceStats($additional_service, $additional_service_stats);
+            }
         }
+
+        $services_medicals_stats_gross_price_sum = $additional_service_stats_gross_price_sum + $medical_stats_gross_price_sum;
+
+        // sum
+        $turnover_margin_stats_sum = $this->visitRepository->sumTurnoverMarginStats($turnover_margin_stats);
 
         // Statystyka wizyt za ostatni 1 rok, 6 miesięcy, 3 miesiące, 1 miesiąc, 1 tydzień, 1 dzień
         foreach ($users as $user) {
@@ -146,6 +157,7 @@ class ReportController extends Controller
             $sum_visit_stats['last_week'] = (isset($sum_visit_stats['last_week']) ? (int)$sum_visit_stats['last_week'] + $stats['last_week'] : $stats['last_week']);
             $sum_visit_stats['today'] = (isset($sum_visit_stats['today']) ? (int)$sum_visit_stats['today'] + $stats['today'] : $stats['today']);
         }
+        //dd($turnover_margin_stats);
 
         return view(
             'admin.reports.list',
@@ -168,6 +180,9 @@ class ReportController extends Controller
                 'additional_service_stats_vat_price_sum' => $additional_service_stats_vat_price_sum,
                 'additional_service_stats_net_price_sum' => $additional_service_stats_net_price_sum,
                 'additional_service_stats_gross_price_sum' => $additional_service_stats_gross_price_sum,
+                'services_medicals_stats_gross_price_sum' => $services_medicals_stats_gross_price_sum,
+                'turnover_margin_stats' => $turnover_margin_stats,
+                'turnover_margin_stats_sum' => $turnover_margin_stats_sum,
                 'visit_stats' => $visit_stats,
                 'sum_visit_stats' => $sum_visit_stats
             ]
@@ -192,7 +207,6 @@ class ReportController extends Controller
         $end = Carbon::today()->timezone('Europe/Warsaw')->toDateString();
 
 
-
         $stats['last_year'] = $this->countVisits($user_id, $start_year, $end);
         $stats['last_six_months'] = $this->countVisits($user_id, $start_six_months, $end);
         $stats['last_three_months'] = $this->countVisits($user_id, $start_three_months, $end);
@@ -211,6 +225,45 @@ class ReportController extends Controller
             ->whereRaw('user_id = ?', [$user_id])
             ->orderBy('created_at');
         return $query->count();
+    }
+
+    private function addTurnoverMarginStats($visit, $arr)
+    {
+        $newItem = [];
+
+        $calcVisitStats = $this->visitRepository->calcVisitStats($visit);
+        $exists = false;
+
+        foreach ($arr as $key => $item) {
+            if ($calcVisitStats['user_id'] == $item['user_id']) {
+
+                //modyfikujemy dane
+                $newItem = $item;
+
+                $newItem['net_price'] += $calcVisitStats['net_price'];
+                $newItem['gross_price'] += $calcVisitStats['gross_price'];
+                $newItem['medicals_turnover'] += $calcVisitStats['medicals_turnover'];
+                $newItem['medicals_margin_doctor_all'] += $calcVisitStats['medicals_margin_doctor_all'];
+                $newItem['medicals_margin_company_all'] += $calcVisitStats['medicals_margin_company_all'];
+                $newItem['medicals_margin_all'] += $calcVisitStats['medicals_margin_all'];
+                $newItem['additional_services_turnover'] += $calcVisitStats['additional_services_turnover'];
+                $newItem['additional_services_margin_doctor_all'] += $calcVisitStats['additional_services_margin_doctor_all'];
+                $newItem['additional_services_margin_company_all'] += $calcVisitStats['additional_services_margin_company_all'];
+                $newItem['additional_services_margin_all'] += $calcVisitStats['additional_services_margin_all'];
+
+                // nadpisujemy całą tablicę
+                $arr[$key] = $newItem;
+
+                return $arr;
+            }
+        }
+
+        // jeżeli nie było w tablicy to dodajemy całość
+        if (!$exists) {
+            $arr[] = $calcVisitStats;
+        }
+
+        return $arr;
     }
 
     private function addToMedicalStats($data, $arr)

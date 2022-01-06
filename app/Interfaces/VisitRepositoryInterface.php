@@ -20,4 +20,6 @@ interface VisitRepositoryInterface
     public function turnoverCurrentMonth(): float;
     public function marginCurrentMonth(): float;
     public function countVisitsCurrentMonth(): int;
+    public function calcVisitStats($visit): array;
+    public function sumTurnoverMarginStats($data): array;
 }

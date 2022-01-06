@@ -213,6 +213,16 @@
             </tbody>
         </table>
         @php $counter = 1; @endphp
+
+        <div class="row my-5">
+            <div class="col-md-12 text-right cost-summary">
+                <h4>
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden"></span>
+                    </div> Koszt leków weterynaryjnych i usług dodatkowych: {{ Str::currency($services_medicals_stats_gross_price_sum) }} PLN
+                </h4>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -241,45 +251,27 @@
                 <tfoot>
                     <tr>
                         <th colspan="2" class="text-right">Razem</th>
-                        <th>46260.00</th>
-                        <th>10260.00</th>
-                        <th>56520.00</th>
-                        <th>2260.80</th>
-                        <th>2260.80</th>
-                        <th>4521.60</th>
+                        <th>{{ Str::currency($turnover_margin_stats_sum['medicals_turnover']) }}</th>
+                        <th>{{ Str::currency($turnover_margin_stats_sum['additional_services_turnover']) }}</th>
+                        <th>{{ Str::currency($turnover_margin_stats_sum['turnover']) }}</th>
+                        <th>{{ Str::currency($turnover_margin_stats_sum['margin_company']) }}</th>
+                        <th>{{ Str::currency($turnover_margin_stats_sum['margin_doctor']) }}</th>
+                        <th>{{ Str::currency($turnover_margin_stats_sum['margin_all']) }}</th>
                     </tr>
                 </tfoot>
                 <tbody>
+                    @foreach($turnover_margin_stats as $key => $item)
                     <tr>
                         <td>{{ $counter++ }}.</td>
-                        <td>Tiger Nixon</td>
-                        <td>15420.00</td>
-                        <td>3420.00</td>
-                        <td>18840.00</td>
-                        <td>753.60</td>
-                        <td>753.60</td>
-                        <td>1507.20</td>
+                        <td>{{ $item['name'] }} {{ $item['surname'] }}</td>
+                        <td>{{ Str::currency($item['medicals_turnover']) }}</td>
+                        <td>{{ Str::currency($item['additional_services_turnover']) }}</td>
+                        <td>{{ Str::currency($item['turnover']) }}</td>
+                        <td>{{ Str::currency($item['margin_company']) }}</td>
+                        <td>{{ Str::currency($item['margin_doctor']) }}</td>
+                        <td>{{ Str::currency($item['margin_all']) }}</td>
                     </tr>
-                    <tr>
-                        <td>{{ $counter++ }}.</td>
-                        <td>Tiger Nixon</td>
-                        <td>15420.00</td>
-                        <td>3420.00</td>
-                        <td>18840.00</td>
-                        <td>753.60</td>
-                        <td>753.60</td>
-                        <td>1507.20</td>
-                    </tr>
-                    <tr>
-                        <td>{{ $counter++ }}.</td>
-                        <td>Tiger Nixon</td>
-                        <td>15420.00</td>
-                        <td>3420.00</td>
-                        <td>18840.00</td>
-                        <td>753.60</td>
-                        <td>753.60</td>
-                        <td>1507.20</td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
