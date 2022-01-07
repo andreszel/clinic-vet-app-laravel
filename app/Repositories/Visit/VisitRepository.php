@@ -285,6 +285,8 @@ class VisitRepository implements VisitRepositoryInterface
         $data['user_id'] = $visit->user_id;
         $data['name'] = $user->name;
         $data['surname'] = $user->surname;
+        $data['pay_type_id'] = $visit->pay_type_id;
+        $data['pay_type_name'] = $visit->pay_type->name;
         $data['net_price'] = $visit->net_price;
         $data['gross_price'] = $visit->gross_price;
         // medicals
@@ -315,6 +317,8 @@ class VisitRepository implements VisitRepositoryInterface
         unset($newData['user_id']);
         unset($newData['name']);
         unset($newData['surname']);
+        unset($newData['pay_type_id']);
+        unset($newData['pay_type_name']);
 
         foreach ($newData as $key => $value) {
             $newData[$key] = 0;

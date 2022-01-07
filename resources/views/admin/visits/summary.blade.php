@@ -78,7 +78,7 @@
                         <tbody>
                             @foreach($visit_medicals ?? [] as $visit_medical)
                             <tr>
-                                <td>{{ $counter_visit_medicals++ }}.</td>
+                                <td>{{ $counter++ }}.</td>
                                 <td>{{ $visit_medical->medical->name }}</td>
                                 <td class="text-right">{{ $visit_medical->net_price }}</td>
                                 <td class="text-right">{{ $visit_medical->gross_price }}</td>
@@ -87,6 +87,7 @@
                                 <td class="text-right">{{ Str::currency($visit_medical->sum_gross_price) }}</td>
                             </tr>
                             @endforeach
+                            @php $counter = 1; @endphp
                         </tbody>
                     </table>
                 </div>
@@ -146,7 +147,7 @@
                         <tbody>
                             @foreach($visit_additional_services ?? [] as $visit_additional_service)
                             <tr>
-                                <td>{{ $counter_visit_services++ }}.</td>
+                                <td>{{ $counter++ }}.</td>
                                 <td>{{ $visit_additional_service->additionalservice->name }}</td>
                                 <td class="text-right">{{ $visit_additional_service->net_price }}</td>
                                 <td class="text-right">{{ $visit_additional_service->gross_price }}</td>
@@ -155,6 +156,7 @@
                                 <td class="text-right">{{ $visit_additional_service->sum_gross_price }}</td>
                             </tr>
                             @endforeach
+                            @php $counter = 1; @endphp
                         </tbody>
                     </table>
                 </div>

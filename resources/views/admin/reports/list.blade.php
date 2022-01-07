@@ -14,7 +14,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Wyszukiwarka wizyt lekarskich</h6>
+        <h6 class="m-0 font-weight-bold">Wyszukiwarka wizyt lekarskich</h6>
     </div>
     <div class="card-body">
         <form id="report-form" action="{{ route('reports.list') }}" method="GET">
@@ -76,7 +76,7 @@
 <!-- Raport 1: Statystyka wizyt wszystkich lekarzy -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Raport 1: Statystyka wizyt wszystkich lekarzy</h6>
+        <h6 class="m-0 font-weight-bold">Raport 1: Statystyka wizyt wszystkich lekarzy</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -97,8 +97,8 @@
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
-                        <th colspan="2" class="text-right">Razem</th>
+                    <tr class="bg-light text-info">
+                        <th colspan="2" class="align-middle text-right text-uppercase">Razem</th>
                         <th>{{ $sum_visit_stats['last_year'] }}</th>
                         <th>{{ $sum_visit_stats['last_six_months'] }}</th>
                         <th>{{ $sum_visit_stats['last_three_months'] }}</th>
@@ -132,7 +132,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Raport 2: Statystyka leków i usług dodatkowych</h6>
+        <h6 class="m-0 font-weight-bold">Raport 2: Statystyka leków i usług dodatkowych</h6>
     </div>
     <div class="card-body">
 
@@ -153,8 +153,8 @@
                         </tr>
                     </thead>
                     <tfoot>
-                        <tr>
-                            <th colspan="4" class="text-right">Razem</th>
+                        <tr class="bg-light text-info">
+                            <th colspan="4" class="align-middle text-right text-uppercase">Razem</th>
                             <th class="text-right">{{ Str::currency($medical_stats_vat_price_sum) }}</th>
                             <th class="text-right">{{ Str::currency($medical_stats_net_price_sum) }}</th>
                             <th class="text-right">{{ Str::currency($medical_stats_gross_price_sum) }}</th>
@@ -192,8 +192,8 @@
                 </tr>
             </thead>
             <tfoot>
-                <tr>
-                    <th colspan="3" class="text-right">Razem</th>
+                <tr class="bg-light text-info">
+                    <th colspan="3" class="align-middle text-right text-uppercase">Razem</th>
                     <th class="text-right">{{ Str::currency($additional_service_stats_vat_price_sum) }}</th>
                     <th class="text-right">{{ Str::currency($additional_service_stats_net_price_sum) }}</th>
                     <th class="text-right">{{ Str::currency($additional_service_stats_gross_price_sum) }}</th>
@@ -231,7 +231,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Raport 3: Statystyka obrotów i zysku</h6>
+        <h6 class="m-0 font-weight-bold">Raport 3: Statystyka obrotów i zysku</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -239,24 +239,24 @@
                 <thead>
                     <tr>
                         <th>Lp.</th>
-                        <th>Lekarz</th>
-                        <th>Obroty leki</th>
-                        <th>Obroty usługi dodatkowe</th>
-                        <th>Obroty</th>
-                        <th>Zysk firma</th>
-                        <th>Zysk lekarz</th>
-                        <th>Zyski suma</th>
+                        <th class="col-md-4">Lekarz</th>
+                        <th>Obroty leki PLN</th>
+                        <th>Obroty usługi dodatkowe PLN</th>
+                        <th>Obroty PLN</th>
+                        <th>Zysk firma PLN</th>
+                        <th>Zysk lekarz PLN</th>
+                        <th>Zyski suma PLN</th>
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
-                        <th colspan="2" class="text-right">Razem</th>
-                        <th>{{ Str::currency($turnover_margin_stats_sum['medicals_turnover']) }}</th>
-                        <th>{{ Str::currency($turnover_margin_stats_sum['additional_services_turnover']) }}</th>
-                        <th>{{ Str::currency($turnover_margin_stats_sum['turnover']) }}</th>
-                        <th>{{ Str::currency($turnover_margin_stats_sum['margin_company']) }}</th>
-                        <th>{{ Str::currency($turnover_margin_stats_sum['margin_doctor']) }}</th>
-                        <th>{{ Str::currency($turnover_margin_stats_sum['margin_all']) }}</th>
+                    <tr class="bg-light text-info">
+                        <th colspan="2" class="align-middle text-right text-uppercase">Razem</th>
+                        <th class="text-right">{{ Str::currency($turnover_margin_stats_sum['medicals_turnover']) }}</th>
+                        <th class="text-right">{{ Str::currency($turnover_margin_stats_sum['additional_services_turnover']) }}</th>
+                        <th class="text-right">{{ Str::currency($turnover_margin_stats_sum['turnover']) }}</th>
+                        <th class="text-right">{{ Str::currency($turnover_margin_stats_sum['margin_company']) }}</th>
+                        <th class="text-right">{{ Str::currency($turnover_margin_stats_sum['margin_doctor']) }}</th>
+                        <th class="text-right">{{ Str::currency($turnover_margin_stats_sum['margin_all']) }}</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -264,12 +264,12 @@
                     <tr>
                         <td>{{ $counter++ }}.</td>
                         <td>{{ $item['name'] }} {{ $item['surname'] }}</td>
-                        <td>{{ Str::currency($item['medicals_turnover']) }}</td>
-                        <td>{{ Str::currency($item['additional_services_turnover']) }}</td>
-                        <td>{{ Str::currency($item['turnover']) }}</td>
-                        <td>{{ Str::currency($item['margin_company']) }}</td>
-                        <td>{{ Str::currency($item['margin_doctor']) }}</td>
-                        <td>{{ Str::currency($item['margin_all']) }}</td>
+                        <td class="text-right">{{ Str::currency($item['medicals_turnover']) }}</td>
+                        <td class="text-right">{{ Str::currency($item['additional_services_turnover']) }}</td>
+                        <td class="text-right">{{ Str::currency($item['turnover']) }}</td>
+                        <td class="text-right">{{ Str::currency($item['margin_company']) }}</td>
+                        <td class="text-right">{{ Str::currency($item['margin_doctor']) }}</td>
+                        <td class="text-right">{{ Str::currency($item['margin_all']) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -284,7 +284,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Raport 4. Link do Szczegółowe rozliczenie wizyt wszystkich lekarzy</h6>
+        <h6 class="m-0 font-weight-bold">Raport 4. Link do Szczegółowe rozliczenie wizyt wszystkich lekarzy</h6>
     </div>
     <div class="card-body">
         Raport w osobnym linku, ponieważ jest to długa lista - <a href="raport-4.html" target="_blank" class="text-primary">Pokaż raport</a>.
@@ -296,7 +296,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Raport 5. Rozliczenie wizyt</h6>
+        <h6 class="m-0 font-weight-bold">Raport 5. Rozliczenie wizyt</h6>
     </div>
     <div class="card-body">
         @if(count($visits) > 0)
@@ -316,39 +316,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($visits ?? [] as $visit)
+                    @foreach($visit_stats_by_pay_type as $key => $visit)
                     <tr>
                         <td>{{ $counter++ }}.</td>
-                        <td>{{ $visit->visit_date }}</td>
-                        <td>{{ $visit->customer->name . ' ' . $visit->customer->surname }}</td>
-                        <td>{{ $visit->user->name . ' ' . $visit->user->surname }}</td>
-                        <td>{{ $visit->gross_price }}</td>
-                        <td>35.00</td>
-                        <td>55.00</td>
-                        <td>{{ $visit->pay_type->name }}</td>
+                        <td>{{ $visit['visit_date'] }}</td>
+                        <td>{{ $visit['customer_name'] . ' ' . $visit['customer_surname'] }}</td>
+                        <td>{{ $visit['user_name'] . ' ' . $visit['user_surname'] }}</td>
+                        <td class="text-right">{{ $visit['gross_price'] }}</td>
+                        <td class="text-right">{{ $visit['margin_doctor'] }}</td>
+                        <td class="text-right">{{ $visit['margin_company'] }}</td>
+                        <td>{{ $visit['pay_type_name'] }}</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <th colspan="4" rowspan="3">Razem</th>
-                        <th>6250.00</th>
-                        <th>175.00</th>
-                        <th>275.00</th>
-                        <th>Gotówka</th>
+                    @foreach($summary_visit_stats_by_pay_type as $key => $item)
+                    <tr class="bg-light text-info">
+                        @if($key == 0)
+                        <th colspan="4" rowspan="{{ $count_summary_visit_stats_by_pay_type }}" class="align-middle text-center text-uppercase">Razem</th>
+                        @endif
+                        <th class="text-right">{{ $item['gross_price'] }}</th>
+                        <th class="text-right">{{ $item['margin_company'] }}</th>
+                        <th class="text-right">{{ $item['margin_doctor'] }}</th>
+                        <th>{{ $item['pay_type_name'] }}</th>
                     </tr>
-                    <tr>
-                        <th>6250.00</th>
-                        <th>175.00</th>
-                        <th>275.00</th>
-                        <th>Przelew</th>
-                    </tr>
-                    <tr>
-                        <th>6250.00</th>
-                        <th>175.00</th>
-                        <th>275.00</th>
-                        <th></th>
-                    </tr>
+                    @endforeach
                 </tfoot>
             </table>
         </div>

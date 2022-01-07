@@ -407,8 +407,6 @@ class VisitController extends Controller
 
         // Search
         $counter = 1;
-        $counter_visit_medicals = 1;
-        $counter_visit_services = 1;
         $sum_all_medicals = 0;
         $sum_all_additional_services = 0;
         $visit_medicals = [];
@@ -435,10 +433,8 @@ class VisitController extends Controller
             'maxStep' => $maxStep,
             'customer' => $customer,
             'visit' => $visitModel,
-            'counter_visit_medicals' => $counter_visit_medicals,
             'visit_medicals' => $visit_medicals,
             'sum_all_medicals' => $sum_all_medicals,
-            'counter_visit_services' => $counter_visit_services,
             'visit_additional_services' => $visit_additional_services,
             'sum_all_additional_services' => $sum_all_additional_services,
             'maxTimeToEdit' => $maxTimeToEdit

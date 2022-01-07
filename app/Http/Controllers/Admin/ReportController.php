@@ -53,6 +53,8 @@ class ReportController extends Controller
         // Statystyka wizyt za ostatni 1 rok, 6 miesięcy, 3 miesiące, 1 miesiąc, 1 tydzień, 1 dzień
         $visit_stats = [];
         $sum_visit_stats = [];
+        $visit_stats_by_pay_type = [];
+        $summary_visit_stats_by_pay_type = [];
 
         $users = $this->userRepository->all();
 
@@ -104,48 +106,21 @@ class ReportController extends Controller
         }
 
         //dd($query->toSql());
-
         $visits = $query->get();
+
         //dd($visits);
 
-        foreach ($visits as $visit) {
-            // Statystyki obrotów i zysków ze wszystkich znalezionych wizyt
-            $turnover_margin_stats = $this->addTurnoverMarginStats($visit, $turnover_margin_stats);
-
-            foreach ($visit->visit_medicals as $visit_medical) {
-                $vat_price = $visit_medical->sum_gross_price - $visit_medical->sum_net_price;
-
-                $medical_stats_vat_price_sum += $vat_price;
-                $medical_stats_net_price_sum += $visit_medical->sum_net_price;
-                $medical_stats_gross_price_sum += $visit_medical->sum_gross_price;
-
-                $medical_stats = $this->addToMedicalStats($visit_medical, $medical_stats);
-            }
-
-            foreach ($visit->additional_services as $additional_service) {
-                $vat_price = $additional_service->sum_gross_price - $additional_service->sum_net_price;
-
-                $additional_service_stats_vat_price_sum += $vat_price;
-                $additional_service_stats_net_price_sum += $additional_service->sum_net_price;
-                $additional_service_stats_gross_price_sum += $additional_service->sum_gross_price;
-
-                $additional_service_stats = $this->addToAdditionalServiceStats($additional_service, $additional_service_stats);
-            }
-        }
-
-        $services_medicals_stats_gross_price_sum = $additional_service_stats_gross_price_sum + $medical_stats_gross_price_sum;
-
-        // sum
-        $turnover_margin_stats_sum = $this->visitRepository->sumTurnoverMarginStats($turnover_margin_stats);
-
-        // Statystyka wizyt za ostatni 1 rok, 6 miesięcy, 3 miesiące, 1 miesiąc, 1 tydzień, 1 dzień
+        // Raport 1: Statystyka wizyt wszystkich lekarzy - statystyka wizyt za ostatni 1 rok, 6 miesięcy, 3 miesiące, 1 miesiąc, 1 tydzień, 1 dzień
         foreach ($users as $user) {
             $item = [];
+            // doctor name
             $item['name'] = $user->name;
             $item['surname'] = $user->surname;
 
+            // get stats
             $stats = $this->visitStats($user->id);
             $item['stats'] = $stats;
+
 
             $visit_stats[] = $item;
 
@@ -157,6 +132,48 @@ class ReportController extends Controller
             $sum_visit_stats['last_week'] = (isset($sum_visit_stats['last_week']) ? (int)$sum_visit_stats['last_week'] + $stats['last_week'] : $stats['last_week']);
             $sum_visit_stats['today'] = (isset($sum_visit_stats['today']) ? (int)$sum_visit_stats['today'] + $stats['today'] : $stats['today']);
         }
+
+        foreach ($visits as $visit) {
+            foreach ($visit->visit_medicals as $visit_medical) {
+                $vat_price = $visit_medical->sum_gross_price - $visit_medical->sum_net_price;
+
+                // sum - Raport 2: Statystyka leków i usług dodatkowych - lista leków
+                $medical_stats_vat_price_sum += $vat_price;
+                $medical_stats_net_price_sum += $visit_medical->sum_net_price;
+                $medical_stats_gross_price_sum += $visit_medical->sum_gross_price;
+
+                // items - Raport 2: Statystyka leków i usług dodatkowych - lista leków
+                $medical_stats = $this->addToMedicalStats($visit_medical, $medical_stats);
+            }
+
+            foreach ($visit->additional_services as $additional_service) {
+                $vat_price = $additional_service->sum_gross_price - $additional_service->sum_net_price;
+
+                // sum - Raport 2: Statystyka leków i usług dodatkowych - lista usług
+                $additional_service_stats_vat_price_sum += $vat_price;
+                $additional_service_stats_net_price_sum += $additional_service->sum_net_price;
+                $additional_service_stats_gross_price_sum += $additional_service->sum_gross_price;
+
+                // items - Raport 2: Statystyka leków i usług dodatkowych - lista usług
+                $additional_service_stats = $this->addToAdditionalServiceStats($additional_service, $additional_service_stats);
+            }
+
+            // Raport 3: Statystyka obrotów i zysku
+            $turnover_margin_stats = $this->addTurnoverMarginStats($visit, $turnover_margin_stats);
+        }
+
+        // Raport 2: Statystyka leków i usług dodatkowych
+        $services_medicals_stats_gross_price_sum = $additional_service_stats_gross_price_sum + $medical_stats_gross_price_sum;
+
+        // sum - Raport 3: Statystyka obrotów i zysku
+        $turnover_margin_stats_sum = $this->visitRepository->sumTurnoverMarginStats($turnover_margin_stats);
+
+        // sum - Raport 5. Rozliczenie wizyt
+        foreach ($visits as $visit) {
+            $visit_stats_by_pay_type = $this->getVisitStatsByPayType($visit, $visit_stats_by_pay_type);
+            $summary_visit_stats_by_pay_type = $this->getSummaryVisitStatsByPayType($visit, $summary_visit_stats_by_pay_type);
+        }
+
         //dd($turnover_margin_stats);
 
         return view(
@@ -184,9 +201,69 @@ class ReportController extends Controller
                 'turnover_margin_stats' => $turnover_margin_stats,
                 'turnover_margin_stats_sum' => $turnover_margin_stats_sum,
                 'visit_stats' => $visit_stats,
-                'sum_visit_stats' => $sum_visit_stats
+                'sum_visit_stats' => $sum_visit_stats,
+                'visit_stats_by_pay_type' => $visit_stats_by_pay_type,
+                'summary_visit_stats_by_pay_type' => $summary_visit_stats_by_pay_type,
+                'count_summary_visit_stats_by_pay_type' => count($summary_visit_stats_by_pay_type)
             ]
         );
+    }
+
+    private function getVisitStatsByPayType($visit, $arr)
+    {
+        $newItem = [];
+
+        $calcVisitStats = $this->visitRepository->calcVisitStats($visit);
+        $newItem['visit_date'] = $visit->visit_date;
+        $newItem['customer_name'] = $visit->customer->name;
+        $newItem['customer_surname'] = $visit->customer->surname;
+        $newItem['user_name'] = $visit->user->name;
+        $newItem['user_surname'] = $visit->user->surname;
+        $newItem['gross_price'] = $calcVisitStats['gross_price'];
+        $newItem['margin_company'] = $calcVisitStats['margin_company'];
+        $newItem['margin_doctor'] = $calcVisitStats['margin_doctor'];
+        $newItem['pay_type_name'] = $visit->pay_type->name;
+
+        $arr[] = $newItem;
+
+        return $arr;
+    }
+
+    private function getSummaryVisitStatsByPayType($visit, $arr)
+    {
+        $newItem = [];
+
+        $calcVisitStats = $this->visitRepository->calcVisitStats($visit);
+        $exists = false;
+
+        foreach ($arr as $key => $item) {
+            if ($item['pay_type_id'] == $calcVisitStats['pay_type_id']) {
+                //modyfikujemy dane
+                $newItem = $item;
+
+                $newItem['net_price'] += $calcVisitStats['net_price'];
+                $newItem['gross_price'] += $calcVisitStats['gross_price'];
+                $newItem['margin_company'] += $calcVisitStats['margin_company'];
+                $newItem['margin_doctor'] += $calcVisitStats['margin_doctor'];
+
+                // nadpisujemy całą tablicę
+                $arr[$key] = $newItem;
+
+                return $arr;
+            }
+        }
+        if (!$exists) {
+            $newItem['pay_type_id'] = $calcVisitStats['pay_type_id'];
+            $newItem['pay_type_name'] = $calcVisitStats['pay_type_name'];
+            $newItem['net_price'] = $calcVisitStats['net_price'];
+            $newItem['gross_price'] = $calcVisitStats['gross_price'];
+            $newItem['margin_company'] = $calcVisitStats['margin_company'];
+            $newItem['margin_doctor'] = $calcVisitStats['margin_doctor'];
+
+            $arr[] = $newItem;
+        }
+
+        return $arr;
     }
 
     private function visitStats($user_id)
