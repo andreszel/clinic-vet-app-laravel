@@ -2,6 +2,7 @@
 # {{ $details['title'] }}
 
 <div class="contener-message">
+    <p class="text-center mb-3"><img class="img-fluid rounded mx-auto" src="{{ asset('img/trzaskacz-vet-weterynarz-piotrkow-trybunalski-logo.png') }}" alt="Logo" /></p>
     <p class="mb-3">W aplikacji {{ config('app.name') }} zostało założone konto.</p>
     <p>Twoje tymczasowe hasło do logowania: <strong>{{ $details['random_password'] }}</strong></p>
     <p>Po zalogowaniu hasło musisz zmienić na nowe!</p>

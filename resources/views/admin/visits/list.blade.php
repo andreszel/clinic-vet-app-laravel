@@ -44,7 +44,7 @@
                 </tfoot>
                 <tbody>
                     @foreach($visits ?? [] as $visit)
-                    <tr class="{{ $visit->confirm_visit ? 'text-success' : 'text-warning' }}">
+                    <tr class="{{ $visit->confirm_visit ? 'text-success' : 'text-warning' }}" title="{{ $visit->confirm_visit ? 'Wizyta zatwierdzona' : 'Wizyta rozpoczęta - w trakcie realizacji' }}">
                         <td>{{ $counter++ }}.</td>
                         <td>{{ $visit->customer->name }} {{ $visit->customer->surname }}</td>
                         <td>{{ $visit->visit_date }}</td>
