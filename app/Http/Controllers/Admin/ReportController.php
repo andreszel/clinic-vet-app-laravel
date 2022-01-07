@@ -55,6 +55,33 @@ class ReportController extends Controller
         $sum_visit_stats = [];
         $visit_stats_by_pay_type = [];
         $summary_visit_stats_by_pay_type = [];
+        // Raport 4. Link do Szczegółowe rozliczenie wizyt wszystkich lekarzy
+        $visit_calc_details = [];
+
+        $url = $request->url();
+        $uri = $request->getRequestUri();
+
+        // get params from url
+        /* $separator = '&';
+        $uri_arr = explode('?', $uri);
+        $params_arr = explode($separator, $uri_arr[1]);
+        unset($params_arr[0]);
+        $params_string = implode($separator, $params_arr);
+
+        $urlWithQueryString = $request->fullUrl();
+        $input_all = $request->all();
+        $input_collect = $request->collect();
+
+        dump($url);
+        dump($uri);
+        dump($uri_arr);
+        dump($params_arr);
+        dump($params_string);
+        dump($urlWithQueryString);
+        dump($input_all);
+        dump($input_collect);
+        dump($request);
+        dd(); */
 
         $users = $this->userRepository->all();
 
@@ -172,9 +199,14 @@ class ReportController extends Controller
         foreach ($visits as $visit) {
             $visit_stats_by_pay_type = $this->getVisitStatsByPayType($visit, $visit_stats_by_pay_type);
             $summary_visit_stats_by_pay_type = $this->getSummaryVisitStatsByPayType($visit, $summary_visit_stats_by_pay_type);
+
+            // Raport 4. Szczegółowe rozliczenie wizyt wszystkich lekarzy za okres od 2021-11-01 do 2021-11-30
+            $visit_calc_details = $this->getVisitCalcDetails($visit, $visit_calc_details);
         }
 
-        //dd($turnover_margin_stats);
+        $visit_calc_details = $this->addSummaryVisitToCalcDetails($visit_calc_details);
+
+        //dd($visit_calc_details);
 
         return view(
             'admin.reports.list',
@@ -204,9 +236,66 @@ class ReportController extends Controller
                 'sum_visit_stats' => $sum_visit_stats,
                 'visit_stats_by_pay_type' => $visit_stats_by_pay_type,
                 'summary_visit_stats_by_pay_type' => $summary_visit_stats_by_pay_type,
-                'count_summary_visit_stats_by_pay_type' => count($summary_visit_stats_by_pay_type)
+                'count_summary_visit_stats_by_pay_type' => count($summary_visit_stats_by_pay_type),
+                'visit_calc_details' => $visit_calc_details
             ]
         );
+    }
+
+    private function getVisitCalcDetails($visit, $arr)
+    {
+        $calcVisitStats = $this->visitRepository->calcVisitStats($visit);
+
+        $newVisit = $visit->toArray();
+        $newVisit['margin_company'] = $calcVisitStats['margin_company'];
+        $newVisit['margin_doctor'] = $calcVisitStats['margin_doctor'];
+        $newVisit['pay_type_name'] = $calcVisitStats['pay_type_name'];
+
+        if (in_array($visit->user_id, $arr)) {
+            $arr[$visit->user_id]['visits'][] = $newVisit;
+        } else {
+            $arr[$visit->user_id]['name'] = $visit->user->name;
+            $arr[$visit->user_id]['surname'] = $visit->user->surname;
+            $arr[$visit->user_id]['visits'][] = $newVisit;
+        }
+
+        return $arr;
+    }
+
+    public function addSummaryVisitToCalcDetails($arr)
+    {
+        foreach ($arr as $key => $item) {
+            //dd($item);
+            $sum_net_price_medical = 0;
+            $sum_gross_price_medical = 0;
+            $sum_vat_price_medical = 0;
+            foreach ($item['visits'] as $key_visit => $visit) {
+                foreach ($visit['visit_medicals'] as $key_medical => $visit_medical) {
+                    $sum_net_price_medical += $visit_medical['sum_net_price'];
+                    $sum_gross_price_medical += $visit_medical['sum_gross_price'];
+                    $sum_vat_price_medical += $visit_medical['sum_gross_price'] - $visit_medical['sum_net_price'];
+                }
+
+                $arr[$key]['sum_net_price_medical'] = $sum_net_price_medical;
+                $arr[$key]['sum_gross_price_medical'] = $sum_gross_price_medical;
+                $arr[$key]['sum_vat_price_medical'] = $sum_vat_price_medical;
+
+                $sum_net_price_additional_service = 0;
+                $sum_gross_price_additional_service = 0;
+                $sum_vat_price_additional_service = 0;
+                foreach ($visit['additional_services'] as $key_additional_service => $additional_service) {
+                    $sum_net_price_additional_service += $additional_service['sum_net_price'];
+                    $sum_gross_price_additional_service += $additional_service['sum_gross_price'];
+                    $sum_vat_price_additional_service += $additional_service['sum_gross_price'] - $additional_service['sum_net_price'];
+                }
+
+                $arr[$key]['sum_net_price_additional_service'] = $sum_net_price_medical;
+                $arr[$key]['sum_gross_price_additional_service'] = $sum_gross_price_medical;
+                $arr[$key]['sum_vat_price_additional_service'] = $sum_vat_price_medical;
+            }
+        }
+
+        return $arr;
     }
 
     private function getVisitStatsByPayType($visit, $arr)

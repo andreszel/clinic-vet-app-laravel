@@ -66,12 +66,15 @@
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
-    <li class="nav-item">
-        <div class="col-lg-12 mb-4">
+    <li class="nav-item d-sm-none d-md-block">
+        <div class="col-lg-12 mb-2">
             <div class="card bg-primary text-white shadow">
                 <div class="card-body">
                     Stan konta
-                    <div class="text-white-50 small">2450.00 PLN</div>
+                    <div class="text-white-50 small">
+                        <span class="d-block d-md-inline">2450.00</span>
+                        <span class="d-block d-md-inline">PLN</span>
+                    </div>
                 </div>
             </div>
         </div>

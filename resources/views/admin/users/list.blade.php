@@ -2,15 +2,13 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Lekarze</h1>
+<div class="mb-3">
+    <h1 class="h3 mb-3 text-gray-800 d-inline">Użytkownicy - lekarze</h1>
 
-@if(!$users->isEmpty())
-<div class="row mb-3">
-    <div class="col-md-12">
-        <a class="btn  btn-sm btn-primary float-right" href="{{ route('users.create') }}" title="Dodaj nowego lekarza"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
-    </div>
+    @if(!$users->isEmpty())
+    <a class="btn  btn-sm btn-primary float-right" href="{{ route('users.create') }}" title="Dodaj nowego lekarza"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
+    @endif
 </div>
-@endif
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">

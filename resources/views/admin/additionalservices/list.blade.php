@@ -2,16 +2,13 @@
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Usługi dodatkowe</h1>
+<div class="mb-3">
+    <h1 class="h3 mb-2 text-gray-800 d-inline">Usługi dodatkowe</h1>
 
-
-@if(!$additionalservices->isEmpty())
-<div class="row mb-3">
-    <div class="col-md-12">
-        <a class="btn  btn-sm btn-primary float-right" href="{{ route('additionalservices.create') }}" title="Dodaj nowy lek"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
-    </div>
+    @if(!$additionalservices->isEmpty())
+    <a class="btn  btn-sm btn-primary float-right" href="{{ route('additionalservices.create') }}" title="Dodaj nowy lek"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
+    @endif
 </div>
-@endif
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
