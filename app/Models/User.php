@@ -22,7 +22,10 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'surname'
+        'surname',
+        'type_id',
+        'commission_services',
+        'commission_medicals'
     ];
 
     /**
