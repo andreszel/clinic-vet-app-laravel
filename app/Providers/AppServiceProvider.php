@@ -37,12 +37,12 @@ class AppServiceProvider extends ServiceProvider
 
         // add Str::currency macro
         Str::macro('currency', function ($price) {
-            return number_format($price, 2, '.', ' ');
+            return number_format((float)$price, 2, '.', ' ');
         });
 
         Blade::directive('currency_format', function ($money) {
             //return sprintf('%.2f', $money);
-            return number_format($money, 2, '.', ' ');
+            return number_format((float)$money, 2, '.', ' ');
         });
 
         Paginator::useBootstrap();

@@ -234,6 +234,7 @@
         <h6 class="m-0 font-weight-bold">Raport 3: Statystyka obrotów i zysku</h6>
     </div>
     <div class="card-body">
+        @if($turnover_margin_stats_sum)
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
@@ -275,6 +276,9 @@
                 </tbody>
             </table>
         </div>
+        @else
+        <h3 class="text-info">Brak danych</h3>
+        @endif
     </div>
 </div>
 @php $counter = 1; @endphp
@@ -300,7 +304,6 @@
     </div>
     <div class="card-body">
         @if(count($visits) > 0)
-
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
@@ -344,6 +347,8 @@
                 </tfoot>
             </table>
         </div>
+        @else
+        <h3 class="text-info">Brak danych</h3>
         @endif
     </div>
 </div>

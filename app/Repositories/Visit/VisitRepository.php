@@ -312,6 +312,9 @@ class VisitRepository implements VisitRepositoryInterface
 
     public function sumTurnoverMarginStats($data): array
     {
+        if (empty($data)) {
+            return [];
+        }
         $newData = $data[0];
 
         unset($newData['user_id']);
