@@ -147,10 +147,12 @@
         <div class="text-center my-3">
             <h4 class="text-info">Lista jest pusta</h4>
             <h1><i class="fas fa-ban"></i></h1>
+            @can('admin-level')
             <p>Dodaj chociaż jedną pozycję, żeby była sprzedaż. :)</p>
             <div class="col-md-12 text-center">
                 <a class="btn btn-primary" href="{{ route('medicals.create') }}" title="Dodaj nowy lek"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
             </div>
+            @endcan
         </div>
         @endif
     </div>
