@@ -35,7 +35,10 @@ class CustomerController extends Controller
             'phrase' => $phrase
         ]);
 
-        $counter = ($page * $limit) + 1;
+        $counter = 1;
+        if ($page >= 1) {
+            $counter = (($page - 1) * $limit) + 1;
+        }
 
         return view('admin.customers.list', [
             'customers' => $resultPaginator,

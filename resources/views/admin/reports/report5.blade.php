@@ -26,9 +26,9 @@
                         <td>{{ $visit['visit_date'] }}</td>
                         <td>{{ $visit['customer_name'] . ' ' . $visit['customer_surname'] }}</td>
                         <td>{{ $visit['user_name'] . ' ' . $visit['user_surname'] }}</td>
-                        <td class="text-right">{{ $visit['gross_price'] }}</td>
-                        <td class="text-right">{{ $visit['margin_doctor'] }}</td>
-                        <td class="text-right">{{ $visit['margin_company'] }}</td>
+                        <td class="text-right">{{ Str::currency($visit['gross_price']) }}</td>
+                        <td class="text-right">{{ Str::currency($visit['margin_doctor']) }}</td>
+                        <td class="text-right">{{ Str::currency($visit['margin_company']) }}</td>
                         <td>{{ $visit['pay_type_name'] }}</td>
                     </tr>
                     @endforeach
@@ -39,9 +39,9 @@
                         @if($key == 0)
                         <th colspan="4" rowspan="{{ $count_summary_visit_stats_by_pay_type }}" class="align-middle text-center text-uppercase">Razem</th>
                         @endif
-                        <th class="text-right">{{ $item['gross_price'] }}</th>
-                        <th class="text-right">{{ $item['margin_company'] }}</th>
-                        <th class="text-right">{{ $item['margin_doctor'] }}</th>
+                        <th class="text-right">{{ Str::currency($item['gross_price']) }}</th>
+                        <th class="text-right">{{ Str::currency($item['margin_company']) }}</th>
+                        <th class="text-right">{{ Str::currency($item['margin_doctor']) }}</th>
                         <th>{{ $item['pay_type_name'] }}</th>
                     </tr>
                     @endforeach

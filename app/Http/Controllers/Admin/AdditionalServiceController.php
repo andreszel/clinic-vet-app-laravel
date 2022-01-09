@@ -31,7 +31,10 @@ class AdditionalServiceController extends Controller
         $limit = $request->get('limit', AdditionalServiceRepositoryInterface::LIMIT_DEFAULT);
         $additionalservices = $this->additionalServiceRepository->allPaginated($limit);
 
-        $counter = ($page * $limit) + 1;
+        $counter = 1;
+        if ($page >= 1) {
+            $counter = (($page - 1) * $limit) + 1;
+        }
 
         return view('admin.additionalservices.list', [
             'additionalservices' => $additionalservices,
