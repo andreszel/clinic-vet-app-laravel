@@ -6,7 +6,9 @@
     <h1 class="h3 mb-2 text-gray-800 d-inline">Usługi dodatkowe</h1>
 
     @if(!$additionalservices->isEmpty())
+    @can('admin-level')
     <a class="btn  btn-sm btn-primary float-right" href="{{ route('additionalservices.create') }}" title="Dodaj nowy lek"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
+    @endcan
     @endif
 </div>
 

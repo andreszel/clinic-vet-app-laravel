@@ -6,7 +6,9 @@
     <h1 class="h3 mb-2 text-gray-800 d-inline">Leki weterynaryjne</h1>
 
     @if(!$medicals->isEmpty())
+    @can('admin-level')
     <a class="btn  btn-sm btn-primary float-right" href="{{ route('medicals.create') }}" title="Dodaj nowy lek"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
+    @endcan
     @endif
 </div>
 
