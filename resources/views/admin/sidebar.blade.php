@@ -10,8 +10,8 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('home') }}">
+    <li class="nav-item {{ Request::routeIs('homeadmin') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('homeadmin') }}">
             <i class="fas fa-home"></i>
             <span>Pulpit</span></a>
     </li>

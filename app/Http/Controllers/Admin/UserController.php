@@ -154,7 +154,7 @@ class UserController extends Controller
         $user = $this->userRepository->create($data);
 
         //return redirect()->route('users.edit', ['id' => $user->id])->with('success', 'Użytkownik został dodany!');
-        return redirect()->route('users.list')->with('success', 'Użytkownik został dodany!');
+        return redirect()->route('users.list')->with('success', 'Użytkownik został dodany! Wysłaliśmy do niego email z hasłem tymczasowym i linkiem do logowania.');
     }
 
     public function update(AddUser $request, int $userId)

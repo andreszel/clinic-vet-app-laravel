@@ -32,7 +32,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Panel administracyjny
 Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'], function () {
-    Route::get('/', [AdminHomeController::class, 'index'])->name('home');
+    Route::get('/', [AdminHomeController::class, 'index'])->name('homeadmin');
     Route::get('/test-jquery', [AdminHomeController::class, 'testJquery']);
     Route::get('/test-pdf', [AdminHomeController::class, 'createPDF']);
     Route::post('/testajax', [AdminHomeController::class, 'testAjax'])->name('test.ajax');
