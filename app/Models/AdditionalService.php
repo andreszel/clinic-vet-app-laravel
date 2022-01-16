@@ -19,6 +19,8 @@ class AdditionalService extends Model
         'net_price',
         'gross_price',
         'vat_id',
+        'nightly_net_price',
+        'nightly_gross_price',
         'set_price_in_add',
         'active',
         'description',

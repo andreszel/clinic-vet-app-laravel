@@ -31,6 +31,8 @@
                         <th>Cena netto [PLN]</th>
                         <th>Cena brutto [PLN]</th>
                         <th>VAT [PLN]</th>
+                        <th>Stawka nocna netto [PLN]</th>
+                        <th>Stawka nocna brutto [PLN]</th>
                         <th class="text-center px-3">VAT [%]</th>
                         @can('admin-level')
                         <th>Włączona</th>
@@ -46,6 +48,8 @@
                         <th>Cena netto [PLN]</th>
                         <th>Cena brutto [PLN]</th>
                         <th>VAT [PLN]</th>
+                        <th>Stawka nocna netto [PLN]</th>
+                        <th>Stawka nocna brutto [PLN]</th>
                         <th class="text-center px-3">VAT [%]</th>
                         @can('admin-level')
                         <th>Włączona</th>
@@ -62,6 +66,8 @@
                         <td class="text-right">{{ Str::currency($additionalservice->net_price) }}</td>
                         <td class="text-right">{{ Str::currency($additionalservice->gross_price) }}</td>
                         <td class="text-right">{{ Str::currency($additionalservice->gross_price-$additionalservice->net_price) }}</td>
+                        <td class="text-right">{{ Str::currency($additionalservice->nightly_net_price) }}</td>
+                        <td class="text-right">{{ Str::currency($additionalservice->nightly_gross_price) }}</td>
                         <td class="text-center px-3">{{ $additionalservice->vat->name }}</td>
                         @can('admin-level')
                         <td>

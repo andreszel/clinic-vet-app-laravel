@@ -43,6 +43,24 @@
                     @enderror
                 </div>
             </div>
+
+            <div class="form-group row">
+                <label for="nightly_gross_price" class="col-3 col-form-label">Stawka nocna brutto</label>
+                <div class="col-2">
+                    <div class="input-group">
+                        <input value="{{ $additionalservice->nightly_gross_price }}" id="nightly_gross_price" name="nightly_gross_price" placeholder="Wpisz stawkę nocną brutto" type="text" class="form-control">
+                        <div class="input-group-append">
+                            <div class="input-group-text">PLN</div>
+                        </div>
+                    </div>
+                    @error('nightly_gross_price')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label class="col-md-3" for="vat_id">Vat sprzedaży</label>
                 <div class="col-md-1">

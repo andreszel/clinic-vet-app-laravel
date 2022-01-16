@@ -70,12 +70,21 @@ class AdditionalServiceController extends Controller
         if ($data['set_price_in_visit'] == 1) {
             $data['net_price'] = 0;
             $data['gross_price'] = 0;
+
+            // NIGHTLY
+            $data['nightly_net_price'] = 0;
+            $data['nightly_gross_price'] = 0;
         } else {
             $vat = Vats::where('id', $request['vat_id'])->first();
             $vatDivisor  = 1 + ((int)$vat->name / 100);
             $data['gross_price'] = number_format($request['gross_price'], 2);
             $netPrice = number_format($request['gross_price'] / $vatDivisor, 2);
             $data['net_price'] = $netPrice;
+
+            // NIGHTLY
+            $data['nightly_gross_price'] = number_format($request['nightly_gross_price'], 2);
+            $nightlyNetPrice = number_format($request['nightly_gross_price'] / $vatDivisor, 2);
+            $data['nightly_net_price'] = $nightlyNetPrice;
         }
 
         $data['set_price_in_visit'] = $request['set_price_in_visit'] ? 1 : 0;
@@ -127,11 +136,20 @@ class AdditionalServiceController extends Controller
         if ($data['set_price_in_visit'] == 1) {
             $data['net_price'] = 0;
             $data['gross_price'] = 0;
+
+            // NIGHTLY
+            $data['nightly_net_price'] = 0;
+            $data['nightly_gross_price'] = 0;
         } else {
             $vat = Vats::where('id', $request['vat_id'])->first();
             $vatDivisor  = 1 + ((int)$vat->name / 100);
             $netPrice = number_format($request['gross_price'] / $vatDivisor, 2);
             $data['net_price'] = $netPrice;
+
+            // NIGHTLY
+            $data['nightly_gross_price'] = number_format($request['nightly_gross_price'], 2);
+            $nightlyNetPrice = number_format($request['nightly_gross_price'] / $vatDivisor, 2);
+            $data['nightly_net_price'] = $nightlyNetPrice;
         }
         $data['set_price_in_visit'] = $request['set_price_in_visit'] ? 1 : 0;
 

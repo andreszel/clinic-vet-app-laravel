@@ -27,6 +27,7 @@ class AddAdditionalServices extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'vat_id' => ['required', 'exists:vats,id'],
             'gross_price' => ['required_if:set_price_in_visit,0'],
+            'nightly_gross_price' => ['required_if:set_price_in_visit,0'],
             'set_price_in_visit' => ['required'],
             'active' => ['required'],
             'description' => [],

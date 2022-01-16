@@ -40,6 +40,8 @@ class AdditionalServiceRepository implements AdditionalServiceRepositoryInterfac
         $additional_service->net_price = $postData['net_price'] ?? $additional_service->net_price;
         $additional_service->gross_price = $postData['gross_price'] ?? $additional_service->gross_price;
         $additional_service->set_price_in_visit = $postData['set_price_in_visit'];
+        $additional_service->nightly_net_price = $postData['nightly_net_price'] ?? $additional_service->nightly_net_price;
+        $additional_service->nightly_gross_price = $postData['nightly_gross_price'] ?? $additional_service->nightly_gross_price;
         $additional_service->vat_id  = $postData['vat_id '] ?? $additional_service->vat_id;
         $additional_service->active = $postData['active'] ?? $additional_service->active;
         $additional_service->description = $postData['description'] ?? $additional_service->description;
