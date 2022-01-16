@@ -26,6 +26,8 @@
                     <tr>
                         <th>Lp.</th>
                         <th>Imię i nazwisko</th>
+                        <th>Numer stada</th>
+                        <th>NIP</th>
                         <th>Adres</th>
                         <th>Telefon</th>
                         <th>Email</th>
@@ -36,6 +38,8 @@
                     <tr>
                         <th>Lp.</th>
                         <th>Imię i nazwisko</th>
+                        <th>Numer stada</th>
+                        <th>NIP</th>
                         <th>Adres</th>
                         <th>Telefon</th>
                         <th>Email</th>
@@ -47,6 +51,8 @@
                     <tr>
                         <td>{{ $counter++ }}.</td>
                         <td>{{ $customer->name }} {{ $customer->surname }}</td>
+                        <td>{{ $customer->number_herd }}</td>
+                        <td>{{ $customer->nip }}</td>
                         <td>{{ $customer->address }}</td>
                         <td>{{ $customer->phone }}</td>
                         <td>{{ $customer->email }}</td>

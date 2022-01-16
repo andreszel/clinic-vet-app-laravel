@@ -37,6 +37,29 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label for="number_herd" class="col-md-3 col-form-label">Numer stada</label>
+                <div class="col-md-9">
+                    <input value="{{ $customer->number_herd }}" id="number_herd" name="number_herd" placeholder="Wpisz numer stada" type="text" aria-describedby="nameHelpBlock" class="form-control" required="required">
+                    @error('number_herd')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="nip" class="col-md-3 col-form-label">NIP</label>
+                <div class="col-md-9">
+                    <input value="{{ $customer->nip }}" id="nip" name="nip" placeholder="Wpisz NIP" type="text" aria-describedby="nameHelpBlock" class="form-control" required="required">
+                    @error('nip')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+            <div class="form-group row">
                 <label for="address" class="col-md-3 col-form-label">Adres</label>
                 <div class="col-md-9">
                     <input value="{{ $customer->address }}" id="address" name="address" placeholder="Wpisz adres" type="text" aria-describedby="nameHelpBlock" class="form-control">

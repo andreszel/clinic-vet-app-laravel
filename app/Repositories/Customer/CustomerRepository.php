@@ -42,6 +42,8 @@ class CustomerRepository implements CustomerRepositoryInterface
         $customer = $this->customerModel->findOrFail($id);
 
         $customer->name = $postData['name'] ?? $customer->name;
+        $customer->number_herd = $postData['number_herd'] ?? $customer->number_herd;
+        $customer->nip = $postData['nip'] ?? $customer->nip;
         $customer->surname = $postData['surname'] ?? $customer->surname;
         $customer->address = $postData['address'] ?? $customer->address;
         $customer->phone = $postData['phone'] ?? $customer->phone;

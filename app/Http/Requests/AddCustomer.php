@@ -25,6 +25,8 @@ class AddCustomer extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'number_herd' => ['required', 'string', 'max:255'],
+            'nip' => ['required', 'string', 'max:10'],
             'surname' => ['required', 'string', 'max:255'],
             'address' => ['nullable', 'string'],
             'phone' => ['nullable', 'string'],
