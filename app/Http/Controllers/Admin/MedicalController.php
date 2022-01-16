@@ -9,9 +9,9 @@ use App\Models\Medical;
 use App\Models\UnitMeasure;
 use App\Models\Vats;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Symfony\Component\Console\Input\Input;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\MedicalsImport;
 
 class MedicalController extends Controller
 {
@@ -234,5 +234,29 @@ class MedicalController extends Controller
         // obliczanie brakujących cen i uzupełnienie w obiekcie request - STOP
 
         return $postData;
+    }
+
+    public function fileImportMedicals(Request $request)
+    {
+        $medical = new MedicalsImport;
+        $data = Excel::import($medical, $request->file('file')->store('temp'));
+
+        $all_rows = $medical->getAllRowsCount();
+        $fail_rows = $medical->getFailRowsCount();
+        $fail_margin_rows = $medical->getFailMarginRowsCount();
+
+        if ($fail_rows > 0) {
+            if ($fail_margin_rows > 0) {
+                $message = "Plik został przetworzony prawidłowo, ale nie zaimportowano wszystkich leków. W {$fail_rows} wierszach znajdują się nieprawidłowe dane. W {$fail_margin_rows} wierszach marża leków jest poniżej zera.";
+            } else {
+                $message = "Plik został przetworzony prawidłowo, ale nie zaimportowano wszystkich leków. W {$all_rows} wierszach znajdują się nieprawidłowe dane.";
+            }
+
+            return redirect()->back()->with('warning', $message);
+        } else {
+            $message = "Plik został zaimportowany. Dodane lub zaktualizowane zostało {$all_rows}";
+
+            return redirect()->back()->with('success', $message);
+        }
     }
 }

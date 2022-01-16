@@ -7,9 +7,17 @@
 
     @if(!$medicals->isEmpty())
     @can('admin-level')
-    <a class="btn  btn-sm btn-primary float-right" href="{{ route('medicals.create') }}" title="Dodaj nowy lek"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
+    <a class="btn btn-sm btn-primary float-right" href="{{ route('medicals.create') }}" title="Dodaj nowy lek"><i class="fas fa-fw fa-plus"></i> Dodaj</a>
     @endcan
     @endif
+
+    @can('admin-level')
+    <form action="{{ route('medicals.file_import') }}" class="float-right form-inline mr-3" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="file" name="file" class="form-control  form-control-sm" required="required">
+        <button class="btn btn-sm btn-success">Importuj leki</button>
+    </form>
+    @endcan
 </div>
 
 <!-- DataTales Example -->

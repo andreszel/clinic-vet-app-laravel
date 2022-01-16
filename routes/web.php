@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::put('/update/{id}', [MedicalController::class, 'update'])->name('update')->middleware('can:admin-level');
         Route::delete('/remove/{id}', [MedicalController::class, 'destroy'])->name('remove')->middleware('can:admin-level');
         Route::post('/change-status/{id}', [MedicalController::class, 'changeStatus'])->name('change_status')->middleware('can:admin-level');
+        Route::post('/file-import', [MedicalController::class, 'fileImportMedicals'])->name('file_import')->middleware('can:admin-level');
     });
 
     Route::group(['prefix' => 'customers', 'as' => 'customers.'], function () {

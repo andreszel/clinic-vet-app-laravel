@@ -20,6 +20,11 @@ class MedicalRepository implements MedicalRepositoryInterface
         return $this->medicalModel->findOrFail($id);
     }
 
+    public function getByName(string $name): Medical
+    {
+        return $this->medicalModel->where('name', $name)->firstOrFail();
+    }
+
     public function allPaginated(int $limit)
     {
         return $this->medicalModel
