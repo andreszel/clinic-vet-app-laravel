@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddAdditionalServiceToVisit;
 use App\Http\Requests\AddMedicalToVisit;
 use App\Http\Requests\AddVisitStep1;
+use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\VisitRepositoryInterface;
 use App\Models\AdditionalService;
 use App\Models\Customer;
@@ -23,21 +24,32 @@ use Illuminate\View\View;
 class VisitController extends Controller
 {
     private VisitRepositoryInterface $visitRepository;
+    private UserRepositoryInterface $userRepository;
 
-    public function __construct(VisitRepositoryInterface $visitRepository)
+    public function __construct(UserRepositoryInterface $userRepository, VisitRepositoryInterface $visitRepository)
     {
+        $this->userRepository = $userRepository;
         $this->visitRepository = $visitRepository;
     }
 
     public function index(Request $request): View
     {
-        $phrase = $request->get('phrase');
+        $user_id = $request->get('user_id');
+        $from_date = $request->get('from_date');
+        $to_date = $request->get('to_date');
+        $customer_name = $request->get('customer_name');
+        $customer_surname = $request->get('customer_surname');
+
         $page = $request->get('page');
         $limit = $request->get('limit', VisitRepositoryInterface::LIMIT_DEFAULT);
 
-        $resultPaginator = $this->visitRepository->filterBy($phrase, $limit);
+        $resultPaginator = $this->visitRepository->filterBy($user_id, $from_date, $to_date, $customer_name, $customer_surname, $limit);
         $resultPaginator->appends([
-            'phrase' => $phrase
+            'user_id' => $user_id,
+            'from_date' => $from_date,
+            'to_date' => $to_date,
+            'customer_name' => $customer_name,
+            'customer_surname' => $customer_surname,
         ]);
 
         $counter = 1;
@@ -45,9 +57,17 @@ class VisitController extends Controller
             $counter = (($page - 1) * $limit) + 1;
         }
 
+        $users = $this->userRepository->all();
+
+
         return view('admin.visits.list', [
             'visits' => $resultPaginator,
-            'phrase' => $phrase,
+            'users' => $users,
+            'user_id' => $user_id,
+            'from_date' => $from_date,
+            'to_date' => $to_date,
+            'customer_name' => $customer_name,
+            'customer_surname' => $customer_surname,
             'counter' => $counter,
             'visitRepository' => $this->visitRepository
         ]);

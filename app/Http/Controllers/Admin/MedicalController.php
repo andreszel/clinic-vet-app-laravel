@@ -29,13 +29,13 @@ class MedicalController extends Controller
      */
     public function index(Request $request): View
     {
-        $phrase = $request->get('phrase');
+        $name = $request->get('name');
         $page = (int)$request->get('page');
         $limit = $request->get('limit', MedicalRepositoryInterface::LIMIT_DEFAULT);
 
-        $resultPaginator = $this->medicalRepository->filterBy($phrase, $limit);
+        $resultPaginator = $this->medicalRepository->filterBy($name, $limit);
         $resultPaginator->appends([
-            'phrase' => $phrase
+            'name' => $name
         ]);
 
         $counter = 1;
@@ -46,7 +46,7 @@ class MedicalController extends Controller
 
         return view('admin.medicals.list', [
             'medicals' => $resultPaginator,
-            'phrase' => $phrase,
+            'name' => $name,
             'counter' => $counter
         ]);
     }

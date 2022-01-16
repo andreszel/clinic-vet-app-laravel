@@ -26,14 +26,20 @@ class CustomerController extends Controller
      */
     public function index(Request $request): View
     {
-        $phrase = $request->get('phrase');
+        $name = $request->get('name');
+        $surname = $request->get('surname');
         $page = $request->get('page');
         $limit = $request->get('limit', CustomerRepositoryInterface::LIMIT_DEFAULT);
 
-        $resultPaginator = $this->customerRepository->filterBy($phrase, $limit);
+        $resultPaginator = $this->customerRepository->filterBy($name, $surname, $limit);
         $resultPaginator->appends([
-            'phrase' => $phrase
+            'name' => $name,
+            'surname' => $surname
         ]);
+        //dd($resultPaginator);
+
+        $url = $request->url();
+        $uri = $request->getRequestUri();
 
         $counter = 1;
         if ($page >= 1) {
@@ -42,7 +48,8 @@ class CustomerController extends Controller
 
         return view('admin.customers.list', [
             'customers' => $resultPaginator,
-            'phrase' => $phrase,
+            'name' => $name,
+            'surname' => $surname,
             'counter' => $counter
         ]);
     }

@@ -4,7 +4,7 @@
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-gray-800">Wizyty lekarskie</h1>
 
-
+@include('admin.visits.search')
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -15,6 +15,8 @@
 
         @if(!$visits->isEmpty())
         <div class="col-xl-12 form-group" id="validation-message-additionalservice"></div>
+
+        {{ $visits->links() }}
 
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
@@ -75,6 +77,9 @@
                 </tbody>
             </table>
         </div>
+
+        {{ $visits->links() }}
+
         @else
         <div class="text-center my-3">
             <h4 class="text-info">Lista jest pusta</h4>
@@ -88,3 +93,4 @@
 @endsection
 
 @include('helpers.sections.datatables')
+@include('helpers.sections.datetime')

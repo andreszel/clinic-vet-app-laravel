@@ -13,5 +13,5 @@ interface CustomerRepositoryInterface
     public function delete(int $id);
     public function create(array $data);
     public function update(array $postData, int $id): void;
-    public function filterBy(?string $phrase, int $limit = self::LIMIT_DEFAULT);
+    public function filterBy(?string $name, ?string $surname, int $limit = self::LIMIT_DEFAULT);
 }

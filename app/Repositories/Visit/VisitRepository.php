@@ -59,19 +59,46 @@ class VisitRepository implements VisitRepositoryInterface
         $visit->update();
     }
 
-    public function filterBy(?string $phrase, int $limit = self::LIMIT_DEFAULT)
+    public function filterBy(?int $user_id, ?string $from_date, ?string $to_date, ?string $customer_name, ?string $customer_surname, int $limit = self::LIMIT_DEFAULT)
     {
         $user = Auth::user();
 
         $query = $this->visitModel
             ->with(['user', 'customer', 'pay_type']);
+
+        // administrator wszystkie, lekarz tylko swoje
         if ($user->type_id != 1) {
             $query = $query->where('user_id', $user->id);
         }
+
         $query->orderBy('created_at');
 
-        if ($phrase) {
-            $query->whereRaw('name like ?', ["%$phrase%"]);
+        // lekarz
+        if ($user_id) {
+            $query = $query->where('user_id', $user_id);
+        }
+
+        // Data wizyty od
+        if ($from_date) {
+            $query->whereRaw('visit_date >= ?', [$from_date]);
+        }
+
+        // Data wizyty do
+        if ($to_date) {
+            $query->whereRaw('visit_date <= ?', [$to_date]);
+        }
+
+        // Imię klienta
+        if ($customer_name) {
+            $query->whereHas('customer', function ($query) use ($customer_name) {
+                $query->whereRaw('name LIKE ?', ['%' . $customer_name . '%']);
+            });
+        }
+        // Nazwisko klienta
+        if ($customer_surname) {
+            $query->whereHas('customer', function ($query) use ($customer_surname) {
+                $query->whereRaw('surname LIKE ?', ['%' . $customer_surname . '%']);
+            });
         }
 
         return $query->paginate($limit);

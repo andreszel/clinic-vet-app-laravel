@@ -10,6 +10,8 @@
     @endif
 </div>
 
+@include('admin.customers.search')
+
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -19,6 +21,8 @@
 
         @if(!$customers->isEmpty())
         <div class="col-xl-12 form-group" id="validation-message-customer"></div>
+
+        {{ $customers->links() }}
 
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
@@ -73,6 +77,8 @@
                 </tbody>
             </table>
         </div>
+
+        {{ $customers->links() }}
         @else
         <div class="text-center my-3">
             <h4 class="text-info">Lista jest pusta</h4>

@@ -70,14 +70,14 @@ class MedicalRepository implements MedicalRepositoryInterface
         $medical->save();
     }
 
-    public function filterBy(?string $phrase, int $limit = self::LIMIT_DEFAULT)
+    public function filterBy(?string $name, int $limit = self::LIMIT_DEFAULT)
     {
         $query = $this->medicalModel
             ->with(['vat_buy', 'vat_sell', 'unit_measure'])
             ->orderBy('created_at');
 
-        if ($phrase) {
-            $query->whereRaw('name like ?', ["$phrase%"]);
+        if ($name) {
+            $query->whereRaw('name like ?', ["$name%"]);
         }
 
         return $query->paginate($limit);

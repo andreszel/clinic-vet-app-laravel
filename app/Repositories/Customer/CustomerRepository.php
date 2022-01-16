@@ -51,13 +51,17 @@ class CustomerRepository implements CustomerRepositoryInterface
         $customer->update();
     }
 
-    public function filterBy(?string $phrase, int $limit = self::LIMIT_DEFAULT)
+    public function filterBy(?string $name, ?string $surname, int $limit = self::LIMIT_DEFAULT)
     {
         $query = $this->customerModel
             ->orderBy('created_at');
 
-        if ($phrase) {
-            $query->whereRaw('name like ?', ["$phrase%"]);
+        if ($name) {
+            $query->whereRaw('name like ?', ["$name%"]);
+        }
+
+        if ($surname) {
+            $query->whereRaw('surname like ?', ["$surname%"]);
         }
 
         return $query->paginate($limit);
