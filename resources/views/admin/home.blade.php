@@ -59,7 +59,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Obroty za m-c bieżący</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">PLN @currency_format($turnoverCurrentMonth)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">PLN {{ Str::currency($turnoverCurrentMonth) }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -77,7 +77,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Zysk za m-c bieżący</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">PLN @currency_format($marginCurrentMonth)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">PLN {{ Str::currency($marginCurrentMonth) }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>

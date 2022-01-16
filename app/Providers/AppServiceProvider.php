@@ -40,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
             return number_format((float)$price, 2, '.', ' ');
         });
 
+        //z jakiego powodu nie działa, macro działa ok
         Blade::directive('currency_format', function ($money) {
             //return sprintf('%.2f', $money);
             return number_format((float)$money, 2, '.', ' ');

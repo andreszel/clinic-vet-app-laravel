@@ -59,9 +59,9 @@
                     <tr>
                         <td>{{ $counter++ }}.</td>
                         <td>{{ $additionalservice->name }}</td>
-                        <td class="text-right">{{ $additionalservice->net_price }}</td>
-                        <td class="text-right">{{ $additionalservice->gross_price }}</td>
-                        <td class="text-right">@currency_format($additionalservice->gross_price-$additionalservice->net_price)</td>
+                        <td class="text-right">{{ Str::currency($additionalservice->net_price) }}</td>
+                        <td class="text-right">{{ Str::currency($additionalservice->gross_price) }}</td>
+                        <td class="text-right">{{ Str::currency($additionalservice->gross_price-$additionalservice->net_price) }}</td>
                         <td class="text-center px-3">{{ $additionalservice->vat->name }}</td>
                         @can('admin-level')
                         <td>
