@@ -55,6 +55,8 @@ class VisitRepository implements VisitRepositoryInterface
         $visit->visit_cleared = $postData['visit_cleared'] ?? $visit->visit_cleared;
         $visit->confirm_visit = $postData['confirm_visit'] ?? $visit->confirm_visit;
         $visit->description = $postData['description'] ?? $visit->description;
+        $visit->nightly_visit = $postData['nightly_visit'] ?? $visit->nightly_visit;
+        $visit->paid_gross_price = $postData['paid_gross_price'] ?? $visit->paid_gross_price;
 
         $visit->update();
     }

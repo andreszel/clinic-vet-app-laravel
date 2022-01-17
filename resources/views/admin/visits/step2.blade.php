@@ -50,54 +50,36 @@
                             <tr>
                                 <th>Lp.</th>
                                 <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
-                                <th class="text-center">VAT [%]</th>
-                                <th class="text-right">Suma</th>
-                                <th>Action</th>
+                                <th>Formularz</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Lp.</th>
-                                <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
-                                <th class="text-center">VAT [%]</th>
-                                <th class="text-right">Suma</th>
-                                <th>Action</th>
-                            </tr>
-                        </tfoot>
                         <tbody>
                             @foreach($medicals ?? [] as $medical)
                             <tr>
                                 <td>{{ $counter++ }}.</td>
                                 <td>{{ $medical->name }}</td>
-                                <td class="text-right">{{ $medical->net_price_sell }}</td>
-                                <td class="text-right">{{ $medical->gross_price_sell }}</td>
-                                <td class="text-center">{{ $medical->vat_sell->name }}</td>
-                                <td class="text-right"></td>
-                                <td>
+                                <td class="text-right">
                                     <form class="form-inline" action="{{ route('visits.add_medical', ['id' => $visit->id, 'medical_id'=>$medical->id]) }}" method="POST">
                                         <input type="hidden" name="visit_id" value="{{$visit->id}}">
                                         <input type="hidden" name="medical_id" value="{{$medical->id}}">
                                         @csrf
                                         @method('POST')
-                                        <div class="col-auto">
-                                            @php
-                                            $default_value = 1;
-                                            $step = 1;
-                                            if($medical->unit_measure->id == 2) {
-                                            $default_value = 100;
-                                            $step = 5;
-                                            }
-                                            @endphp
-                                            <input type="number" name="quantity" id="quantity" value="{{ $default_value }}" class="form-control" step="{{$step}}" placeholder="Wpisz ilość" required="required" />
-                                        </div>
-                                        <div class="col-auto">{{ $medical->unit_measure->name }}</div>
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Dodaj do wizyty</button>
-                                        </div>
+                                        @php
+                                        $default_value = 1;
+                                        $step = 1;
+                                        if($medical->unit_measure->id == 2) {
+                                        $default_value = 100;
+                                        $step = 5;
+                                        }
+                                        @endphp
+                                        @if($medical->unit_measure->can_change_price)
+                                        <label for="gross_price" class="mr-2">Cena brutto:</label>
+                                        <input type="number" name="gross_price_sell" id="gross_price_sell" value="{{ $medical->gross_price_sell }}" class="form-control col-md-2 text-right mr-2" required="required" />
+                                        @endif
+                                        <label for="quantity">Ilość:</label>
+                                        <input type="number" name="quantity" id="quantity" value="{{ $default_value }}" class="form-control col-md-2 mr-2" step="{{$step}}" placeholder="Wpisz ilość" required="required" />
+                                        <span class="mr-2">{{ $medical->unit_measure->short_name }}</span>
+                                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Dodaj do wizyty</button>
                                     </form>
                                 </td>
                             </tr>
@@ -138,23 +120,8 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Lp.</th>
-                                <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
-                                <th class="text-center">VAT [%]</th>
-                                <th class="text-center">Ilość</th>
-                                <th class="text-right">Suma [PLN]</th>
-                                <th>Action</th>
-                            </tr>
-                        </tfoot>
                         <tbody>
                             @foreach($visit_medicals ?? [] as $visit_medical)
-                            @php
-                            $sum_all_medicals += $visit_medical->sum_gross_price;
-                            @endphp
                             <tr>
                                 <td>{{ $counter_visit_medicals++ }}.</td>
                                 <td>{{ $visit_medical->medical->name }}</td>

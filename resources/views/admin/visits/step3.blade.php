@@ -50,31 +50,20 @@
                             <tr>
                                 <th>Lp.</th>
                                 <th>Nazwa usługi</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
+                                <th class="text-right">Cena netto [PLN] @include('helpers.sections.nightly_visit_icon', ['nightly_visit' => $visit->nightly_visit])</th>
+                                <th class="text-right">Cena brutto [PLN] @include('helpers.sections.nightly_visit_icon', ['nightly_visit' => $visit->nightly_visit])</th>
                                 <th class="text-center">VAT [%]</th>
                                 <th class="text-right">Suma</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Lp.</th>
-                                <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
-                                <th class="text-center">VAT [%]</th>
-                                <th class="text-right">Suma</th>
-                                <th>Action</th>
-                            </tr>
-                        </tfoot>
                         <tbody>
                             @foreach($additional_services ?? [] as $additional_service)
                             <tr>
                                 <td>{{ $counter++ }}.</td>
                                 <td>{{ $additional_service->name }}</td>
-                                <td class="text-right">{{ $additional_service->net_price }}</td>
-                                <td class="text-right">{{ $additional_service->gross_price }}</td>
+                                <td class="text-right">{{ ($visit->nightly_visit ? $additional_service->nightly_net_price : $additional_service->net_price) }}</td>
+                                <td class="text-right">{{ ($visit->nightly_visit ? $additional_service->nightly_gross_price : $additional_service->gross_price) }}</td>
                                 <td class="text-center">{{ $additional_service->vat->name }}</td>
                                 <td class="text-right"></td>
                                 <td>
@@ -84,14 +73,12 @@
                                         <input type="hidden" name="set_price_in_visit" value="{{$additional_service->set_price_in_visit}}">
                                         @csrf
                                         @method('POST')
-                                        @if($additional_service->set_price_in_visit)
                                         <div class="col-auto">
                                             Cena
                                         </div>
                                         <div class="col-auto">
-                                            <input type="text" name="gross_price" id="gross_price" value="" class="form-control price-format" placeholder="Wpisz cenę" required="required" />
+                                            <input type="number" name="gross_price" id="gross_price" value="{{ $additional_service->set_price_in_visit ? 0 : ($visit->nightly_visit ? $additional_service->nightly_gross_price : $additional_service->gross_price) }}" min="{{ $additional_service->set_price_in_visit ? 0 : $additional_service->gross_price }}" class="form-control price-format" placeholder="Wpisz cenę" required="required" />
                                         </div>
-                                        @endif
                                         <div class="col-auto">
                                             Ilość
                                         </div>
@@ -126,7 +113,7 @@
         <div class="row">
             <div class="col-md-12 mt-3">
                 <h6 class="mb-3 font-weight-bold text-primary">Lista usług dodatkowych dodanych do wizyty</h6>
-                @if(count($visit_services) > 0)
+                @if(count($visit_additional_services) > 0)
                 <div class="table-responsive">
                     <table class="table table-bordered" width="100%" cellspacing="0">
                         <thead>
@@ -141,30 +128,18 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Lp.</th>
-                                <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
-                                <th class="text-center">VAT [%]</th>
-                                <th class="text-center">Ilość</th>
-                                <th class="text-right">Suma [PLN]</th>
-                                <th>Action</th>
-                            </tr>
-                        </tfoot>
                         <tbody>
-                            @foreach($visit_services ?? [] as $visit_service)
+                            @foreach($visit_additional_services ?? [] as $visit_additional_service)
                             <tr>
-                                <td>{{ $counter_visit_services++ }}.</td>
-                                <td>{{ $visit_service->additionalservice->name }}</td>
-                                <td class="text-right">{{ $visit_service->net_price }}</td>
-                                <td class="text-right">{{ $visit_service->gross_price }}</td>
-                                <td class="text-center">{{ $visit_service->vat->name }}</td>
-                                <td class="text-center">{{ $visit_service->quantity }}</td>
-                                <td class="text-right">{{ $visit_service->sum_gross_price }}</td>
+                                <td>{{ $counter_visit_additional_services++ }}.</td>
+                                <td>{{ $visit_additional_service->additionalservice->name }}</td>
+                                <td class="text-right">{{ $visit_additional_service->net_price }}</td>
+                                <td class="text-right">{{ $visit_additional_service->gross_price }}</td>
+                                <td class="text-center">{{ $visit_additional_service->vat->name }}</td>
+                                <td class="text-center">{{ $visit_additional_service->quantity }}</td>
+                                <td class="text-right">{{ $visit_additional_service->sum_gross_price }}</td>
                                 <td>
-                                    <form action="{{ route('visits.remove_additional_service', ['id' => $visit_service->id, 'visit_id' => $visit->id]) }}" method="post">
+                                    <form action="{{ route('visits.remove_additional_service', ['id' => $visit_additional_service->id, 'visit_id' => $visit->id]) }}" method="post">
                                         @method('DELETE')
                                         {{ csrf_field() }}
                                         <button type="submit" class="btn btn-sm text-danger mr-2" onclick="return confirm('Czy na pewno chcesz usunąć?')"><i class="fas fa-trash-alt"></i></button>
@@ -177,7 +152,7 @@
                 </div>
                 <div class="row my-5">
                     <div class="col-md-12 text-right">
-                        <h4>Suma wszystkich dodanych usług: {{ Str::currency($sum_all_services) }} PLN</h4>
+                        <h4>Suma wszystkich dodanych usług: {{ Str::currency($sum_all_additional_services) }} PLN</h4>
                     </div>
                 </div>
                 @else

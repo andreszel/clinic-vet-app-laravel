@@ -251,6 +251,8 @@ class ReportController extends Controller
         $newVisit['margin_doctor'] = $calcVisitStats['margin_doctor'];
         $newVisit['pay_type_name'] = $calcVisitStats['pay_type_name'];
 
+        //dd($newVisit);
+
         if (in_array($visit->user_id, $arr)) {
             $arr[$visit->user_id]['visits'][] = $newVisit;
         } else {
@@ -289,9 +291,9 @@ class ReportController extends Controller
                     $sum_vat_price_additional_service += $additional_service['sum_gross_price'] - $additional_service['sum_net_price'];
                 }
 
-                $arr[$key]['sum_net_price_additional_service'] = $sum_net_price_medical;
-                $arr[$key]['sum_gross_price_additional_service'] = $sum_gross_price_medical;
-                $arr[$key]['sum_vat_price_additional_service'] = $sum_vat_price_medical;
+                $arr[$key]['sum_net_price_additional_service'] = $sum_net_price_additional_service;
+                $arr[$key]['sum_gross_price_additional_service'] = $sum_gross_price_additional_service;
+                $arr[$key]['sum_vat_price_additional_service'] = $sum_vat_price_additional_service;
             }
         }
 

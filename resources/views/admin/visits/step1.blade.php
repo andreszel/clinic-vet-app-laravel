@@ -65,6 +65,29 @@
                 </div>
             </div>
 
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label">Taryfa nocna</label>
+                <div class="col-md-8">
+                    <div class="custom-controls-stacked">
+                        <div class="custom-control custom-radio">
+                            <input name="nightly_visit" id="nightly_visit_0" type="radio" required="required" class="custom-control-input" value="1" {{ $visit->nightly_visit ? 'checked="checked"' : '' }}>
+                            <label for="nightly_visit_0" class="custom-control-label">Tak</label>
+                        </div>
+                    </div>
+                    <div class="custom-controls-stacked">
+                        <div class="custom-control custom-radio">
+                            <input name="nightly_visit" id="nightly_visit_1" type="radio" required="required" class="custom-control-input" value="0" {{ $visit->nightly_visit == false ? 'checked="checked"' : '' }}>
+                            <label for="nightly_visit_1" class="custom-control-label">Nie</label>
+                        </div>
+                    </div>
+                    @error('active')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
             @if($errors->any())
             {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
             @endif

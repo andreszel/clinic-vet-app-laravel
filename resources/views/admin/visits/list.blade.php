@@ -26,6 +26,7 @@
                         <th>Klient</th>
                         <th>Data wizyty</th>
                         <th>Cena brutto [PLN]</th>
+                        <th>Zapłacono [PLN]</th>
                         <th>Lekarz</th>
                         <th>Wizyta potwierdzona</th>
                         <th>Data potwierdzenia</th>
@@ -38,6 +39,7 @@
                         <th>Klient</th>
                         <th>Data wizyty</th>
                         <th>Cena brutto [PLN]</th>
+                        <th>Zapłacono [PLN]</th>
                         <th>Lekarz</th>
                         <th>Wizyta potwierdzona</th>
                         <th>Data potwierdzenia</th>
@@ -51,6 +53,7 @@
                         <td>{{ $visit->customer->name }} {{ $visit->customer->surname }}</td>
                         <td>{{ $visit->visit_date }}</td>
                         <td class="text-right">{{ $visit->gross_price }}</td>
+                        <td class="text-right">{{ $visit->paid_gross_price }}</td>
                         <td>{{ $visit->user->name }} {{ $visit->user->surname }}</td>
                         <td>{{ $visit->confirm_visit ? 'tak' : 'nie' }}</td>
                         <td>{{ $visit->confirm_visit ? $visit->updated_at : '' }}</td>

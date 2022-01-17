@@ -184,7 +184,7 @@
 
         <div class="row my-5">
             <div class="col-md-12 text-center">
-                <h4 class="alert alert-info">Koszt wizyty: {{ Str::currency($sum_all_medicals+$sum_all_additional_services) }} PLN</h4>
+                <h4 class="alert alert-info"><span class="text-uppercase">Do zapłaty:</span> {{ Str::currency($sum_all_medicals + $sum_all_additional_services) }} PLN</h4>
                 <p>Ważna! Kliknięcie przycisku Zapisz wizytę oznacza ostateczne zatwierdzenie wizyty lekarskiej.</p>
                 <p class="text-warning">Edycja wizyty na Twoim koncie możliwa max w czasie {{ $maxTimeToEdit }} minut od zapisania wizyty. </p>
             </div>
@@ -194,9 +194,15 @@
         <form id="save-summary-form" action="{{ route('visits.store_summary', ['id'=>$visit->id]) }}" method="POST">
             @csrf
             @method('PUT')
-            <div class="mb-3">
-                <label for="description" class="form-label">Dodatkowe informacje do wizyty</label>
-                <textarea class="form-control" id="description" name="description" rows="3">{{ $visit->description }}</textarea>
+            <div class="row">
+                <div class="col-md-9 mb-3">
+                    <label for="description" class="form-label">Dodatkowe informacje do wizyty</label>
+                    <textarea class="form-control" id="description" name="description" rows="3">{{ $visit->description }}</textarea>
+                </div>
+                <div class="col-md-3 mb-3 text-center">
+                    <label for="paid_gross_price" class="form-label">Zapłacono</label>
+                    <input type="number" class="form-control form-control-lg text-center col-md-12" id="paid_gross_price" name="paid_gross_price" value="{{ $visit->confirm_visit ? $visit->paid_gross_price : number_format($sum_all_medicals + $sum_all_additional_services,2,'.','') }}">
+                </div>
             </div>
             <div class="row mt-4 mb-1">
                 <div class="col-md-12">

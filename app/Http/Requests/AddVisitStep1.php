@@ -26,7 +26,8 @@ class AddVisitStep1 extends FormRequest
         return [
             'customer_id' => ['required', 'exists:customers,id', 'integer'],
             'pay_type_id' => ['required', 'exists:pay_types,id', 'integer'],
-            'visit_date' => ['required', 'date_format:Y-m-d']
+            'visit_date' => ['required', 'date_format:Y-m-d'],
+            'nightly_visit' => ['required']
         ];
     }
 }
