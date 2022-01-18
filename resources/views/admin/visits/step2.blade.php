@@ -50,6 +50,7 @@
                             <tr>
                                 <th>Lp.</th>
                                 <th>Nazwa leku</th>
+                                <th>Cena brutto PLN @include('helpers.sections.nightly_visit_icon', ['nightly_visit' => $visit->nightly_visit])</th>
                                 <th>Formularz</th>
                             </tr>
                         </thead>
@@ -58,6 +59,7 @@
                             <tr>
                                 <td>{{ $counter++ }}.</td>
                                 <td>{{ $medical->name }}</td>
+                                <td class="text-right">{{ $medical->gross_price_sell }}</td>
                                 <td class="text-right">
                                     <form class="form-inline" action="{{ route('visits.add_medical', ['id' => $visit->id, 'medical_id'=>$medical->id]) }}" method="POST">
                                         <input type="hidden" name="visit_id" value="{{$visit->id}}">
@@ -73,10 +75,9 @@
                                         }
                                         @endphp
                                         @if($medical->unit_measure->can_change_price)
-                                        <label for="gross_price" class="mr-2">Cena brutto:</label>
-                                        <input type="number" name="gross_price_sell" id="gross_price_sell" value="{{ $medical->gross_price_sell }}" class="form-control col-md-2 text-right mr-2" required="required" />
+                                        <input type="text" name="gross_price_sell" id="gross_price_sell" value="{{ str_replace(',','.',$medical->gross_price_sell) }}" onChange="if(this.value=='NaN' || this.value==''){this.value='0.00'};this.value=parseFloat(this.value.replace(',','.')).toFixed(2);" class="form-control col-md-3 text-right mr-2" required="required" />
                                         @endif
-                                        <label for="quantity">Ilość:</label>
+                                        <span class="mr-2">Ilość:</span>
                                         <input type="number" name="quantity" id="quantity" value="{{ $default_value }}" class="form-control col-md-2 mr-2" step="{{$step}}" placeholder="Wpisz ilość" required="required" />
                                         <span class="mr-2">{{ $medical->unit_measure->short_name }}</span>
                                         <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Dodaj do wizyty</button>
@@ -112,8 +113,8 @@
                             <tr>
                                 <th>Lp.</th>
                                 <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
+                                <th class="text-right">Cena netto [PLN] @include('helpers.sections.nightly_visit_icon', ['nightly_visit' => $visit->nightly_visit])</th>
+                                <th class="text-right">Cena brutto [PLN] @include('helpers.sections.nightly_visit_icon', ['nightly_visit' => $visit->nightly_visit])</th>
                                 <th class="text-center">VAT [%]</th>
                                 <th class="text-center">Ilość</th>
                                 <th class="text-right">Suma [PLN]</th>

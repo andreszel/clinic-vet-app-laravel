@@ -252,6 +252,8 @@ class VisitRepository implements VisitRepositoryInterface
         $additional_services_margin_company_all = 0;
         $additional_services_margin_all = 0;
 
+        $turnover = 0;
+
         // wysokość marży za usługi i za leki dla lekarza, który dodał wizytę
         $commission_medicals = $visit->user->commission_medicals;
         $commission_services = $visit->user->commission_services;
@@ -260,6 +262,8 @@ class VisitRepository implements VisitRepositoryInterface
         foreach ($visit->visit_medicals as $visit_medical) {
             //turnover medicals
             $medicals_turnover += $visit_medical->sum_gross_price;
+            $turnover += $visit_medical->sum_gross_price;
+
             // all margin
             $medical_gross_margin = $visit_medical->sum_gross_margin;
             // margin doctor
@@ -280,6 +284,7 @@ class VisitRepository implements VisitRepositoryInterface
         foreach ($visit->additional_services as $additional_service) {
             // turnover additional servies
             $additional_services_turnover += $additional_service->sum_gross_price;
+            $turnover += $additional_service->sum_gross_price;
 
             // margin is gross price
             $additional_service_gross_margin = $additional_service->sum_gross_price;
@@ -318,6 +323,7 @@ class VisitRepository implements VisitRepositoryInterface
         $data['pay_type_name'] = $visit->pay_type->name;
         $data['net_price'] = $visit->net_price;
         $data['gross_price'] = $visit->gross_price;
+
         // medicals
         $data['medicals_turnover'] = $medicals_turnover;
         $data['medicals_margin_doctor_all'] = $medicals_margin_doctor_all;
@@ -331,7 +337,7 @@ class VisitRepository implements VisitRepositoryInterface
         $data['additional_services_margin_all'] = $additional_services_margin_all;
 
         // sum
-        $data['turnover'] = $medicals_turnover + $additional_services_turnover;
+        $data['turnover'] = $turnover;
         $data['margin_company'] = $medicals_margin_company_all + $additional_services_turnover;
         $data['margin_doctor'] = $medicals_margin_doctor_all + $additional_services_margin_company_all;
         $data['margin_all'] = $medicals_margin_all + $additional_services_margin_all;
@@ -353,7 +359,7 @@ class VisitRepository implements VisitRepositoryInterface
         unset($newData['pay_type_name']);
 
         foreach ($newData as $key => $value) {
-            $newData[$key] = 0;
+            $newData[$key] = (int)0;
         }
 
         foreach ($data as $key => $item) {

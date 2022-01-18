@@ -205,7 +205,6 @@ class ReportController extends Controller
         }
 
         $visit_calc_details = $this->addSummaryVisitToCalcDetails($visit_calc_details);
-
         //dd($visit_calc_details);
 
         return view(
@@ -402,6 +401,8 @@ class ReportController extends Controller
         $calcVisitStats = $this->visitRepository->calcVisitStats($visit);
         $exists = false;
 
+        //dump($calcVisitStats);
+
         foreach ($arr as $key => $item) {
             if ($calcVisitStats['user_id'] == $item['user_id']) {
 
@@ -418,6 +419,10 @@ class ReportController extends Controller
                 $newItem['additional_services_margin_doctor_all'] += $calcVisitStats['additional_services_margin_doctor_all'];
                 $newItem['additional_services_margin_company_all'] += $calcVisitStats['additional_services_margin_company_all'];
                 $newItem['additional_services_margin_all'] += $calcVisitStats['additional_services_margin_all'];
+                $newItem['turnover'] += $calcVisitStats['turnover'];
+                $newItem['margin_company'] += $calcVisitStats['margin_company'];
+                $newItem['margin_doctor'] += $calcVisitStats['margin_doctor'];
+                $newItem['margin_all'] += $calcVisitStats['margin_all'];
 
                 // nadpisujemy całą tablicę
                 $arr[$key] = $newItem;

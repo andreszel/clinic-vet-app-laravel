@@ -52,8 +52,6 @@
                                 <th>Nazwa usługi</th>
                                 <th class="text-right">Cena netto [PLN] @include('helpers.sections.nightly_visit_icon', ['nightly_visit' => $visit->nightly_visit])</th>
                                 <th class="text-right">Cena brutto [PLN] @include('helpers.sections.nightly_visit_icon', ['nightly_visit' => $visit->nightly_visit])</th>
-                                <th class="text-center">VAT [%]</th>
-                                <th class="text-right">Suma</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -64,8 +62,6 @@
                                 <td>{{ $additional_service->name }}</td>
                                 <td class="text-right">{{ ($visit->nightly_visit ? $additional_service->nightly_net_price : $additional_service->net_price) }}</td>
                                 <td class="text-right">{{ ($visit->nightly_visit ? $additional_service->nightly_gross_price : $additional_service->gross_price) }}</td>
-                                <td class="text-center">{{ $additional_service->vat->name }}</td>
-                                <td class="text-right"></td>
                                 <td>
                                     <form class="form-inline" action="{{ route('visits.add_additional_service', ['id' => $visit->id, 'additional_service_id'=>$additional_service->id]) }}" method="POST">
                                         <input type="hidden" name="visit_id" value="{{$visit->id}}">
@@ -73,21 +69,10 @@
                                         <input type="hidden" name="set_price_in_visit" value="{{$additional_service->set_price_in_visit}}">
                                         @csrf
                                         @method('POST')
-                                        <div class="col-auto">
-                                            Cena
-                                        </div>
-                                        <div class="col-auto">
-                                            <input type="number" name="gross_price" id="gross_price" value="{{ $additional_service->set_price_in_visit ? 0 : ($visit->nightly_visit ? $additional_service->nightly_gross_price : $additional_service->gross_price) }}" min="{{ $additional_service->set_price_in_visit ? 0 : $additional_service->gross_price }}" class="form-control price-format" placeholder="Wpisz cenę" required="required" />
-                                        </div>
-                                        <div class="col-auto">
-                                            Ilość
-                                        </div>
-                                        <div class="col-auto">
-                                            <input type="number" name="quantity" id="quantity" value="1" class="form-control col-4" placeholder="Wpisz ilość" required="required" />
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Dodaj do wizyty</button>
-                                        </div>
+                                        <input type="number" name="gross_price" id="gross_price" value="{{ $additional_service->set_price_in_visit ? 0 : ($visit->nightly_visit ? $additional_service->nightly_gross_price : $additional_service->gross_price) }}" min="{{ $additional_service->set_price_in_visit ? 0 : $additional_service->gross_price }}" class="form-control col-md-3 text-right mr-2" placeholder="Wpisz cenę" required="required" />
+                                        <span class="mr-2">Ilość:</span>
+                                        <input type="number" name="quantity" id="quantity" value="1" class="form-control col-md-2 mr-2" placeholder="Wpisz ilość" required="required" />
+                                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Dodaj do wizyty</button>
                                     </form>
                                 </td>
                             </tr>
@@ -120,9 +105,7 @@
                             <tr>
                                 <th>Lp.</th>
                                 <th>Nazwa leku</th>
-                                <th class="text-right">Cena netto [PLN]</th>
-                                <th class="text-right">Cena brutto [PLN]</th>
-                                <th class="text-center">VAT [%]</th>
+                                <th class="text-right">Cena brutto [PLN] @include('helpers.sections.nightly_visit_icon', ['nightly_visit' => $visit->nightly_visit])</th>
                                 <th class="text-center">Ilość</th>
                                 <th class="text-right">Suma [PLN]</th>
                                 <th>Action</th>
@@ -133,9 +116,7 @@
                             <tr>
                                 <td>{{ $counter_visit_additional_services++ }}.</td>
                                 <td>{{ $visit_additional_service->additionalservice->name }}</td>
-                                <td class="text-right">{{ $visit_additional_service->net_price }}</td>
                                 <td class="text-right">{{ $visit_additional_service->gross_price }}</td>
-                                <td class="text-center">{{ $visit_additional_service->vat->name }}</td>
                                 <td class="text-center">{{ $visit_additional_service->quantity }}</td>
                                 <td class="text-right">{{ $visit_additional_service->sum_gross_price }}</td>
                                 <td>
