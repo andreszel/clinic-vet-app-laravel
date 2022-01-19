@@ -43,6 +43,7 @@ class ReportController extends Controller
         $medical_stats_vat_price_sum = 0;
         $medical_stats_net_price_sum = 0;
         $medical_stats_gross_price_sum = 0;
+        $medical_stats_paid_price_sum = 0;
         $turnover_margin_stats = [];
         $turnover_margin_stats_sum = [];
         $additional_service_stats = [];
@@ -161,6 +162,9 @@ class ReportController extends Controller
         }
 
         foreach ($visits as $visit) {
+
+            $medical_stats_paid_price_sum += $visit->paid_gross_price;
+
             foreach ($visit->visit_medicals as $visit_medical) {
                 $vat_price = $visit_medical->sum_gross_price - $visit_medical->sum_net_price;
 
@@ -224,6 +228,7 @@ class ReportController extends Controller
                 'medical_stats_vat_price_sum' => $medical_stats_vat_price_sum,
                 'medical_stats_net_price_sum' => $medical_stats_net_price_sum,
                 'medical_stats_gross_price_sum' => $medical_stats_gross_price_sum,
+                'medical_stats_paid_price_sum' => $medical_stats_paid_price_sum,
                 'additional_service_stats' => $additional_service_stats,
                 'additional_service_stats_vat_price_sum' => $additional_service_stats_vat_price_sum,
                 'additional_service_stats_net_price_sum' => $additional_service_stats_net_price_sum,

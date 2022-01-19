@@ -376,21 +376,21 @@ class VisitController extends Controller
             ->where('active', 1)
             ->first();
 
-        // obliczamy cenę brutto i netto
-        //$grossPrice = ($additional_service->set_price_in_visit ? $postData['gross_price'] : $additional_service->gross_price);
-        // obliczamy cenę brutto i netto dla każdej usługi ponieważ można zmienić cenę
-        $grossPrice = $postData['gross_price'];
-
-        // pobieramy vat, żeby ktoś nie dodał innego
+        // pobieramy VAT, żeby ktoś nie dodał innego
         $vat = Vats::where('id', $additional_service->vat_id)->first();
         $vatDivisor  = 1 + ((int)$vat->name / 100);
 
-        $netPrice = $grossPrice / $vatDivisor;
+        // Ceny z formularza
+        $gross_price = $postData['gross_price'];
+        $net_price = $gross_price / $vatDivisor;
 
-        //calc
-        // cena
-        $sum_gross_price = ($quantity * $grossPrice);
-        $sum_net_price = $sum_gross_price / $vatDivisor;
+        // Ceny z usługi
+        $gross_price_std = $additional_service->gross_price;
+        $net_price_std = $additional_service->net_price;
+
+        if ($gross_price < $gross_price_std) {
+            return redirect()->back()->with('warning', 'Usługa nie została dodana! Cena sprzedaży nie może być mniejsza od ceny w cenniku.');
+        }
 
         // sprawdzamy, czy istnieje już taka usługa dodana do wizyty
         $old_visit_additional_service = VisitAdditionalService::where('additional_service_id', $additional_service->id)
@@ -400,41 +400,145 @@ class VisitController extends Controller
         //jeżeli istnieje i nie jest to paliwo to dodajemy ilość, aktualiujemy vat i ceny
         if ($old_visit_additional_service) {
             if ($additional_service->set_price_in_visit) {
-                $newNetPrice = ($old_visit_additional_service->net_price + $netPrice);
-                $newGrossPrice = ($old_visit_additional_service->gross_price + $grossPrice);
+                $newNetPrice = ($old_visit_additional_service->net_price + $net_price);
+                $newGrossPrice = ($old_visit_additional_service->gross_price + $gross_price);
 
+                // Calculations START
+                $sum_gross_price = ($quantity * $newGrossPrice);
+                $sum_net_price = $sum_gross_price / $vatDivisor;
+                $sum_gross_price_std = 0;
+                $sum_net_price_std = 0;
+
+                // Additional margin, all for doctor
+                $addtional_net_margin = 0;
+                $addtional_gross_margin = 0;
+
+                // Summary margin
+                $sum_gross_margin_doctor = 0;
+                $sum_net_margin_doctor = 0;
+                $sum_gross_margin_company = $sum_gross_price;
+                $sum_net_margin_company = $sum_net_price;
+                // STOP
+
+                // ustawiamy wartości
+                $old_visit_additional_service->quantity = $quantity;
+                $old_visit_additional_service->sum_net_price = $sum_net_price;
+                $old_visit_additional_service->sum_gross_price = $sum_gross_price;
                 $old_visit_additional_service->vat_id = $additional_service->vat_id;
                 $old_visit_additional_service->net_price = $newNetPrice;
                 $old_visit_additional_service->gross_price = $newGrossPrice;
+                $old_visit_additional_service->net_price_std = $net_price_std;
+                $old_visit_additional_service->gross_price_std = $gross_price_std;
+                $old_visit_additional_service->sum_net_margin_company = $sum_net_margin_company;
+                $old_visit_additional_service->sum_gross_margin_company = $sum_gross_margin_company;
+                $old_visit_additional_service->sum_net_margin_doctor = $sum_net_margin_doctor;
+                $old_visit_additional_service->sum_gross_margin_doctor = $sum_gross_margin_doctor;
 
-                // ustawiamy wartości, żeby później już nie obliczać
-                $old_visit_additional_service->sum_net_price = $sum_net_price;
-                $old_visit_additional_service->sum_gross_price = $sum_gross_price;
-
+                //dd($old_visit_additional_service);
                 $old_visit_additional_service->update();
             } else {
                 $quantity += $old_visit_additional_service->quantity;
 
+                // Calculations START
+                $sum_gross_price = ($quantity * $gross_price);
+                $sum_net_price = $sum_gross_price / $vatDivisor;
+                $sum_gross_price_std = ($quantity * $gross_price_std);
+                $sum_net_price_std = $sum_gross_price_std / $vatDivisor;
+
+                // Additional margin, all for doctor
+                $addtional_net_margin = $sum_net_price - $sum_net_price_std;
+                $addtional_gross_margin = $sum_gross_price - $sum_gross_price_std;
+
+                // wysokość marży [%] za usługi dla lekarza, który dodaje wizytę
+                $commission_medicals = $visitModel->user->commission_medicals;
+                $commission_services = $visitModel->user->commission_services;
+
+                // Summary margin
+                $sum_gross_margin_doctor = ($sum_gross_price_std * ($commission_services / 100));
+                $sum_net_margin_doctor = ($sum_gross_margin_doctor / $vatDivisor);
+                $sum_gross_margin_company = ($sum_gross_price_std - $sum_gross_margin_doctor);
+                $sum_net_margin_company = ($sum_gross_margin_company / $vatDivisor);
+
+                // Plus additional margin
+                $sum_net_margin_doctor += $addtional_net_margin;
+                $sum_gross_margin_doctor +=  $addtional_gross_margin;
+                // STOP
+
+                // ustawiamy wartości
                 $old_visit_additional_service->quantity = $quantity;
                 $old_visit_additional_service->vat_id = $additional_service->vat_id;
-                $old_visit_additional_service->net_price = $netPrice;
-                $old_visit_additional_service->gross_price = $grossPrice;
+                $old_visit_additional_service->net_price = $net_price;
+                $old_visit_additional_service->gross_price = $gross_price;
+                $old_visit_additional_service->sum_net_price = $sum_net_price;
+                $old_visit_additional_service->sum_gross_price = $sum_gross_price;
+
+                $old_visit_additional_service->net_price_std = $net_price_std;
+                $old_visit_additional_service->gross_price_std = $gross_price_std;
+                $old_visit_additional_service->sum_net_margin_company = $sum_net_margin_company;
+                $old_visit_additional_service->sum_gross_margin_company = $sum_gross_margin_company;
+                $old_visit_additional_service->sum_net_margin_doctor = $sum_net_margin_doctor;
+                $old_visit_additional_service->sum_gross_margin_doctor = $sum_gross_margin_doctor;
 
                 $old_visit_additional_service->update();
             }
         } else {
             $visit_additional_service = new VisitAdditionalService();
 
+            // Calculations START
+            $sum_gross_price = ($quantity * $gross_price);
+            $sum_net_price = $sum_gross_price / $vatDivisor;
+            $sum_gross_price_std = ($quantity * $gross_price_std);
+            $sum_net_price_std = $sum_gross_price_std / $vatDivisor;
+
+            if ($additional_service->set_price_in_visit) {
+                // Additional margin, all for doctor
+                $addtional_net_margin = 0;
+                $addtional_gross_margin = 0;
+
+                // Summary margin
+                $sum_gross_margin_doctor = 0;
+                $sum_net_margin_doctor = 0;
+                $sum_gross_margin_company = $sum_gross_price;
+                $sum_net_margin_company = $sum_net_price;
+                // STOP
+            } else {
+                // Additional margin, all for doctor
+                $addtional_net_margin = $sum_net_price - $sum_net_price_std;
+                $addtional_gross_margin = $sum_gross_price - $sum_gross_price_std;
+
+                // wysokość marży [%] za usługi dla lekarza, który dodaje wizytę
+                $commission_medicals = $visitModel->user->commission_medicals;
+                $commission_services = $visitModel->user->commission_services;
+
+                // Summary margin
+                $sum_gross_margin_doctor = ($sum_gross_price_std * ($commission_services / 100));
+                $sum_net_margin_doctor = ($sum_gross_margin_doctor / $vatDivisor);
+                $sum_gross_margin_company = ($sum_gross_price_std - $sum_gross_margin_doctor);
+                $sum_net_margin_company = ($sum_gross_margin_company / $vatDivisor);
+
+                // Plus additional margin
+                $sum_net_margin_doctor += $addtional_net_margin;
+                $sum_gross_margin_doctor +=  $addtional_gross_margin;
+                // STOP
+            }
+
+
+            // ustawiamy wartości
             $visit_additional_service->visit_id = $postData['visit_id'];
             $visit_additional_service->additional_service_id = $additional_service->id;
             $visit_additional_service->quantity = $quantity;
             $visit_additional_service->vat_id = $additional_service->vat_id;
-            $visit_additional_service->net_price = $netPrice;
-            $visit_additional_service->gross_price = $grossPrice;
-
-            // ustawiamy wartości, żeby później już nie obliczać
+            $visit_additional_service->net_price = $net_price;
+            $visit_additional_service->gross_price = $gross_price;
             $visit_additional_service->sum_net_price = $sum_net_price;
             $visit_additional_service->sum_gross_price = $sum_gross_price;
+
+            $visit_additional_service->net_price_std = $net_price_std;
+            $visit_additional_service->gross_price_std = $gross_price_std;
+            $visit_additional_service->sum_net_margin_company = $sum_net_margin_company;
+            $visit_additional_service->sum_gross_margin_company = $sum_gross_margin_company;
+            $visit_additional_service->sum_net_margin_doctor = $sum_net_margin_doctor;
+            $visit_additional_service->sum_gross_margin_doctor = $sum_gross_margin_doctor;
 
             //dd($visit_additional_service);
             $visit_additional_service->save();

@@ -86,9 +86,9 @@
         <div class="row my-5">
             <div class="col-md-12 text-right cost-summary">
                 <h4>
-                    <div class="spinner-grow" role="status">
+                    <div class="spinner-grow {{ $medical_stats_paid_price_sum < $services_medicals_stats_gross_price_sum ? 'text-warning' : 'text-success' }}" role="status">
                         <span class="visually-hidden"></span>
-                    </div> Koszt leków weterynaryjnych i usług dodatkowych: {{ Str::currency($services_medicals_stats_gross_price_sum) }} PLN
+                    </div> Koszt leków weterynaryjnych i usług dodatkowych: {{ Str::currency($services_medicals_stats_gross_price_sum) }} PLN @if($medical_stats_paid_price_sum < $services_medicals_stats_gross_price_sum) , <span class="text-warning">zapłacono: {{ Str::currency($medical_stats_paid_price_sum) }} PLN</span> @endif
                 </h4>
             </div>
         </div>
