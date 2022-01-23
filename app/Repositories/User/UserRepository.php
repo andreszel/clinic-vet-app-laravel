@@ -69,6 +69,11 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
     }
 
+    public function whereType(int $id)
+    {
+        return $this->userModel->where('type_id', $id)->get();
+    }
+
     public function filterBy(?string $phrase, ?string $email, ?string $phone, int $limit = self::LIMIT_DEFAULT)
     {
         $query = $this->userModel

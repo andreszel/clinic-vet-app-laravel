@@ -66,14 +66,14 @@ class VisitRepository implements VisitRepositoryInterface
         $user = Auth::user();
 
         $query = $this->visitModel
-            ->with(['user', 'customer', 'pay_type']);
+            ->with(['user', 'customer', 'pay_type', 'visit_medicals', 'additional_services']);
 
         // administrator wszystkie, lekarz tylko swoje
         if ($user->type_id != 1) {
             $query = $query->where('user_id', $user->id);
         }
 
-        $query->orderBy('created_at');
+        $query->orderBy('visit_date', 'desc');
 
         // lekarz
         if ($user_id) {
@@ -104,6 +104,70 @@ class VisitRepository implements VisitRepositoryInterface
         }
 
         return $query->paginate($limit);
+    }
+
+    public function filterByCustomerDates(int $id, string $from_date, string $to_date)
+    {
+        $user = Auth::user();
+
+        $query = $this->visitModel
+            ->with(['user', 'customer', 'pay_type', 'visit_medicals', 'additional_services']);
+
+        // administrator wszystkie, lekarz tylko swoje
+        if ($user->type_id != 1) {
+            $query = $query->whereRaw('user_id', $user->id);
+        }
+
+        $query->orderBy('visit_date', 'desc');
+
+        // lekarz
+        if ($id) {
+            $query->whereRaw('customer_id = ?', $id);
+        }
+
+        // Data wizyty od
+        if ($from_date) {
+            $query->whereRaw('visit_date >= ?', [$from_date]);
+        }
+
+        // Data wizyty do
+        if ($to_date) {
+            $query->whereRaw('visit_date <= ?', [$to_date]);
+        }
+
+        return $query->paginate();
+    }
+
+    public function filterByUserDates(int $id, string $from_date, string $to_date)
+    {
+        $user = Auth::user();
+
+        $query = $this->visitModel
+            ->with(['user', 'customer', 'pay_type', 'visit_medicals', 'additional_services']);
+
+        // administrator wszystkie, lekarz tylko swoje
+        if ($user->type_id != 1) {
+            $query = $query->whereRaw('user_id', $user->id);
+        }
+
+        $query->orderBy('visit_date', 'desc');
+
+        // lekarz
+        if ($id) {
+            $query->whereRaw('user_id = ?', $id);
+        }
+
+        // Data wizyty od
+        if ($from_date) {
+            $query->whereRaw('visit_date >= ?', [$from_date]);
+        }
+
+        // Data wizyty do
+        if ($to_date) {
+            $query->whereRaw('visit_date <= ?', [$to_date]);
+        }
+
+        return $query->paginate();
     }
 
     public function maxVisitNumber(int $customerId): int
@@ -257,7 +321,8 @@ class VisitRepository implements VisitRepositoryInterface
         // wysokość marży za usługi i za leki dla lekarza, który dodał wizytę
         $commission_medicals = $visit->user->commission_medicals;
         $commission_services = $visit->user->commission_services;
-
+        /*         dump(__FUNCTION__);
+        dd(__FILE__); */
         // przeglądamy wszystkie dodane leki do wizyty
         foreach ($visit->visit_medicals as $visit_medical) {
             //turnover medicals
@@ -290,18 +355,16 @@ class VisitRepository implements VisitRepositoryInterface
             $additional_service_gross_margin = $additional_service->sum_gross_price;
 
             // czy to jest dojazd
-            $drive_to_customer = $additional_service->additionalservice->drive_to_customer;
-
-            if ($drive_to_customer) {
+            if ($additional_service->additionalservice->drive_to_customer) {
                 // margin doctor
                 $additional_service_margin_doctor = 0;
                 // margin company
                 $additional_service_margin_company = $additional_service_gross_margin;
             } else {
                 // margin doctor
-                $additional_service_margin_doctor = ($additional_service_gross_margin * ($commission_services / 100));
+                $additional_service_margin_doctor = $additional_service->sum_gross_margin_doctor;
                 // margin company
-                $additional_service_margin_company = ($additional_service_gross_margin - $additional_service_margin_doctor);
+                $additional_service_margin_company = $additional_service->sum_gross_margin_company;
             }
 
             // all margin additional services
@@ -313,12 +376,10 @@ class VisitRepository implements VisitRepositoryInterface
             $additional_services_margin_all += $additional_service_gross_margin;
         }
 
-        $user = User::where('id', $visit->user_id)->first();
-
         // add to array
         $data['user_id'] = $visit->user_id;
-        $data['name'] = $user->name;
-        $data['surname'] = $user->surname;
+        $data['name'] = $visit->user->name;
+        $data['surname'] = $visit->user->surname;
         $data['pay_type_id'] = $visit->pay_type_id;
         $data['pay_type_name'] = $visit->pay_type->name;
         $data['net_price'] = $visit->net_price;

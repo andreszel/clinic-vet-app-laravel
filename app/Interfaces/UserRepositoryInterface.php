@@ -20,5 +20,6 @@ interface UserRepositoryInterface
     public function create(array $data);
     public function update(array $postData, int $userId): void;
     public function change_status(int $id): void;
+    public function whereType(int $id);
     public function filterBy(?string $phrase, ?string $email, ?string $phone, int $limit = self::LIMIT_DEFAULT);
 }

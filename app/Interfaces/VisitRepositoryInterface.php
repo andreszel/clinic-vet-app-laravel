@@ -16,6 +16,8 @@ interface VisitRepositoryInterface
     public function create(array $data);
     public function update(array $postData, int $id): void;
     public function filterBy(?int $user_id, ?string $from_date, ?string $to_date, ?string $customer_name, ?string $customer_surname, int $limit = self::LIMIT_DEFAULT);
+    public function filterByCustomerDates(int $id, string $from_date, string $to_date);
+    public function filterByUserDates(int $id, string $from_date, string $to_date);
     public function maxVisitNumber(int $customerId): int;
     public function turnoverCurrentMonth(): float;
     public function marginCurrentMonth(): float;

@@ -63,7 +63,7 @@ class CustomerRepository implements CustomerRepositoryInterface
         if ($surname) {
             $query->whereRaw('surname like ?', ["$surname%"]);
         }
-
+        //dd($query->toSql());
         return $query->paginate($limit);
     }
 }

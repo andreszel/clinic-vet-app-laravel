@@ -57,8 +57,7 @@ class VisitController extends Controller
             $counter = (($page - 1) * $limit) + 1;
         }
 
-        $users = $this->userRepository->all();
-
+        $users = $this->userRepository->whereType(2)->all();
 
         return view('admin.visits.list', [
             'visits' => $resultPaginator,

@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PDF;
 
 class HomeController extends Controller
 {
@@ -48,7 +49,7 @@ class HomeController extends Controller
 
     public function createPDF()
     {
-        $html = '<h1>Test</h1><p>Enim et nulla laboris voluptate qui Lorem anim ipsum. Mollit deserunt aute mollit velit nisi excepteur eiusmod consectetur. Excepteur nostrud reprehenderit amet occaecat eu deserunt deserunt ea velit fugiat velit.</p>';
+        //$html = '<h1>Test</h1><p>Enim et nulla laboris voluptate qui Lorem anim ipsum. Mollit deserunt aute mollit velit nisi excepteur eiusmod consectetur. Excepteur nostrud reprehenderit amet occaecat eu deserunt deserunt ea velit fugiat velit.</p>';
         // load a HTML string, file or view name
         //$pdf = App::make('dompdf.wrapper');
         //$pdf->loadHTML($html);
@@ -56,7 +57,10 @@ class HomeController extends Controller
 
         // use the facade
         $data = array();
-        $pdf = PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif', 'debugCss' => true, 'debugLayout' => true])->loadView('pdf.test', $data);
+        $pdf = PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif', 'debugCss' => false, 'debugLayout' => false]);
+        //$pdf->setPaper('a4', 'landscape');
+        $pdf->setWarnings(false);
+        $pdf->loadView('pdf.test', $data);
 
         return $pdf->download('test.pdf');
 

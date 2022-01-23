@@ -48,7 +48,7 @@
                 </tfoot>
                 <tbody>
                     @foreach($visits ?? [] as $visit)
-                    <tr class="{{ $visit->confirm_visit ? 'text-success' : 'text-warning' }}" title="{{ $visit->confirm_visit ? 'Wizyta zatwierdzona' : 'Wizyta rozpoczęta - w trakcie realizacji' }}">
+                    <tr class="{{ $visit->confirm_visit ? 'text-success' : 'text-warning' }}" title="{{ $visit->confirm_visit ? 'Wizyta zatwierdzona - zakończona przez lekarza' : 'Wizyta rozpoczęta - w trakcie realizacji' }}">
                         <td>{{ $counter++ }}.</td>
                         <td>{{ $visit->customer->name }} {{ $visit->customer->surname }}</td>
                         <td>{{ $visit->visit_date }}</td>
@@ -61,7 +61,7 @@
                             <form action="{{ route('visits.remove', ['id' => $visit->id]) }}" method="post">
                                 @method('DELETE')
                                 {{ csrf_field() }}
-                                <a href="#" class="btn text-primary" title="Podgląd wydruku">
+                                <a href="{{ route('reports.pdf.one_visit_report', ['id'=>$visit->id]) }}" target="_blank" class="btn text-primary" title="Podgląd wydruku">
                                     <i class="far fa-file-pdf"></i>
                                 </a>
                                 @can('view', $visit)

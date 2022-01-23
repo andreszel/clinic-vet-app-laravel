@@ -37,20 +37,15 @@
                     <label for="customer_surname">Klient nazwisko</label>
                     <input value="{{ $customer_surname }}" type="text" class="form-control" id="customer_surname" name="customer_surname" placeholder="Wpisz nazwisko Klienta" autocomplete="off">
                 </div>
-                <div class="col-auto mb-2">
-                    <label for="customer_phone">Klient telefon</label>
-                    <input value="{{ $customer_phone }}" type="text" class="form-control" id="customer_phone" name="customer_phone" placeholder="Wpisz telefon Klienta" autocomplete="off">
-                </div>
-
-                <div class="col-auto mb-2">
-                    <label for="customer_email">Klient email</label>
-                    <input value="{{ $customer_email }}" type="text" class="form-control" id="customer_email" name="customer_email" placeholder="Wpisz email Klienta" autocomplete="off">
-                </div>
             </div>
             <div class="row mt-3">
-                <div class="col-md-12 text-right">
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download text-white-50"></i> Pobierz PDF</a>
-                    <button type="submit" class="btn btn-sm btn-primary">Szukaj</button>
+                <div class="col-md-6">
+                    <p class="text-info">
+                        <small>Znalezionych wizyt lekarskich: {{ count($visits) }}</small>
+                    </p>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button type="submit" class="btn btn-sm btn-primary">Szukaj wizyt</button>
                 </div>
             </div>
         </form>

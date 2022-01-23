@@ -7,8 +7,8 @@
 </div>
 
 <div class="d-none d-lg-block">
-    <p class="mb-4">Incididunt cupidatat elit labore sit. Consequat aliqua occaecat aute anim magna proident pariatur commodo est ea cupidatat exercitation fugiat minim. Esse exercitation in est nulla tempor ad cillum ullamco. Ullamco anim laboris proident esse consectetur non qui. Mollit ipsum cupidatat id est excepteur incididunt aute.
-        <a target="_blank" href="https://datatables.net">Pomoc</a>.
+    <p class="mb-4">
+        Wyszukiwarka ustawia domyślne parametry data od i data do, jeżeli nie wybierzemy żadnych parametrów.
     </p>
 </div>
 
@@ -16,13 +16,15 @@
 
 @include('admin.reports.report1')
 
-@include('admin.reports.report2')
+@include('admin.reports.report6')
+
+@include('admin.reports.report5')
 
 @include('admin.reports.report3')
 
-@include('admin.reports.report4')
+@include('admin.reports.report2')
 
-@include('admin.reports.report5')
+@include('admin.reports.report4')
 
 @endsection
 

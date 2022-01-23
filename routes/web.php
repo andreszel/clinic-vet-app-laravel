@@ -115,8 +115,15 @@ Route::group(['middleware' => ['auth', 'forcechangepass'], 'prefix' => 'admin'],
         Route::delete('/remove/{id}', [VisitController::class, 'destroy'])->name('remove');
     });
 
-    Route::group(['middleware' => 'can:admin-level', 'prefix' => 'reports', 'as' => 'reports.'], function () {
-        Route::get('/', [ReportController::class, 'index'])->name('list');
+    Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
+
+        Route::get('/', [ReportController::class, 'index'])->name('list')->middleware('can:admin-level');
+
+        Route::group(['prefix' => 'pdf', 'as' => 'pdf.'], function () {
+            Route::get('/one-visit-report/{id}', [ReportController::class, 'createPDFOneVisit'])->name('one_visit_report');
+            Route::get('/customer-month-report/{id}/{from_date}/{to_date}', [ReportController::class, 'createPDFCustomerMonth'])->name('customer_report')->middleware('can:admin-level');
+            Route::get('/user-month-report/{id}/{from_date}/{to_date}', [ReportController::class, 'createPDFUserMonth'])->name('user_report')->middleware('can:admin-level');
+        });
     });
 
     Route::group(['prefix' => 'support', 'as' => 'support.'], function () {

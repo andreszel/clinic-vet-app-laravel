@@ -1,7 +1,7 @@
 <!-- Raport 1: Statystyka wizyt wszystkich lekarzy -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold">Raport 1: Statystyka wizyt wszystkich lekarzy</h6>
+        <h6 class="m-0 font-weight-bold" title="Raport 1">Statystyka wizyt wszystkich lekarzy</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -36,7 +36,14 @@
                     @foreach($visit_stats as $key => $visit_stat)
                     <tr>
                         <td>{{ $counter++ }}.</td>
-                        <td>{{ $visit_stat['name'] }} {{ $visit_stat['surname'] }}</td>
+                        <td>
+                            <p class="float-left">{{ $visit_stat['name'] }} {{ $visit_stat['surname'] }}</p>
+                            @if($from_date && $to_date)
+                            <a href="{{ route('reports.pdf.user_report', ['id' => $visit_stat['id'], 'from_date'=>$from_date, 'to_date'=>$to_date]) }}" target="_blank" class="btn btn-primary btn-sm float-right" title="Podgląd wydruku">
+                                <i class="fas fa-download text-white-50"></i> Pobierz
+                            </a>
+                            @endif
+                        </td>
                         <td>{{ $visit_stat['stats']['last_year'] }}</td>
                         <td>{{ $visit_stat['stats']['last_six_months'] }}</td>
                         <td>{{ $visit_stat['stats']['last_three_months'] }}</td>

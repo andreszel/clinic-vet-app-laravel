@@ -1,10 +1,11 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold">Raport 2: Statystyka leków i usług dodatkowych</h6>
+        <h6 class="m-0 font-weight-bold" title="Raport 2">Statystyka leków i usług dodatkowych</h6>
     </div>
     <div class="card-body">
 
+        @if(count($medical_stats) > 0 OR count($additional_service_stats) > 0)
         <h5>Lista leków</h5>
 
         <div class="table-responsive">
@@ -88,10 +89,17 @@
                 <h4>
                     <div class="spinner-grow {{ $medical_stats_paid_price_sum < $services_medicals_stats_gross_price_sum ? 'text-warning' : 'text-success' }}" role="status">
                         <span class="visually-hidden"></span>
-                    </div> Koszt leków weterynaryjnych i usług dodatkowych: {{ Str::currency($services_medicals_stats_gross_price_sum) }} PLN @if($medical_stats_paid_price_sum < $services_medicals_stats_gross_price_sum) , <span class="text-warning">zapłacono: {{ Str::currency($medical_stats_paid_price_sum) }} PLN</span> @endif
+                    </div> Koszt leków weterynaryjnych i usług dodatkowych: {{ Str::currency($services_medicals_stats_gross_price_sum) }} PLN
+                    @if($medical_stats_paid_price_sum < $services_medicals_stats_gross_price_sum) , <span class="text-warning">zapłacono: {{ Str::currency($medical_stats_paid_price_sum) }} PLN</span>
+                        @else
+                        , <span class="text-warning">zapłacono: {{ Str::currency($medical_stats_paid_price_sum) }} PLN</span>
+                        @endif
                 </h4>
             </div>
         </div>
+        @else
+        <h3 class="text-info">Brak danych</h3>
+        @endif
     </div>
 </div>
 

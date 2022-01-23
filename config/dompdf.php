@@ -12,7 +12,7 @@ return array(
     |
     */
     'show_warnings' => false,   // Throw an Exception on warnings from dompdf
-    'orientation' => 'portrait',
+    'orientation' => 'portrait', //landscape
     'defines' => array(
         /**
          * The location of the DOMPDF font directory
