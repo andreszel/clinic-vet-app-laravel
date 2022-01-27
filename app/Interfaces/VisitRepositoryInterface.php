@@ -11,6 +11,7 @@ interface VisitRepositoryInterface
     public const MAX_TIME_TO_EDIT = 10;
 
     public function get(int $id): Visit;
+    public function all();
     public function allPaginated(int $limit);
     public function delete(int $id);
     public function create(array $data);
@@ -22,6 +23,9 @@ interface VisitRepositoryInterface
     public function turnoverCurrentMonth(): float;
     public function marginCurrentMonth(): float;
     public function countVisitsCurrentMonth(): int;
+    public function getVisitCalcDetails($visit, $arr): array;
     public function calcVisitStats($visit): array;
+    public function addSummaryVisitToCalcDetails($arr): array;
+    public function addTurnoverMarginStats($visit, $arr): array;
     public function sumTurnoverMarginStats($data): array;
 }
