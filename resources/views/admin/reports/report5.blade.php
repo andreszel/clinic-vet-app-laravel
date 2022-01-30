@@ -28,10 +28,9 @@
                         <td>{{ $visit['customer_name'] . ' ' . $visit['customer_surname'] }}</td>
                         <td>{{ $visit['user_name'] . ' ' . $visit['user_surname'] }}</td>
                         <td>
-                            <form action="{{ route('reports.pdf.one_visit_report', ['id' => $visit['id']]) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-download text-white-50"></i> Pobierz</button>
-                            </form>
+                            <a href="{{ route('reports.pdf.one_visit_report', ['id'=>$visit['id']]) }}" target="_blank" class="btn btn-sm btn-primary" title="Podgląd wydruku">
+                                <i class="fas fa-download text-white-50"></i> Pobierz
+                            </a>
                         </td>
                         <td class="text-right">{{ Str::currency($visit['gross_price']) }}</td>
                         <td class="text-right">{{ Str::currency($visit['margin_doctor']) }}</td>
