@@ -31,10 +31,10 @@ class AddColumnsSumForVisitMedicalsTable extends Migration
     public function down()
     {
         Schema::table('visit_medicals', function (Blueprint $table) {
-            $table->dropColumn('sum_net_price');
-            $table->dropColumn('sum_gross_price');
+            $table->dropIfExists(['sum_net_price', 'sum_gross_price', 'sum_net_margin', 'sum_gross_margin']);
+            /* $table->dropColumn('sum_gross_price');
             $table->dropColumn('sum_net_margin');
-            $table->dropColumn('sum_gross_margin');
+            $table->dropColumn('sum_gross_margin'); */
         });
     }
 }

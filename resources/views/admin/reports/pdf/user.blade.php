@@ -16,6 +16,7 @@
     <h3 class="text-center">Rozliczenie wizyt lekarskich: dla lek. {{ $user->name . ' ' . $user->surname }}</h3>
     <p class="text-center">w okresie od {{ $from_date }} do {{ $to_date }}</p>
     <div>
+        @if($visit_count > 0)
         @foreach($visits as $visit)
 
         <h3 class="font-weight-bold">{{$counter++}}. Wizyta numer {{ $visit['visit_number'] }}</h3>
@@ -127,6 +128,9 @@
                 <td class="text-right font-weight-bold">{{ Str::currency($turnover_margin_stats_sum['margin_doctor']) }}</td>
             </tr>
         </table>
+        @else
+        <h1 class="text-info text-center">Brak danych</h1>
+        @endif
 
     </div>
 

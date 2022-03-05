@@ -29,8 +29,8 @@ class AddColumnsForCustomersTable extends Migration
     public function down()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn('number_herd');
-            $table->dropColumn('nip');
+            $table->dropIfExists(['number_herd', 'nip']);
+            //$table->dropColumn('nip');
         });
     }
 }

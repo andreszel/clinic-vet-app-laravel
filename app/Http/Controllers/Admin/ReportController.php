@@ -351,6 +351,7 @@ class ReportController extends Controller
         $pdf->setWarnings(false);
         $pdf->loadView('admin.reports.pdf.user', [
             'visits' => $visits,
+            'visit_count' => $visits->count(),
             'user' => $user,
             'counter' => $counter,
             'turnover_margin_stats' => $turnover_margin_stats,

@@ -26,7 +26,7 @@ class AddColumnDefaultSelectedForUserTypesTable extends Migration
     public function down()
     {
         Schema::table('user_types', function (Blueprint $table) {
-            $table->dropColumn('default_selected');
+            $table->dropIfExists('default_selected');
         });
     }
 }

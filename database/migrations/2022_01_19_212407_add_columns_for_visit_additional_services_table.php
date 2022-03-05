@@ -41,13 +41,13 @@ class AddColumnsForVisitAdditionalServicesTable extends Migration
     public function down()
     {
         Schema::table('visit_additional_services', function (Blueprint $table) {
-            $table->dropColumn('net_price_std');
-            $table->dropColumn('gross_price_std');
+            /* $table->dropColumn('net_price_std');
+            $table->dropColumn('gross_price_std'); */
 
-            $table->dropColumn('sum_net_margin_company');
-            $table->dropColumn('sum_gross_margin_company');
+            $table->dropIfExists(['net_price_std', 'gross_price_std', 'sum_net_margin_company', 'sum_gross_margin_company', 'sum_net_margin_doctor', 'sum_gross_margin_doctor']);
+            /* $table->dropColumn('sum_gross_margin_company');
             $table->dropColumn('sum_net_margin_doctor');
-            $table->dropColumn('sum_gross_margin_doctor');
+            $table->dropColumn('sum_gross_margin_doctor'); */
         });
     }
 }

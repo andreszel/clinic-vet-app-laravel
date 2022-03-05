@@ -29,8 +29,8 @@ class AddColumnConfirmVisitForVisitTable extends Migration
     public function down()
     {
         Schema::table('visits', function (Blueprint $table) {
-            $table->dropColumn('cleared_date');
-            $table->dropColumn('confirm_visit');
+            $table->dropIfExists(['cleared_date', 'confirm_visit']);
+            //$table->dropColumn('confirm_visit');
         });
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddColumnsForUserTable extends Migration
@@ -37,16 +38,18 @@ class AddColumnsForUserTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('users_type_id_foreign');
-            $table->dropForeign('users_parent_id_foreign');
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->dropForeign('users_type_id_foreign');
+                $table->dropForeign('users_parent_id_foreign');
+            }
 
-            $table->dropColumn('type_id');
-            $table->dropColumn('surname');
+            $table->dropIfExists(['type_id', 'surname', 'phone', 'set_pass', 'date_set_pass', 'active', 'parent_id']);
+            /* $table->dropColumn('surname');
             $table->dropColumn('phone');
             $table->dropColumn('set_pass');
             $table->dropColumn('date_set_pass');
             $table->dropColumn('active');
-            $table->dropColumn('parent_id');
+            $table->dropColumn('parent_id'); */
         });
     }
 }

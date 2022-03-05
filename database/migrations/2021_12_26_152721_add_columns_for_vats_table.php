@@ -29,8 +29,8 @@ class AddColumnsForVatsTable extends Migration
     public function down()
     {
         Schema::table('vats', function (Blueprint $table) {
-            $table->dropColumn('default_medicals');
-            $table->dropColumn('default_services');
+            $table->dropIfExists(['default_medicals', 'default_services']);
+            //$table->dropColumn('default_services');
         });
     }
 }

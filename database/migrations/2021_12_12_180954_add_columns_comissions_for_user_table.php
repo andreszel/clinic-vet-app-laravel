@@ -29,8 +29,8 @@ class AddColumnsComissionsForUserTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('commission_services');
-            $table->dropColumn('commission_medicals');
+            $table->dropIfExists(['commission_services', 'commission_medicals']);
+            //$table->dropColumn('commission_medicals');
         });
     }
 }

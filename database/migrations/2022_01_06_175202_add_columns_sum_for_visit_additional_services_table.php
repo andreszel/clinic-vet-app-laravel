@@ -29,8 +29,8 @@ class AddColumnsSumForVisitAdditionalServicesTable extends Migration
     public function down()
     {
         Schema::table('visit_additional_services', function (Blueprint $table) {
-            $table->dropColumn('sum_net_price');
-            $table->dropColumn('sum_gross_price');
+            $table->dropIfExists(['sum_net_price', 'sum_gross_price']);
+            //$table->dropColumn('sum_gross_price');
         });
     }
 }

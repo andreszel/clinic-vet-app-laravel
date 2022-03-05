@@ -34,7 +34,7 @@ class AddColumnCanChangePriceForUnitMeasuresTable extends Migration
     public function down()
     {
         Schema::table('unit_measures', function (Blueprint $table) {
-            $table->dropColumn('can_change_price');
+            $table->dropIfExists('can_change_price');
         });
     }
 }

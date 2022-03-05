@@ -29,8 +29,8 @@ class AddColumnsNightlyPriceForAdditionalServicesTable extends Migration
     public function down()
     {
         Schema::table('additional_services', function (Blueprint $table) {
-            $table->dropColumn('nightly_net_price');
-            $table->dropColumn('nightly_gross_price');
+            $table->dropIfExists(['nightly_net_price', 'nightly_gross_price']);
+            //$table->dropColumn('nightly_gross_price');
         });
     }
 }

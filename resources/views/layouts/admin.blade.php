@@ -52,8 +52,6 @@
             </div>
             <!-- End of Main Content -->
 
-            @include('helpers.sections.logout_modal')
-
         </div>
 
     </div><!-- End of Page Wrapper -->

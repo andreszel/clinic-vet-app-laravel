@@ -29,8 +29,8 @@ class AddColumnsForVisitMedicalsTable extends Migration
     public function down()
     {
         Schema::table('visit_medicals', function (Blueprint $table) {
-            $table->dropColumn('net_margin');
-            $table->dropColumn('gross_margin');
+            $table->dropIfExists(['net_margin', 'gross_margin']);
+            //$table->dropColumn('gross_margin');
         });
     }
 }

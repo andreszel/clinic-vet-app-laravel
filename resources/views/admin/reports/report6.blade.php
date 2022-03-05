@@ -5,6 +5,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
+            @if($sum_visit_customer_stats)
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr>
@@ -54,6 +55,9 @@
                     @endforeach
                 </tbody>
             </table>
+            @else
+            <h3 class="text-info">Brak danych</h3>
+            @endif
         </div>
     </div>
 </div>

@@ -30,9 +30,9 @@ class AddColumnsNightlyPaidForVisitsTable extends Migration
     public function down()
     {
         Schema::table('visits', function (Blueprint $table) {
-            $table->dropColumn('nightly_visit');
-            $table->dropColumn('paid_net_price');
-            $table->dropColumn('paid_gross_price');
+            $table->dropIfExists(['nightly_visit', 'paid_net_price', 'paid_gross_price']);
+            /* $table->dropColumn('paid_net_price');
+            $table->dropColumn('paid_gross_price'); */
         });
     }
 }
